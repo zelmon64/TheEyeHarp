@@ -264,7 +264,8 @@ void Eye::setTimbrePreset(){
                 releaseSlider.setValue(release.color);
                 disc.percussive.value=true;
                 break;
- //           case 3:
+            case 3:
+				disc.percussive.value=false;
 //                harmonic[0].setColorByValue(-6);
 //                harmonic[1].setColorByValue(-23);
 //                harmonic[2].setColorByValue(-10.5);

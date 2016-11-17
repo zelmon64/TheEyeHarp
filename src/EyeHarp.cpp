@@ -5,7 +5,7 @@ THE MOUSEHARP: BY ZACHARIAS VAMVAKOUSIS
 20/3/2011
 
 ***************************************************************************/
-
+#define MINVOL 0.5
 EyeHarp::~EyeHarp(){
 
 }
@@ -226,14 +226,15 @@ void EyeHarp::update(ofPoint Gaze,bool *sacadic){
                             if(eye.disc.dist>eye.disc.neutralRegion && eye.disc.dist<ofGetHeight()/2 && (!eye.disc.fixation.value || velocity<100)){
 
                                 if(prDist<eye.disc.dist){
-                                    distVol=(0.0f+((float)(eye.disc.dist-eye.disc.neutralRegion)/(height/2-eye.disc.neutralRegion)));
+                                    distVol=(MINVOL+MINVOL*((float)(eye.disc.dist-eye.disc.neutralRegion)/(height/2-eye.disc.neutralRegion)));
+					
                                     targetVolume=eye.volume.value*distVol;
                                     volumeChanged=true;
                                 }
                                 else{
                                     if(velocity<100){
-                                        distVol=(0.0f+((float)(eye.disc.dist-eye.disc.neutralRegion)/(height/2-eye.disc.neutralRegion)));
-                                        targetVolume=eye.volume.value*distVol;
+                                        distVol=(MINVOL+MINVOL*((float)(eye.disc.dist-eye.disc.neutralRegion)/(height/2-eye.disc.neutralRegion)));
+										targetVolume=eye.volume.value*distVol;
                                         volumeChanged=true;
                                     }
                                 }
@@ -255,13 +256,15 @@ void EyeHarp::update(ofPoint Gaze,bool *sacadic){
                             if(eye.disc.dist>eye.disc.neutralRegion && eye.disc.dist<ofGetHeight()/2 ){
 
                                 if(prDist<eye.disc.dist){
-									distVol=(0.0f+((float)(eye.disc.dist-eye.disc.neutralRegion)/(height/2-eye.disc.neutralRegion)));
+									 distVol=(MINVOL+MINVOL*((float)(eye.disc.dist-eye.disc.neutralRegion)/(height/2-eye.disc.neutralRegion)));
+					
                                     targetVolume=eye.volume.value*distVol;
                                     volumeChanged=true;
                                 }
                                 else{
                                     if(velocity<100){
-                                        distVol=(0.0f+((float)(eye.disc.dist-eye.disc.neutralRegion)/(height/2-eye.disc.neutralRegion)));
+                                         distVol=(MINVOL+MINVOL*((float)(eye.disc.dist-eye.disc.neutralRegion)/(height/2-eye.disc.neutralRegion)));
+					
                                         targetVolume=eye.volume.value*distVol;
                                         volumeChanged=true;
                                     }

@@ -6,8 +6,8 @@
 #include "MyGaze.h"
 #include "tobii.h"
 #include "EyeHarp.h"
-#define GBS 10
-#define GBE 10
+#define GBS 1
+#define GBE 1
 #define STH 45
 #define SM 0.95
 /***********************************************************************
