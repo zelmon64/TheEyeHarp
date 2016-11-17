@@ -1,14 +1,14 @@
 #include "Disc.h"
 #include <string>
 #define NR 0.29
-#define FIXVEL 5
+#define FIXVEL 100
 void Disc::setup(int NumOfNotes,float red,float green,float blue,int * Chord, bool Advanced,bool* Conf){
     NotesNumber.setup("NotesNum",ofPoint(-1.2,-0.58+5*0.18),ofPoint(-1.62,-0.58+5*0.18),7,36,NumOfNotes,1,0.2,1000,0.9,0.2,NR);
     chord=Chord;
 	conf=Conf;
 	chordnum=CHORDSNUM;
     advanced=Advanced;
-    distVolume.setup("Dist\nVolume",false, ofPoint(-1.0f,-0.8f),0.1,1000,0.6,0.2,0.1,false);
+    distVolume.setup("Dist\nVolume",true, ofPoint(-1.0f,-0.8f),0.1,1000,0.6,0.2,0.1,false);
     fixation.setup("Fixation",true,ofPoint(-0.8f,0.85f),0.05,1000,0.6,0.2,0.1,false);
     note=-1;
     melody=note;
@@ -164,7 +164,7 @@ void Disc::update(ofPoint gaze, float* velocity,bool *sacadic){
 		}
 		if(replaySameActive)
 			replaySame.update(gaze);
-		if(replaySame.active && *velocity<FIXVEL && !inside && percussive.value){
+		if(replaySame.active && *velocity<FIXVEL && !inside /*&& percussive.value*/){
 			note=melody;
 			inside=true;
 			changed=true;
@@ -231,7 +231,7 @@ void Disc::draw(){
 	
 	ofSetColor(255,255,255);
 	ofCircle(width2,height2,pointSize);
-	if(percussive.value && replaySameActive )		
+	if(/*percussive.value && */replaySameActive )		
 		replaySame.draw();
 				
 	

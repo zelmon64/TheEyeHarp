@@ -2,7 +2,7 @@
 #define _EYEHARPVARS
 
 #define SAMPLERATE 44100
-#define FRAMERATE 60.0f
+#define FRAMERATE 30.0f
 #define TUNING 523.251f
 #define MIDICH1 1
 #define MIDICH2 2
