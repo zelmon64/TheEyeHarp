@@ -3,12 +3,14 @@
 
 void MyGaze::setup(){
     // Connect to the server in push mode on the default TCP port (6555)
-	m_api.connect( true ) ;
+	if (!m_api.connect()) {
+		cout << "Could not connect to EyeTribe" << endl;
+		m_api.connect();
+	}
 }
 MyGaze::~MyGaze()
 {
-  //  m_api.remove_listener( *this );
- //   m_api.disconnect();
+    m_api.disconnect();
 }
 
 /*void MyGaze::on_gaze_data( gtl::GazeData const & gaze_data )

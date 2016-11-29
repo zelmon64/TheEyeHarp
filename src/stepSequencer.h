@@ -11,6 +11,7 @@
 #include "XORswitch.h"
 #include "slider.h"
 #include "EyeHarpVARS.h"
+#include <stack>
 
 #include <fstream>
 
@@ -52,6 +53,8 @@ class stepSequencer{
 		bool outSideLense;
 		ofPoint lastFix;
         sequencerNote ** seqNote;
+		struct gridElement { int x=0, y=0; };
+		std::stack<gridElement> arpeggioStack;
 		//void eagleEye(ofPoint gaze);
 //        ~stepSequencer();
     private:
@@ -73,6 +76,7 @@ class stepSequencer{
         control * tempo;
         DistControl octave;
         Switch monophonic;
+		Switch undo; //deleteLast on the Stack
         int maxNotes;
         int * chord;
         float volume;

@@ -4,11 +4,10 @@
 
 #include "ofMain.h"
 #include "MyGaze.h"
-#include "tobii.h"
+//#include "tobii.h"
 #include "EyeHarp.h"
-#define GBS 1
-#define GBE 1
-#define STH 45
+#define DISPL 3
+#define STH 35
 #define SM 0.95
 /***********************************************************************
 
@@ -20,7 +19,7 @@ enum eyetracker { EYETRIBE, TOBII, MOUSE};
 class ofApp : public ofBaseApp {
 
 	public:
-
+		float ratiox, ratioy;
 		ofApp();
 		~ofApp();
 		void setup();
@@ -41,7 +40,7 @@ class ofApp : public ofBaseApp {
 		bool gaze;
 		bool firstRead;
 		//----- scenes
-		tobii myTobii;
+//		tobii myTobii;
 		MyGaze tribe;
 		EyeHarp                 HARP;
 		bool sacadic;
@@ -52,10 +51,11 @@ class ofApp : public ofBaseApp {
 
         int mouseDwell;
 		void mySmooth();
-		bool sacade();
+		bool fixation();
+		bool prFixation;
 		ofPoint smooth;
 		bool help;
-		ofPoint gbuffer[GBS+GBE];
+		ofPoint gbuffer[DISPL];
 		int bpos;
 		ofPoint raw;
 		int BS;

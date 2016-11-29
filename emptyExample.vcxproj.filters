@@ -1,0 +1,236 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="src\ofApp.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\main.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\arpeggio.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\control.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\controlArpeggio.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Disc.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\DistinctControl.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\eye.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\EyeHarp.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\loopedNote.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\movingSwitch.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\sequencerNote.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\slider.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\stepSequencer.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\switch.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\tomidipie.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\XORswitch.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\addons\ofxMidi\src\ofxBaseMidi.cpp">
+      <Filter>ofxMidi</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\addons\ofxMidi\src\ofxMidi.cpp">
+      <Filter>ofxMidi</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\addons\ofxMidi\src\ofxMidiIn.cpp">
+      <Filter>ofxMidi</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\addons\ofxMidi\src\ofxMidiMessage.cpp">
+      <Filter>ofxMidi</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\addons\ofxMidi\src\ofxMidiOut.cpp">
+      <Filter>ofxMidi</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\addons\ofxMidi\src\desktop\ofxRtMidiIn.cpp">
+      <Filter>ofxMidi</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\addons\ofxMidi\src\desktop\ofxRtMidiOut.cpp">
+      <Filter>ofxMidi</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\addons\ofxMidi\libs\rtmidi\RtMidi.cpp">
+      <Filter>ofxMidi</Filter>
+    </ClCompile>
+    <ClCompile Include="src\MyGaze.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\gazeapi.cpp">
+      <Filter>gazeapi</Filter>
+    </ClCompile>
+    <ClCompile Include="src\gazeapi_parser.cpp">
+      <Filter>gazeapi</Filter>
+    </ClCompile>
+    <ClCompile Include="src\gazeapi_socket.cpp">
+      <Filter>gazeapi</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="src">
+      <UniqueIdentifier>{d8376475-7454-4a24-b08a-aac121d3ad6f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ofxMidi">
+      <UniqueIdentifier>{42d66f5e-3734-465b-aa59-a4da4ec3ab4a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="gazeapi">
+      <UniqueIdentifier>{66e1e983-84c9-43d3-8310-20c562ddacd9}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\ofApp.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\arpeggio.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\arpeggioButton.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\control.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\controlArpeggio.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Disc.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\DistinctControl.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\eye.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\EyeHarp.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\EyeHarpVARS.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\loopedNote.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\movingSwitch.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\sequencerNote.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\slider.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\stepSequencer.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\switch.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\tomidipie.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\XORswitch.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxMidi\src\ofxBaseMidi.h">
+      <Filter>ofxMidi</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxMidi\src\ofxMidi.h">
+      <Filter>ofxMidi</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxMidi\src\ofxMidiConstants.h">
+      <Filter>ofxMidi</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxMidi\src\ofxMidiIn.h">
+      <Filter>ofxMidi</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxMidi\src\ofxMidiMessage.h">
+      <Filter>ofxMidi</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxMidi\src\ofxMidiOut.h">
+      <Filter>ofxMidi</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxMidi\src\ofxMidiTypes.h">
+      <Filter>ofxMidi</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxMidi\src\ios\ofxPGMidiContext.h">
+      <Filter>ofxMidi</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxMidi\src\ios\ofxPGMidiDelegate.h">
+      <Filter>ofxMidi</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxMidi\src\ios\ofxPGMidiIn.h">
+      <Filter>ofxMidi</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxMidi\src\ios\ofxPGMidiOut.h">
+      <Filter>ofxMidi</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxMidi\src\ios\ofxPGMidiSourceDelegate.h">
+      <Filter>ofxMidi</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxMidi\src\desktop\ofxRtMidiIn.h">
+      <Filter>ofxMidi</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxMidi\src\desktop\ofxRtMidiOut.h">
+      <Filter>ofxMidi</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxMidi\libs\rtmidi\RtError.h">
+      <Filter>ofxMidi</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxMidi\libs\rtmidi\RtMidi.h">
+      <Filter>ofxMidi</Filter>
+    </ClInclude>
+    <ClInclude Include="src\MyGaze.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\gaze.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\gazeapi.h">
+      <Filter>gazeapi</Filter>
+    </ClInclude>
+    <ClInclude Include="src\gazeapi_interfaces.h">
+      <Filter>gazeapi</Filter>
+    </ClInclude>
+    <ClInclude Include="src\gazeapi_observable.hpp">
+      <Filter>gazeapi</Filter>
+    </ClInclude>
+    <ClInclude Include="src\gazeapi_parser.hpp">
+      <Filter>gazeapi</Filter>
+    </ClInclude>
+    <ClInclude Include="src\gazeapi_socket.hpp">
+      <Filter>gazeapi</Filter>
+    </ClInclude>
+    <ClInclude Include="src\gazeapi_types.h">
+      <Filter>gazeapi</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="icon.rc">
+      <Filter>src</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+</Project>
