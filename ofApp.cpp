@@ -4,7 +4,6 @@
 #include "EyeHarpVARS.h"
 
 
-
 //--------------------------------------------------------------
 ofApp::ofApp(){
 
@@ -12,14 +11,13 @@ ofApp::ofApp(){
 
 ofApp::~ofApp(){
 	fclose(record);
-	myTobii.~tobii();
-	//tribe.~MyGaze();
+//	myTobii.~tobii();
+	tribe.~MyGaze();
 	HARP.~EyeHarp();
 }
 
 //--------------------------------------------------------------
 void ofApp::setup(){
-	BS=GBE+GBS;
     int bufferSize		= 512;
 //    glutSetCursor(GLUT_CURSOR_CROSSHAIR); 
     //glutSetCursor(GLUT_CURSOR_NONE);
@@ -32,7 +30,7 @@ void ofApp::setup(){
 	gaze=false;
 	HARP.setup();
 	tribe.setup();
-	myTobii.setup();
+	//myTobii.setup();
 	
 	ofSoundStreamListDevices();
 	ofSoundStreamSetup(2, 0, SAMPLERATE, bufferSize, 4);
@@ -52,6 +50,14 @@ void ofApp::setup(){
 	record=NULL;
 	firstRead=false;
 	help=true;
+	FILE* conf;
+	conf=fopen("configuration.txt", "r");
+	float screenx, screeny;
+	fscanf(conf,"%f %f", &screenx, &screeny);
+	ratiox = ofGetScreenWidth() / screenx;
+	ratioy = ofGetScreenHeight() / screeny;
+	fclose(conf);
+	prFixation = false;
 }
 
 //--------------------------------------------------------------
@@ -65,18 +71,31 @@ void ofApp::update(){
 		}
 	}
 	else{
-		if(gaze &&  tribe.m_api.is_connected()){
-			tracker=EYETRIBE;
-			tribe.m_api.get_frame(gdata);
-			if(gdata.raw.x>ofGetWindowPositionX() && gdata.raw.x<ofGetWindowPositionX()+ofGetWidth()  && gdata.raw.y>ofGetWindowPositionY() && gdata.raw.y<ofGetWindowPositionY()+ofGetHeight()){
-				raw.x=gdata.raw.x;
-				raw.y=gdata.raw.y;
+		if (gaze) {
+			if (tribe.m_api.is_connected()) {
+				tracker = EYETRIBE;
+				tribe.m_api.get_frame(gdata);
+				//if (gdata.raw.x > ofGetWindowPositionX() && gdata.raw.x<ofGetWindowPositionX() + ofGetWidth() && gdata.raw.y>ofGetWindowPositionY() && gdata.raw.y < ofGetWindowPositionY() + ofGetHeight()) {
+				
+
+				if (gdata.state == 7){
+					raw.x = gdata.raw.x*ratiox;
+					raw.y = gdata.raw.y*ratioy;
+				}
+
+				mySmooth();
+				int X = smooth.x - ofGetWindowPositionX();
+				int Y = smooth.y - ofGetWindowPositionY();
+				eyeSmoothed = ofPoint(X,Y);
+				eyeSmoothed = ofPoint(smooth.x - ofGetWindowPositionX(), smooth.y - ofGetWindowPositionY());
+
 			}
-			mySmooth();
-			eyeSmoothed=ofPoint(smooth.x-ofGetWindowPositionX(),smooth.y-ofGetWindowPositionY());
-			
+			else {
+				cout << "did not connect to EyeTribe\n";
+				eyeSmoothed = ofPoint( ofGetWindowPositionX(), ofGetWindowPositionY());
+			}
 		}
-		else if(gaze &&  myTobii.success){
+		/*else if(gaze &&  myTobii.success){
 			tracker=TOBII;
 			if(myTobii.eventParams.X>ofGetWindowPositionX() && myTobii.eventParams.X<ofGetWindowPositionX()+ofGetWidth() && myTobii.eventParams.Y>ofGetWindowPositionY() && myTobii.eventParams.Y<ofGetWindowPositionY()+ofGetHeight()){
 				raw.x=myTobii.eventParams.X;
@@ -86,7 +105,7 @@ void ofApp::update(){
 			mySmooth();
 			eyeSmoothed=ofPoint(smooth.x-ofGetWindowPositionX(),smooth.y-ofGetWindowPositionY());
 			
-		}
+		}*/
 		else{
 			sacadic=true;
 			eyeSmoothed=ofPoint(mousex,mousey);
@@ -101,49 +120,44 @@ void ofApp::update(){
 void ofApp::mySmooth(){
 	//cout<<gdata.state<<'\n';
 	if(tracker==TOBII || (tracker==EYETRIBE && gdata.state==7)){
-		if(sacade()){
-			smooth=raw;
+		bool fix = fixation(); 
+		if (fix && !prFixation) {
+			smooth.x = avgNew.x;
+			smooth.y = avgNew.y;
 		}
-		else{
+		if(fix){
 			smooth.x=smooth.x*SM+raw.x*(1-SM);
 			smooth.y=smooth.y*SM+raw.y*(1-SM);
 		}
+		prFixation = fix;
 	}
 }
 
-bool ofApp::sacade(){
-	gbuffer[bpos].x=raw.x;
-	gbuffer[bpos].y=raw.y;
-
-	int prPos=bpos-1;
-	if(prPos<0) prPos+=BS;
-	if(ofDist(gbuffer[prPos].x,gbuffer[prPos].y,avgNew.x,avgNew.y) > STH && ofDist(gbuffer[prPos].x,gbuffer[prPos].y,gbuffer[bpos].x,gbuffer[bpos].y) >STH)
-		gbuffer[prPos]=gbuffer[bpos];
-
+bool ofApp::fixation() {
+	gbuffer[bpos].x = raw.x;
+	gbuffer[bpos].y = raw.y;
+	bool fix;
 	int i;
-	ofPoint avgOld;
-	avgOld.x=0;avgOld.y=0;
-	for(i=(bpos+GBS)%BS;i!=bpos;i=(i+1)%BS){
-		avgOld.x+=gbuffer[i].x;
-		avgOld.y+=gbuffer[i].y;
+	avgNew.x = 0; avgNew.y = 0;
+	int prpos = bpos - 1;
+	if (prpos < 0)
+		prpos += DISPL;
+	for (i = 0; i <DISPL ; i ++) {
+		avgNew.x += gbuffer[i].x;
+		avgNew.y += gbuffer[i].y;
 	}
-	avgOld.x/=(float)GBE;
-	avgOld.y/=(float)GBE;
-	avgNew.x=0;avgNew.y=0;
-	for(i=bpos;i!=(bpos+GBS)%BS;i=(i+1)%BS){
-		avgNew.x+=gbuffer[i].x;
-		avgNew.y+=gbuffer[i].y;
+	avgNew.x /= (float)DISPL;
+	avgNew.y /= (float)DISPL;
+	fix = true;
+	for (i = 0; i <DISPL; i++) {
+		if (ofDist(gbuffer[i].x, gbuffer[i].y, avgNew.x, avgNew.y) > STH) {
+			fix=false;
+		}
 	}
-	avgNew.x/=(float)GBS;
-	avgNew.y/=(float)GBS;
-	bpos=(bpos+1)%BS;
-	if(ofDist(avgOld.x,avgOld.y,avgNew.x,avgNew.y)>STH){
-		sacadic=true;
-		return true;
-	}
-	sacadic=false;
-	return false;
+	bpos = (bpos + 1) % DISPL;
+	return fix;
 }
+
 
 //--------------------------------------------------------------
 void ofApp::draw(){
@@ -162,6 +176,10 @@ void ofApp::draw(){
 		ofSetColor(255);
 		ofDrawBitmapString(temp,5,10);
 	}
+	/*string temp = to_string(mousex) + ',' + to_string(mousey);
+	ofDrawBitmapString(temp,ofPoint(mousex-100,mousey));*/
+	/*string temp = to_string(gdata.state);
+	ofDrawBitmapString(temp, ofPoint(ofGetWidth()/2,ofGetHeight()/2)); */
 }
 
 void ofApp::audioRequested 	(float * output, int bufferSize, int nChannels){
@@ -251,10 +269,12 @@ void ofApp::keyPressed(int key){
 		case 'J':
 			HARP.stepSeq.magDynamic=!HARP.stepSeq.magDynamic;
 			break;
-		case 'l':
-		case 'L':
-			HARP.eye.disc.replaySameActive=!HARP.eye.disc.replaySameActive;
-			//Switch::lenseSlave=!Switch::lenseSlave;
+		//case 'l':
+		//case 'L':
+		//	//printf("%d, %d, %f, %f\n", ofGetScreenWidth(), ofGetScreenHeight(), eyeSmoothed.x, eyeSmoothed.y);
+		//	printf("%d, %d, %f, %f\n", ofGetScreenWidth(), ofGetScreenHeight(), ofGetWindowWidth(), ofGetWindowHeight());
+		//	//HARP.eye.disc.replaySameActive=!HARP.eye.disc.replaySameActive;
+		//	//Switch::lenseSlave=!Switch::lenseSlave;
 
 	}
 	HARP.keyPressed(key);
@@ -282,6 +302,7 @@ void ofApp::mouseDragged(int x, int y, int button){
 
 //--------------------------------------------------------------
 void ofApp::mousePressed(int x, int y, int button){
+	printf("xRaw: %f   yRaw: %f  Smooth: %f, %f\n, window: %d, %d\n", gdata.raw.x,  gdata.raw.y, eyeSmoothed.x, eyeSmoothed.y , ofGetWindowPositionX(), ofGetWindowPositionY());
 	Switch::pressed=true;
 }
 

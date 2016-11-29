@@ -1,10 +1,5 @@
 #include "EyeHarp.h"
-/***********************************************************************
 
-THE MOUSEHARP: BY ZACHARIAS VAMVAKOUSIS
-20/3/2011
-
-***************************************************************************/
 #define MINVOL 0.5
 EyeHarp::~EyeHarp(){
 
@@ -226,14 +221,14 @@ void EyeHarp::update(ofPoint Gaze,bool *sacadic){
                             if(eye.disc.dist>eye.disc.neutralRegion && eye.disc.dist<ofGetHeight()/2 && (!eye.disc.fixation.value || velocity<100)){
 
                                 if(prDist<eye.disc.dist){
-                                    distVol=(MINVOL+MINVOL*((float)(eye.disc.dist-eye.disc.neutralRegion)/(height/2-eye.disc.neutralRegion)));
+                                    distVol=(MINVOL+(1-MINVOL)*((float)(eye.disc.dist-eye.disc.neutralRegion)/(height/2-eye.disc.neutralRegion)));
 					
                                     targetVolume=eye.volume.value*distVol;
                                     volumeChanged=true;
                                 }
                                 else{
                                     if(velocity<100){
-                                        distVol=(MINVOL+MINVOL*((float)(eye.disc.dist-eye.disc.neutralRegion)/(height/2-eye.disc.neutralRegion)));
+										distVol=(MINVOL+(1-MINVOL)*((float)(eye.disc.dist-eye.disc.neutralRegion)/(height/2-eye.disc.neutralRegion)));
 										targetVolume=eye.volume.value*distVol;
                                         volumeChanged=true;
                                     }
@@ -256,15 +251,13 @@ void EyeHarp::update(ofPoint Gaze,bool *sacadic){
                             if(eye.disc.dist>eye.disc.neutralRegion && eye.disc.dist<ofGetHeight()/2 ){
 
                                 if(prDist<eye.disc.dist){
-									 distVol=(MINVOL+MINVOL*((float)(eye.disc.dist-eye.disc.neutralRegion)/(height/2-eye.disc.neutralRegion)));
-					
+									distVol=(MINVOL+(1-MINVOL)*((float)(eye.disc.dist-eye.disc.neutralRegion)/(height/2-eye.disc.neutralRegion)));
                                     targetVolume=eye.volume.value*distVol;
                                     volumeChanged=true;
                                 }
                                 else{
                                     if(velocity<100){
-                                         distVol=(MINVOL+MINVOL*((float)(eye.disc.dist-eye.disc.neutralRegion)/(height/2-eye.disc.neutralRegion)));
-					
+                                        distVol=(MINVOL+(1-MINVOL)*((float)(eye.disc.dist-eye.disc.neutralRegion)/(height/2-eye.disc.neutralRegion)));
                                         targetVolume=eye.volume.value*distVol;
                                         volumeChanged=true;
                                     }
@@ -395,6 +388,7 @@ void EyeHarp::audioRequested 	(float * output, int bufferSize, int nChannels){
 
 void EyeHarp::draw(){
 
+	configure.draw();
     if(!layer.value){
         eye.draw();
         if(eye.multiplex.selected==3 && eye.advanced.value){
@@ -429,10 +423,12 @@ void EyeHarp::draw(){
         transpose.draw();
         transposeSlider.draw();
     }
-	if(showCircle || (focusPoints.value && layer.value==1))
-		ofCircle(gaze,5);
+	if (showCircle || (focusPoints.value && layer.value == 1)) {
+		ofCircle(gaze, 5);
+		/*string mousPos = ofToString(gaze.x)+ " ," + ofToString(gaze.y);
+		ofDrawBitmapString(mousPos, gaze);*/
+	}
 	
-	configure.draw();
 	/*char FR[20];
 	itoa(ofGetFrameRate(),FR,10);
 	ofSetColor(255,255,255);

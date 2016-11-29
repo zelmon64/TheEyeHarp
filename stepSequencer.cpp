@@ -45,7 +45,6 @@ void stepSequencer::setup(DistControl * Scale,int * Transpose, int NumberOfNotes
     releaseFactorSlider.setup(sliderPos,releaseFactor.color,0,255,0.7,false);
     octaveSlider.setup(sliderPos,octave.value,octave.min,octave.max,0.7,false);
     targetVolumeSlider.setup(sliderPos,targetVolume.color,0,255,0.7,false);
-	
     buttonDiameter=1.0f/(float)numberOfNotes.value;
     transpose=Transpose;
     dwell=Dwell;
@@ -80,8 +79,9 @@ void stepSequencer::setup(DistControl * Scale,int * Transpose, int NumberOfNotes
    }
    localOctave=0;
    deleteAll.setup("ClearAll",false,ofPoint(-1.58,0.8),0.095,1000,0.1,0.1,0.1,false);
-   monophonic.setup("monophonic",false,ofPoint(-1.2,0.8),.095,800,.8,.4,0,false);
-//   myfile.open ("./data/logSeq.txt",ios::trunc);
+   //monophonic.setup("monophonic",false,ofPoint(-1.2,0.8),.095,800,.8,.4,0,false);
+   undo.setup("Delete", false, ofPoint(-1.2, 0.8), .095, 800, 0, 0, 0, false);
+	   //   myfile.open ("./data/logSeq.txt",ios::trunc);
    beat=1;
    numAccessX=0;
    numAccessY=0;
@@ -106,7 +106,7 @@ void stepSequencer::update(ofPoint gaze,bool*sacadic,float*velocity){
 	Gaze=gaze;
 	
 	if(*conf){
-		monophonic.update(gaze);
+		//monophonic.update(gaze);
 		Eagle.update(gaze,sacadic);
 	}
 	if(*sacadic)
@@ -119,7 +119,14 @@ void stepSequencer::update(ofPoint gaze,bool*sacadic,float*velocity){
 			}
 	}
     deleteAll.update(gaze);
-    //brightness.update(gaze);
+	undo.update(gaze);
+	if (undo.changed && !arpeggioStack.empty()) {
+		gridElement temp;
+		temp = arpeggioStack.top();
+		arpeggioStack.pop();
+		seqNote[temp.y][temp.x].button.value = false;
+	}
+	//brightness.update(gaze);
 	if(controlMultiplex.selected==0){
 		if(*conf){
 			numberOfNotes.update(gaze);
@@ -188,6 +195,12 @@ void stepSequencer::update(ofPoint gaze,bool*sacadic,float*velocity){
         for(int j=0;j<numberOfNotes.value;j++){
             bool temp;
 			seqNote[i][j].update(gaze,&awayEnough);
+			if (seqNote[i][j].button.changed && seqNote[i][j].button.value) {
+				gridElement temp;
+				temp.x = j;
+				temp.y = i;
+				arpeggioStack.push(temp);
+			}
 			if(i==numAccessX && j==numAccessY &&numPressed){
 				seqNote[numAccessX][numAccessY].button.value=!seqNote[numAccessX][numAccessY].button.value;
 				seqNote[numAccessX][numAccessY].button.changed=true;
@@ -385,8 +398,9 @@ void stepSequencer::draw(){
     }
     //controlMultiplex.draw();
     deleteAll.draw();
+	undo.draw();
 	if(*conf){
-		monophonic.draw();
+		//monophonic.draw();
 		Eagle.draw();
 	}
 	//brightness.draw();
@@ -420,7 +434,8 @@ void stepSequencer::resized(int w,int h){
     controlMultiplex.resized(w,h);
     brightness.resized(w,h);
     deleteAll.resized(w,h);
-    monophonic.resized(w,h);
+   // monophonic.resized(w,h);
+	undo.resized(w,h);
     releaseFactor.resized(w,h);
     numberOfNotes.resized(w,h);
     octave.resized(w,h);
@@ -461,6 +476,14 @@ void stepSequencer::keyPressed(int key){
 			case '9':numAccessX++;numAccessY++;
 				break;
 			case '5':numPressed=true;
+				break;
+			/*case '?':
+				gridElement temp;
+				temp= arpeggioStack.top();
+				arpeggioStack.pop();
+				seqNote[temp.y][temp.x].button.value = false;
+				cout << temp.x;
+				cout << "wtf";*/
 		}
 		
 		if(numAccessX<0) numAccessX=numberOfNotes.value-1;
