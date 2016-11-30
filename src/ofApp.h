@@ -19,7 +19,7 @@ enum eyetracker { EYETRIBE, TOBII, MOUSE};
 class ofApp : public ofBaseApp {
 
 	public:
-		float ratiox, ratioy;
+		//float ratiox, ratioy;
 		ofApp();
 		~ofApp();
 		void setup();

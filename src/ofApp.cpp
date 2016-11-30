@@ -50,13 +50,13 @@ void ofApp::setup(){
 	record=NULL;
 	firstRead=false;
 	help=true;
-	FILE* conf;
+	/*FILE* conf;
 	conf=fopen("configuration.txt", "r");
 	float screenx, screeny;
 	fscanf(conf,"%f %f", &screenx, &screeny);
 	ratiox = ofGetScreenWidth() / screenx;
 	ratioy = ofGetScreenHeight() / screeny;
-	fclose(conf);
+	fclose(conf);*/
 	prFixation = false;
 }
 
@@ -79,8 +79,8 @@ void ofApp::update(){
 				
 
 				if (gdata.state == 7){
-					raw.x = gdata.raw.x*ratiox;
-					raw.y = gdata.raw.y*ratioy;
+					raw.x = gdata.raw.x/**ratiox*/;
+					raw.y = gdata.raw.y/**ratioy*/;
 				}
 
 				mySmooth();
