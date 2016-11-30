@@ -8,7 +8,7 @@ bool Switch::pressed=false;
 ofPoint Switch::MagWindowCenter;
 float Switch::Mag=2;
 float Switch::MagFac=0;
-int Switch::MagRegion=80;
+int Switch::MagRegion;
 bool Switch::magActive=false;
 bool Switch::lenseSlave=false;
 //bool Switch::windowCenterChanged=false;
@@ -40,6 +40,7 @@ void Switch::setup(char Name[20] ,bool Value, ofPoint Pos,float Size, int Dwell,
 	eagleEnable=EagleOnOff;
 	arrowsAccess=false;
 	magout=0;
+	Switch::MagRegion = height*0.14;
 }
 
 void Switch::update(ofPoint gazee){

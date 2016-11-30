@@ -47,7 +47,7 @@ void EyeHarp::setup(){
     ofPoint stepPosUP=ofPoint(1.35,0.2);
     ofPoint stepPosDW=ofPoint(1.35,-.2f);
     masterMultiPlex.setup(3,masterNames,0,ofPoint(1.12,-0.4),HALF_PI,0.05,800);
-    tempo.setup("Tempo",200,ofPoint(1.5,0.4),ofPoint(1.5,-0.05),30.0f,600.0f,0.1f,300,5,.9f,.1f,.0f,true);
+    tempo.setup("Tempo",300,ofPoint(1.5,0.4),ofPoint(1.5,-0.05),30.0f,600.0f,0.1f,300,5,.9f,.1f,.0f,true);
     masterVolume.setup("Volume",150, stepPosUP,stepPosDW,0,1,0.045f,500,20,.9f,.1f,.0f);
     transpose.setup("Transp",stepPosUP,stepPosDW,-5,6,0,1,0.045f,800,0.6f,0.2f,0.0f,false);
     tempoSlider.setup(sliderPos,tempo.value,tempo.min,tempo.max,0.7,true);

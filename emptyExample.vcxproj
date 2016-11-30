@@ -78,7 +78,7 @@
       <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <WarningLevel>Level3</WarningLevel>
-      <AdditionalIncludeDirectories>C:\boost_1_62_0;C:\of_v0.9.7_vs_release\addons\eyetribe\include;C:\of_v0.9.7_vs_release\addons\ofxMidi\src\desktop;C:\Users\zackbam\Documents\boost_1_56_0VS;C:\Users\zackbam\Documents\tet-cpp-client-master\include;C:\Users\zackbam\Documents\Tobii\include\eyex;..\..\..\addons\ofxMidi\libs\rtmidi;..\..\..\addons\ofxMidi\src;%(AdditionalIncludeDirectories);src</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\boost_1_62_0;..\..\..\addons\eyetribe\include;..\..\..\addons\ofxMidi\src\desktop;C:\Users\zackbam\Documents\tet-cpp-client-master\include;C:\Users\zackbam\Documents\Tobii\include\eyex;..\..\..\addons\ofxMidi\libs\rtmidi;..\..\..\addons\ofxMidi\src;%(AdditionalIncludeDirectories);src</AdditionalIncludeDirectories>
       <CompileAs>CompileAsCpp</CompileAs>
       <AdditionalUsingDirectories>C:\of_v0.9.7_vs_release\addons\eyetribe\src;%(AdditionalUsingDirectories)</AdditionalUsingDirectories>
     </ClCompile>
