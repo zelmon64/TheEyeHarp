@@ -170,6 +170,7 @@ void EyeHarp::update(ofPoint Gaze,bool *sacadic){
     }
 	else{
 		eye.update(gaze, &velocity,sacadic);
+		chordLoop.update(Gaze);
 		if (eye.disc.sharp45.changed) {
 			if (eye.disc.sharp45.value) {
 				Scale[3].value++;
@@ -339,7 +340,6 @@ void EyeHarp::update(ofPoint Gaze,bool *sacadic){
 		}
 		
 	}
-	chordLoop.update(Gaze);
 }
 
 void EyeHarp::audioRequested 	(float * output, int bufferSize, int nChannels){
@@ -406,6 +406,7 @@ void EyeHarp::draw(){
 
     if(!layer.value){
         eye.draw();
+		chordLoop.draw();
         if(eye.multiplex.selected==3 && eye.advanced.value){
             for(int i=0;i<7;i++)
                 Scale[i].draw();
@@ -425,7 +426,6 @@ void EyeHarp::draw(){
 	}
     layer.draw();
 	configure.draw();
-	chordLoop.draw();
     //masterMultiPlex.draw();
     //fullScreen.draw();
     if(masterMultiPlex.selected==0){
@@ -469,7 +469,6 @@ void EyeHarp::resized(int w, int h){
     transpose.resized(w,h);
     transposeSlider.resized(w,h);
     for(int i=0;i<7;i++)        Scale[i].resized(w,h);
-	
 	focusPoints.resized(w,h);
 	configure.resized(w,h);
 }

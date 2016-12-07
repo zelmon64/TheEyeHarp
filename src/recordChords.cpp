@@ -17,6 +17,10 @@ void recordChords::update(ofPoint gaze) {
 	if (button.changed) {
 		state = (state + 1) % 3;
 		switch (state) {
+		case PAUSE:
+			button.setup("PRESS TO RECORD", false, ofPoint(1.55, 0.8), 0.1, 1000, 0.6, 0.2, 0.1, false);
+			*showChords = true;
+			break;
 		case RECORD:
 			button.setup("RECORDING...\nPRESS TO STOP", false, ofPoint(1.55, 0.8), 0.1, 1000, 0.6, 0.2, 0.1, false);
 			loop.clear();
@@ -29,15 +33,19 @@ void recordChords::update(ofPoint gaze) {
 			*showChords = true;
 			break;
 		case PLAY:
+			if (loop[loop.size() - 1].sampleCount > stepSeq->noteSamples*(stepSeq->numberOfNotes.value - 2)) {
+				record temp;
+				temp.bar = loop[loop.size() - 1].bar+1;
+				temp.chord = *chord;
+				temp.sampleCount = 0;
+				loop.push_back(temp);
+			}
 			printVector();
 			pos = 0;
 			barCount = 0;
 			button.setup("PLAYING...\nPRESS TO STOP", false, ofPoint(1.55, 0.8), 0.1, 1000, 0.6, 0.2, 0.1, false);
 			*showChords = false;
 			break;
-		case PAUSE:
-			button.setup("PRESS TO RECORD", false, ofPoint(1.55, 0.8), 0.1, 1000, 0.6, 0.2, 0.1, false);
-			*showChords = true;
 		}
 	}
 	if (state == PLAY) {

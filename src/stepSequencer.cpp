@@ -79,7 +79,7 @@ void stepSequencer::setup(DistControl * Scale,int * Transpose, int NumberOfNotes
    }
    localOctave=0;
    deleteAll.setup("ClearAll",false,ofPoint(-1.58,0.8),0.095,1000,0.1,0.1,0.1,false);
-   //monophonic.setup("monophonic",false,ofPoint(-1.2,0.8),.095,800,.8,.4,0,false);
+   monophonic.setup("monophonic",false,ofPoint(-1.2,0.8),.095,800,.8,.4,0,false);
    undo.setup("Delete", false, ofPoint(-1.2, 0.8), .095, 800, 0, 0, 0, false);
 	   //   myfile.open ("./data/logSeq.txt",ios::trunc);
    beat=1;
