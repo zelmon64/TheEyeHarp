@@ -40,6 +40,8 @@ class Disc{
         int * noteFrames;
 		int chordnum;
 		bool replaySameActive;
+		Switch sharp45;
+		int releaseDist;
         ~Disc();
     private:
 		int pointSize;

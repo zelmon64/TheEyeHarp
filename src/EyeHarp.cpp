@@ -47,7 +47,7 @@ void EyeHarp::setup(){
     ofPoint stepPosUP=ofPoint(1.35,0.2);
     ofPoint stepPosDW=ofPoint(1.35,-.2f);
     masterMultiPlex.setup(3,masterNames,0,ofPoint(1.12,-0.4),HALF_PI,0.05,800);
-    tempo.setup("Tempo",300,ofPoint(1.5,0.4),ofPoint(1.5,-0.05),30.0f,600.0f,0.1f,300,5,.9f,.1f,.0f,true);
+    tempo.setup("Tempo",140,ofPoint(1.5,0.4),ofPoint(1.5,-0.05),30.0f,600.0f,0.1f,300,5,.9f,.1f,.0f,true);
     masterVolume.setup("Volume",150, stepPosUP,stepPosDW,0,1,0.045f,500,20,.9f,.1f,.0f);
     transpose.setup("Transp",stepPosUP,stepPosDW,-5,6,0,1,0.045f,800,0.6f,0.2f,0.0f,false);
     tempoSlider.setup(sliderPos,tempo.value,tempo.min,tempo.max,0.7,true);
@@ -70,7 +70,7 @@ void EyeHarp::setup(){
    
     layer.setup("Layer",0,ofPoint(1.48,-0.69),0.16,800,0.6,0.2,0.1,false);
 //    loopNote.setup(60, 61, 0.2, 100, 1000);
-	stepSeq.setup(Scale,&(transpose.value),6,&tempo,700,1.0f,.3f,.1f, &sampleRate,&chord, &midiOut,&(configure.value));
+	stepSeq.setup(Scale,&(transpose.value),8,&tempo,700,1.0f,.3f,.1f, &sampleRate,&chord, &midiOut,&(configure.value));
     eye.arpInterface.setup(Scale,&(transpose.value),&chord,&(stepSeq.totalSamples),&sampleRate,&(stepSeq.curSample));
     randomChord.setup("Random\nChord",false,ofPoint(-1.6f,0.85f),0.05f,1000,0.6,0.2,0.1,false);
     fullScreen.setup("FullScreen",false,ofPoint(1.5f,0.9f),0.05f,1000,0.6,0.2,0.1,false);
@@ -81,6 +81,7 @@ void EyeHarp::setup(){
 	/*masterVolume.setValueByColor(0);
 	masterVolumeSlider.setValue(0);*/
 	configure.setup("Setup",false,ofPoint(-1.55,-0.8),0.1,800,0.6,0.2,0.1,false);
+	chordLoop.setup(&stepSeq,&chord,&(eye.disc.chordONOFF.value),&chordChanged);
 }
 
 void EyeHarp::update(ofPoint Gaze,bool *sacadic){
@@ -169,6 +170,18 @@ void EyeHarp::update(ofPoint Gaze,bool *sacadic){
     }
 	else{
 		eye.update(gaze, &velocity,sacadic);
+		if (eye.disc.sharp45.changed) {
+			if (eye.disc.sharp45.value) {
+				Scale[3].value++;
+				Scale[4].value++;
+			}
+			else {
+				Scale[3].value--;
+				Scale[4].value--;
+			}
+			stepSeq.updatePitch();
+			eye.arpInterface.updateChords();
+		}
 		for(int i=0;i<stepSeq.numberOfNotes.value;i++)
 		{
 			for(int j=0;j<stepSeq.numberOfNotes.value;j++){
@@ -210,13 +223,14 @@ void EyeHarp::update(ofPoint Gaze,bool *sacadic){
                             if(prChord!=chord){
                                 stepSeq.updatePitch();
                                 //eye.arpInterface.updateChords();
+								chordLoop.addChord(chord);
                                 prChord=chord;
                             }
 //                        }
                     }
                     else{
-                        octave=(int)eye.disc.note/7;
-                        note=Scale[eye.disc.note%7].value;
+						octave = (int)(eye.disc.note + 4) / 7;
+                        note=Scale[(eye.disc.note+4)%7].value;
                         if(eye.disc.distVolume.value){
                             if(eye.disc.dist>eye.disc.neutralRegion && eye.disc.dist<ofGetHeight()/2 && (!eye.disc.fixation.value || velocity<100)){
 
@@ -245,8 +259,8 @@ void EyeHarp::update(ofPoint Gaze,bool *sacadic){
                     }
                 }
                 else{
-                    octave=(int)eye.disc.note/7;
-                    note=Scale[eye.disc.note%7].value;
+                    octave=(int)(eye.disc.note+4)/7;
+                    note=Scale[(eye.disc.note+4)%7].value;
                     if(eye.disc.distVolume.value){
                             if(eye.disc.dist>eye.disc.neutralRegion && eye.disc.dist<ofGetHeight()/2 ){
 
@@ -292,7 +306,7 @@ void EyeHarp::update(ofPoint Gaze,bool *sacadic){
 	if(midiAvailable){
 		if(eye.timbrePresets.selected==3 ){
 			
-			if(ofDist(gaze.x,gaze.y,eye.width2,eye.height2)>eye.height2 && velocity<100){
+			if(ofDist(gaze.x,gaze.y,eye.width2,eye.height2)>eye.disc.releaseDist && velocity<100){
 					midiOut.sendNoteOff(MIDICH1, midinote, 0);//if we look outside, release
 				}
 			if(volumeChanged && velocity<100){
@@ -325,6 +339,7 @@ void EyeHarp::update(ofPoint Gaze,bool *sacadic){
 		}
 		
 	}
+	chordLoop.update(Gaze);
 }
 
 void EyeHarp::audioRequested 	(float * output, int bufferSize, int nChannels){
@@ -364,6 +379,7 @@ void EyeHarp::audioRequested 	(float * output, int bufferSize, int nChannels){
 
             output[i*nChannels+1]= sample*curMasterVolume;
             output[i*nChannels] = sample*curMasterVolume;
+			chordLoop.getPos();
             if(stepSeq.curSample==0 && randomChord.value){
     //            int tempChord=rand()%100;
     //            if(tempChord<25) chord=0;
@@ -388,7 +404,6 @@ void EyeHarp::audioRequested 	(float * output, int bufferSize, int nChannels){
 
 void EyeHarp::draw(){
 
-	configure.draw();
     if(!layer.value){
         eye.draw();
         if(eye.multiplex.selected==3 && eye.advanced.value){
@@ -409,6 +424,8 @@ void EyeHarp::draw(){
 		}
 	}
     layer.draw();
+	configure.draw();
+	chordLoop.draw();
     //masterMultiPlex.draw();
     //fullScreen.draw();
     if(masterMultiPlex.selected==0){
@@ -428,7 +445,7 @@ void EyeHarp::draw(){
 		/*string mousPos = ofToString(gaze.x)+ " ," + ofToString(gaze.y);
 		ofDrawBitmapString(mousPos, gaze);*/
 	}
-	
+
 	/*char FR[20];
 	itoa(ofGetFrameRate(),FR,10);
 	ofSetColor(255,255,255);
@@ -446,6 +463,7 @@ void EyeHarp::resized(int w, int h){
     masterVolume.resized(w,h);
     masterMultiPlex.resized(w,h);
     masterVolumeSlider.resized(w,h);
+	chordLoop.resized(w,h);
     tempoSlider.resized(w,h);
     randomChord.resized(w,h);
     transpose.resized(w,h);
@@ -460,4 +478,5 @@ void EyeHarp::resized(int w, int h){
 void EyeHarp::keyPressed(int key){
 	eye.disc.keyPressed(key);
 	stepSeq.keyPressed(key);
+	chordLoop.keyPressed(key);
 }

@@ -46,9 +46,9 @@ void sequencerNote::update(ofPoint gaze){
 		Switch::magActive=false;*/
 	button.setColor(red,green,blue);
 //    cout<<loopNote.curSample<<'\t';
-   /* if(*curSample>*waitSamples && *curSample<(*waitSamples+*noteSamples)){
+    if(*curSample>*waitSamples && *curSample<(*waitSamples+*noteSamples)){
         button.setColor(2*red,2*green,2*blue);
-    }*/
+    }
 }
 
 void sequencerNote::update(ofPoint gaze,bool*sacadic){

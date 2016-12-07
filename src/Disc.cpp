@@ -2,6 +2,7 @@
 #include <string>
 #define NR 0.29
 #define FIXVEL 100
+#define RELEASE_DIST 1.5
 void Disc::setup(int NumOfNotes,float red,float green,float blue,int * Chord, bool Advanced,bool* Conf){
     NotesNumber.setup("NotesNum",ofPoint(-1.2,-0.58+5*0.18),ofPoint(-1.62,-0.58+5*0.18),7,36,NumOfNotes,1,0.2,1000,0.9,0.2,NR);
     chord=Chord;
@@ -43,6 +44,8 @@ void Disc::setup(int NumOfNotes,float red,float green,float blue,int * Chord, bo
 //    else cout << "Unable to open file";
     prbeat=1;
 	replaySameActive=true;
+	sharp45.setup("4# 5#", false, ofPoint(-1.0f, -0.8f), 0.1, 100, 0.6f, 0.2f, 0.0f, false);
+	releaseDist = height2*RELEASE_DIST;
 }
 
 
@@ -59,13 +62,13 @@ Disc::~Disc(){
 }
 
 void Disc::update(ofPoint gaze, float* velocity,bool *sacadic){
-	
+	sharp45.update(gaze);
     if(pressed){
         pressed=false;
     }
     else{
 		if(*conf){
-			distVolume.update(gaze);
+			//distVolume.update(gaze);
 			if(distVolume.changed){
 				if(distVolume.value)
 					neutralRegion=ofGetHeight()*NR;
@@ -83,13 +86,13 @@ void Disc::update(ofPoint gaze, float* velocity,bool *sacadic){
 		dist=ofDist(gaze.x,gaze.y,width2,height2);
 	   // notesONOFF.update(gaze);
 		
-		chordONOFF.update(gaze);
+		//chordONOFF.update(gaze);
 		if(*velocity < FIXVEL && dist < neutralRegion){
 			fixationInNeutral=true;
 		}
 		int tempNote=(int)floor(angle/TWO_PI*NotesNumber.value) % NotesNumber.value; //integer: note
 		if(advanced){
-			chordONOFF.update(gaze);
+			//chordONOFF.update(gaze);
 			percussive.update(gaze);
 			fixation.update(gaze);
 
@@ -142,7 +145,7 @@ void Disc::update(ofPoint gaze, float* velocity,bool *sacadic){
 			}
 
 		}
-		if(ofDist(gaze.x,gaze.y,width2,height2)>height2 && *velocity<FIXVEL){
+		if(ofDist(gaze.x,gaze.y,width2,height2)>releaseDist && *velocity<FIXVEL){
 				prNote=note;
 				note=-1;//this means release note / rest
 				  //  changed=true;
@@ -220,7 +223,7 @@ void Disc::draw(){
 			
 
 		}
-		ofCircle(width2-cos((i+0.5)*tangle)*height2*1.3, height2+sin((i+0.5)*tangle)*height2*1.3,pointSize);
+		ofCircle(width2-cos((i+0.5)*tangle)*height2*RELEASE_DIST*1.08, height2+sin((i+0.5)*tangle)*height2* RELEASE_DIST*1.08,pointSize);
 //        ofSetColor(200,200,255);
 //        ofCircle(width2-cos((i+0.5)*tangle)*inSpotDist, height2+sin((i+0.5)*tangle)*inSpotDist,pointSize);
 	}
@@ -240,12 +243,10 @@ void Disc::draw(){
     for(int i=0;i<NotesNumber.value;i++){
         if(chordONOFF.value){
             if(i<NotesNumber.value-CHORDSNUM){
-				
                 ofPoint curPos=ofPoint(width2-cos((i+0.5)*tangle)*inSpotDist, height2+sin((i+0.5)*tangle)*inSpotDist);
                 int c=255*(i!=melody);
                 ofSetColor(c,255,c);
-                ofDrawBitmapString(ofToString(i%7+1),curPos.x,curPos.y);
-
+                ofDrawBitmapString(ofToString((i+4)%7+1),curPos.x,curPos.y);
             }
             int pos=i+CHORDSNUM+1-NotesNumber.value;
             switch(pos){
@@ -285,17 +286,18 @@ void Disc::draw(){
 	
 
    // notesONOFF.draw();
-	 chordONOFF.draw();
+	// chordONOFF.draw();
 	 if(*conf)
-		 distVolume.draw();
+		 //distVolume.draw();
 	 //if(!inside)
     if(advanced){
-        chordONOFF.draw();
+       // chordONOFF.draw();
         fixation.draw();
         distVolume.draw();
         percussive.draw();
     }
 
+	 sharp45.draw();
 //    ofSetColor(0,0,0);
 //    int melPosX=width2-cos((melody+0.5)*tangle)*inSpotDist;
 //    int melPosY=height2+sin((melody+0.5)*tangle)*inSpotDist;
@@ -321,7 +323,9 @@ void Disc::resized(int w, int h){
     percussive.resized(w,h);
     distVolume.resized(w,h);
 	replaySame.resized(w,h);
+	sharp45.resized(w, h);
 	pointSize=height*0.005;
+	releaseDist = height2*RELEASE_DIST;
 }
 
 void Disc::keyPressed(int key){

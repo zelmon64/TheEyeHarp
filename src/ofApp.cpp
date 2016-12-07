@@ -150,7 +150,7 @@ bool ofApp::fixation() {
 	avgNew.y /= (float)DISPL;
 	fix = true;
 	for (i = 0; i <DISPL; i++) {
-		if (ofDist(gbuffer[i].x, gbuffer[i].y, avgNew.x, avgNew.y) > STH) {
+		if (ofDist(gbuffer[i].x, gbuffer[i].y, avgNew.x, avgNew.y) > STH * ofGetScreenHeight()) {
 			fix=false;
 		}
 	}

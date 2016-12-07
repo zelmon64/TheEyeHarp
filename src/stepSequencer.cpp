@@ -300,8 +300,8 @@ bool stepSequencer::outsideMagRegion(ofPoint gaze,ofPoint lastEagle){
 }
 
 void stepSequencer::sendMidi(){
-    for(int i=0;i<numberOfNotes.value;i++)
-        for(int j=0;j<numberOfNotes.value;j++)
+    for(int i=0;i<maxNotes;i++)
+        for(int j=0;j<maxNotes;j++)
             seqNote[i][j].sendMidi(volume*128);
 }
 

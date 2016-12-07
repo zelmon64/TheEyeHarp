@@ -88,6 +88,9 @@
     <ClCompile Include="src\gazeapi_socket.cpp">
       <Filter>gazeapi</Filter>
     </ClCompile>
+    <ClCompile Include="src\recordChords.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="src">
@@ -226,6 +229,9 @@
     </ClInclude>
     <ClInclude Include="src\gazeapi_types.h">
       <Filter>gazeapi</Filter>
+    </ClInclude>
+    <ClInclude Include="src\recordChords.h">
+      <Filter>src</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

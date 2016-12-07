@@ -120,6 +120,7 @@
     <ClCompile Include="src\movingSwitch.cpp" />
     <ClCompile Include="src\MyGaze.cpp" />
     <ClCompile Include="src\ofApp.cpp" />
+    <ClCompile Include="src\recordChords.cpp" />
     <ClCompile Include="src\sequencerNote.cpp" />
     <ClCompile Include="src\slider.cpp" />
     <ClCompile Include="src\stepSequencer.cpp" />
@@ -164,6 +165,7 @@
     <ClInclude Include="src\movingSwitch.h" />
     <ClInclude Include="src\MyGaze.h" />
     <ClInclude Include="src\ofApp.h" />
+    <ClInclude Include="src\recordChords.h" />
     <ClInclude Include="src\sequencerNote.h" />
     <ClInclude Include="src\slider.h" />
     <ClInclude Include="src\stepSequencer.h" />

@@ -12,6 +12,7 @@
 #include "slider.h"
 #include "EyeHarpVARS.h"
 #include "ofxMidi.h"
+#include "recordChords.h"
 //#include <vrpn_Button.h>
 //#include <vrpn_Analog.h>
 
@@ -55,6 +56,7 @@ class EyeHarp{
 		
 		Switch focusPoints;
 		Switch configure;
+		recordChords chordLoop;
 //        vrpn_Analog_Remote* VRPNAnalog;
         ~EyeHarp();
     private:

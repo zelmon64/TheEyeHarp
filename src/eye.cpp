@@ -21,15 +21,23 @@ void Eye::setup(int * chord, DistControl * Scale,bool* Conf){
     sliderPos=ofPoint(-1.55,0);
     stepPosUP=ofPoint(-1.45,0.4);
     stepPosDW=ofPoint(-1.45,-.2f);
-    disc.setup(14,0.7,0.3,0.1,chord,false,conf);
+    disc.setup(17,0.7,0.3,0.1,chord,false,conf);
 
-
+	char* scaleNames[7];
+	scaleNames[0] = "I";
+	scaleNames[1] = "II";
+	scaleNames[2] = "III";
+	scaleNames[3] = "IV";
+	scaleNames[4] = "V";
+	scaleNames[5] = "VI";
+	scaleNames[6] = "VII";
 
     harmonic[0].setup("Timbre",-3,ofPoint(-1.2f,-0.58f),ofPoint(-1.62f,-0.58f),-60,-1,Ssize,100,10,0.99,0.1,0.0,true);
 //    harmonic[1].setup("",50,ofPoint(0.95,0.92),ofPoint(0.95,0.77),0.0,0.9,Ssize,30,5,0.4,0.4,0.8);
-    for(int i=1;i<7;i++)
-        harmonic[i].setup("",-60,ofPoint(-1.2f,-0.58+i*0.2),ofPoint(-1.62f,-0.58+i*0.2),-60,-1,Ssize,100,10,0.99,0.1,0.0,true);
-    octave.setup("8va",ofPoint(.14,0.22),ofPoint(-.14,0.22),1,3,2,1,0.04,1000,0.2,0.2,0);
+	for (int i = 1; i < 7; i++) {
+		harmonic[i].setup("", -60, ofPoint(-1.2f, -0.58 + i*0.2), ofPoint(-1.62f, -0.58 + i*0.2), -60, -1, Ssize, 100, 10, 0.99, 0.1, 0.0, true);
+	}
+	octave.setup("8va",ofPoint(.14,0.22),ofPoint(-.14,0.22),1,3,1,0,0.04,1000,0.2,0.2,0);
 
     advanced.setup("Advanced",false,ofPoint(-0.8,-0.85),0.05f,1000,0.7,0.4,0,false);
     playArpeggio.setup("ArpeggioON",false,ofPoint(-1.05,-0.6),0.05f,1000,0.7,.4,0,false);
@@ -78,7 +86,6 @@ void Eye::setup(int * chord, DistControl * Scale,bool* Conf){
 
     musicalModes.setup(6,musicalModesNames,0,ofPoint(-1.4,-0.85),HALF_PI,0.06,1000);
 
-
     notesNumSlider.setup(sliderPos,15, 7, 36, 0.7,false);
     vibratoWSlider.setup(sliderPos,128, 0, 255, 0.7,false);
     vibratoHzSlider.setup(sliderPos,vibratoHz.value, vibratoHz.min, vibratoHz.max,0.7,false);
@@ -89,6 +96,7 @@ void Eye::setup(int * chord, DistControl * Scale,bool* Conf){
     vibratoPhaseAdder=(vibratoHz.value/100.0f / SAMPLERATE) * TWO_PI;
 
     setTimbrePreset();
+	
 	
 }
 
@@ -355,6 +363,7 @@ void Eye::draw(){
         //musicalModes.draw();
        // playArpeggio.draw();
     }*/
+	//advanced.draw();
 }
 
 void Eye::resized(int w, int h){
@@ -380,8 +389,9 @@ void Eye::resized(int w, int h){
     release.resized(w,h);
     vibratoHz.resized(w,h);
     vibratoW.resized(w,h);
-    for(int i=0;i<7;i++)
-        harmonic[i].resized(w,h);
+	for (int i = 0; i < 7; i++) {
+		harmonic[i].resized(w, h);
+	}
     octave.resized(w,h);
     arpInterface.resized(w,h);
 }
