@@ -172,9 +172,9 @@ void ofApp::draw(){
 	ofSetColor(255);
 	ofDrawBitmapString(temp,ofGetWidth()*0.9,140);*/
 	if(help && HARP.configure.value==false && HARP.layer.value==0){
-		string temp="Press 'k' to switch between dwell time and mouse click selection method.\nPress 'f' to toggle fullscreen.\nPress 'm' to switch between mouse and gaze input.\nPress 'n' to show/hide the gaze pointer.\nPress 'h' to hide/show keyboard shortcuts.\nPress 'Esc' to exit.";
+		string temp="Press 'k' to switch between dwell time\nand mouse click selection method.\nPress 'f' to toggle fullscreen.\nPress 'm' to switch between mouse and gaze input.\nPress 'n' to show/hide the gaze pointer.\nPress 'h' to hide/show keyboard shortcuts.\nPress 'Esc' to exit.";
 		ofSetColor(255);
-		ofDrawBitmapString(temp,5,10);
+		ofDrawBitmapString(temp,ofGetWidth()*0.67,10);
 	}
 	/*string temp = to_string(mousex) + ',' + to_string(mousey);
 	ofDrawBitmapString(temp,ofPoint(mousex-100,mousey));*/

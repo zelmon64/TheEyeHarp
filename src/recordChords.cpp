@@ -8,21 +8,23 @@ void recordChords::setup(stepSequencer* StepSeq, int*Chord, bool *ShowChords, bo
 	pos = 0;
 	chord = Chord;
 	showChords = ShowChords;
-	button.setup("RecLoop", false, ofPoint(1.55, 0.8), 0.1, 1000, 0.6, 0.2, 0.1, false);
+	button.setup("PRESS TO RECORD", false, ofPoint(1.55, 0.8), 0.1, 1000, 0, 0, 0, false);
 	cchanged = Cchange;
 }
 
 void recordChords::update(ofPoint gaze) {
 	button.update(gaze);
 	if (button.changed) {
-		state = (state + 1) % 3;
+		state++;
+		if (state == 3)	state = 0;
+		//cout << state<< endl;
 		switch (state) {
 		case PAUSE:
-			button.setup("PRESS TO RECORD", false, ofPoint(1.55, 0.8), 0.1, 1000, 0.6, 0.2, 0.1, false);
+			strcpy(button.name, "PRESS TO RECORD");
 			*showChords = true;
 			break;
 		case RECORD:
-			button.setup("RECORDING...\nPRESS TO STOP", false, ofPoint(1.55, 0.8), 0.1, 1000, 0.6, 0.2, 0.1, false);
+			strcpy(button.name, "RECORDING...\nPRESS TO STOP");
 			loop.clear();
 			barCount = 0; 
 			record temp;
@@ -33,6 +35,7 @@ void recordChords::update(ofPoint gaze) {
 			*showChords = true;
 			break;
 		case PLAY:
+			strcpy(button.name, "PLAYING...\nPRESS TO STOP");
 			if (loop[loop.size() - 1].sampleCount > stepSeq->noteSamples*(stepSeq->numberOfNotes.value - 2)) {
 				record temp;
 				temp.bar = loop[loop.size() - 1].bar+1;
@@ -40,21 +43,23 @@ void recordChords::update(ofPoint gaze) {
 				temp.sampleCount = 0;
 				loop.push_back(temp);
 			}
-			printVector();
+			//printVector();
 			pos = 0;
-			barCount = 0;
-			button.setup("PLAYING...\nPRESS TO STOP", false, ofPoint(1.55, 0.8), 0.1, 1000, 0.6, 0.2, 0.1, false);
+			barCount = 0; 
 			*showChords = false;
 			break;
 		}
 	}
 	if (state == PLAY) {
+		//cout << ".";
 		//printf("%d: %d, %d\n", pos, barCount, loop[pos].bar);
-		if (barCount == loop[pos].bar && stepSeq->curSample >= loop[pos].sampleCount) {
+		if ((barCount >= loop[pos].bar && stepSeq->curSample >= loop[pos].sampleCount)) {
 			*chord = loop[pos].chord;
 			*cchanged = true;
 			stepSeq->updatePitch();
+			//printf("pos: %d, size:%d", pos, loop.size());
 			pos = (pos + 1);
+			//cout << pos << endl;
 			if (pos == loop.size()) {
 				barCount = 0;
 				pos = 0;

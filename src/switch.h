@@ -42,6 +42,7 @@ class Switch{
 		static int magOffset;
 		//static bool windowCenterChanged;
 		static int magThr;
+		char name[100];
     protected:
         int FC;
         float dwell;
@@ -52,7 +53,6 @@ class Switch{
 
         float R,G,B;
     private:
-        char name[20];
         float relSize;//relative size
 };
 

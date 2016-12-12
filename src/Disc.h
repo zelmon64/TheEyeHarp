@@ -9,7 +9,7 @@
 
 #include <windows.h>
 #include <fstream>
-#define CHORDSNUM 6
+#define CHORDSNUM 7
 
 class Disc{
     public:
@@ -42,6 +42,7 @@ class Disc{
 		bool replaySameActive;
 		Switch sharp45;
 		int releaseDist;
+		int releaseDistEnd;
         ~Disc();
     private:
 		int pointSize;

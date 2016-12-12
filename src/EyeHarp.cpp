@@ -47,21 +47,20 @@ void EyeHarp::setup(){
     ofPoint stepPosUP=ofPoint(1.35,0.2);
     ofPoint stepPosDW=ofPoint(1.35,-.2f);
     masterMultiPlex.setup(3,masterNames,0,ofPoint(1.12,-0.4),HALF_PI,0.05,800);
-    tempo.setup("Tempo",140,ofPoint(1.5,0.4),ofPoint(1.5,-0.05),30.0f,600.0f,0.1f,300,5,.9f,.1f,.0f,true);
+    tempo.setup("Tempo",140,ofPoint(-1.25, -0.83),ofPoint(-1.61, -0.83),30.0f,600.0f,0.085f,300,5,.9f,.1f,.0f,true);
     masterVolume.setup("Volume",150, stepPosUP,stepPosDW,0,1,0.045f,500,20,.9f,.1f,.0f);
     transpose.setup("Transp",stepPosUP,stepPosDW,-5,6,0,1,0.045f,800,0.6f,0.2f,0.0f,false);
     tempoSlider.setup(sliderPos,tempo.value,tempo.min,tempo.max,0.7,true);
     masterVolumeSlider.setup(sliderPos,masterVolume.color, 0, 255, 0.7,true);
     transposeSlider.setup(sliderPos,transpose.value,transpose.min,transpose.max,0.7,true);
 	focusPoints.setup("FocusPoints",false,ofPoint(1.6,0.85),0.08,800,.8,.4,0,false);
-    Scale[0].setup("Scale",eye.harmonic[0].posUP_,eye.harmonic[0].posDW_,-12,12,0,1,eye.Ssize,500,0.5,0.2,0.0);
-    Scale[1].setup("",eye.harmonic[1].posUP_,eye.harmonic[1].posDW_,-12,12,2,1,eye.Ssize,500,0.5,0.2,0.0);
-    Scale[2].setup("",eye.harmonic[2].posUP_,eye.harmonic[2].posDW_,-12,12,4,1,eye.Ssize,500,0.5,0.2,0.0);
-    Scale[3].setup("",eye.harmonic[3].posUP_,eye.harmonic[3].posDW_,-12,12,5,1,eye.Ssize,500,0.5,0.2,0.0);
-    Scale[4].setup("",eye.harmonic[4].posUP_,eye.harmonic[4].posDW_,-12,12,7,1,eye.Ssize,500,0.5,0.2,0.0);
-    Scale[5].setup("",eye.harmonic[5].posUP_,eye.harmonic[5].posDW_,-12,12,9,1,eye.Ssize,500,0.5,0.2,0.0);
-    Scale[6].setup("",eye.harmonic[6].posUP_,eye.harmonic[6].posDW_,-12,12,11,1,eye.Ssize,500,0.5,0.2,0.0);
-
+    Scale[0].setup("I",eye.harmonic[0].posUP_,eye.harmonic[0].posDW_,-1,1,0,1,eye.Msize,500,0.5,0.2,0.0);
+    Scale[1].setup("II",eye.harmonic[1].posUP_,eye.harmonic[1].posDW_,1,3,2,1, eye.Msize,500,0.5,0.2,0.0);
+    Scale[2].setup("III",eye.harmonic[2].posUP_,eye.harmonic[2].posDW_,3,5,4,1, eye.Msize,500,0.5,0.2,0.0);
+    Scale[3].setup("IV",eye.harmonic[3].posUP_,eye.harmonic[3].posDW_,4,6,5,1, eye.Msize,500,0.5,0.2,0.0);
+    Scale[4].setup("V",eye.harmonic[4].posUP_,eye.harmonic[4].posDW_,6,8,7,1, eye.Msize,500,0.5,0.2,0.0);
+    Scale[5].setup("VI",eye.harmonic[5].posUP_,eye.harmonic[5].posDW_,8,10,9,1, eye.Msize,500,0.5,0.2,0.0);
+    Scale[6].setup("VII",eye.harmonic[6].posUP_,eye.harmonic[6].posDW_,10,12,11,1, eye.Msize,500,0.5,0.2,0.0);
     curMasterVolume=masterVolume.value;
     prChord=chord;
     char** names = new char*[2];
@@ -80,8 +79,9 @@ void EyeHarp::setup(){
 	//if the interface starts with midi out
 	/*masterVolume.setValueByColor(0);
 	masterVolumeSlider.setValue(0);*/
-	configure.setup("Setup",false,ofPoint(-1.55,-0.8),0.1,800,0.6,0.2,0.1,false);
+	configure.setup("Setup",false,ofPoint(1.55,0),0.1,800,0.6,0.2,0.1,false);
 	chordLoop.setup(&stepSeq,&chord,&(eye.disc.chordONOFF.value),&chordChanged);
+	showScale.setup("ShowScale", false, ofPoint(-1.5, -0.8), 0.1, 800, 0.5, 0.2, 0, false);
 }
 
 void EyeHarp::update(ofPoint Gaze,bool *sacadic){
@@ -95,6 +95,7 @@ void EyeHarp::update(ofPoint Gaze,bool *sacadic){
 	configure.update(gaze,sacadic);
     volumeChanged=false;
     layer.update(gaze);
+	
     //masterMultiPlex.update(gaze);
     //fullScreen.update(gaze);
     if(eye.timbrePresets.changed){
@@ -170,8 +171,21 @@ void EyeHarp::update(ofPoint Gaze,bool *sacadic){
     }
 	else{
 		eye.update(gaze, &velocity,sacadic);
+		if (configure.value) {
+			showScale.update(gaze);
+		}
+		else{
+			if(showScale.value)
+				for (int i = 0; i < 7; i++) {
+					Scale[i].update(gaze);
+					if (Scale[i].changed) {
+						stepSeq.updatePitch();
+						eye.arpInterface.updateChords();
+					}
+				}
+		}
 		chordLoop.update(Gaze);
-		if (eye.disc.sharp45.changed) {
+		/*if (eye.disc.sharp45.changed) {
 			if (eye.disc.sharp45.value) {
 				Scale[3].value++;
 				Scale[4].value++;
@@ -182,7 +196,7 @@ void EyeHarp::update(ofPoint Gaze,bool *sacadic){
 			}
 			stepSeq.updatePitch();
 			eye.arpInterface.updateChords();
-		}
+		}*/
 		for(int i=0;i<stepSeq.numberOfNotes.value;i++)
 		{
 			for(int j=0;j<stepSeq.numberOfNotes.value;j++){
@@ -218,8 +232,8 @@ void EyeHarp::update(ofPoint Gaze,bool *sacadic){
                             if(eye.disc.note==eye.disc.NotesNumber.value-CHORDSNUM+2){ chord=4;}
                             if(eye.disc.note==eye.disc.NotesNumber.value-CHORDSNUM+3){ chord=0;}
                             if(eye.disc.note==eye.disc.NotesNumber.value-CHORDSNUM+4){ chord=3;}
-                            if(eye.disc.note==eye.disc.NotesNumber.value-CHORDSNUM+5){ chord=2;}
-                            if(eye.disc.note==eye.disc.NotesNumber.value-CHORDSNUM+6){ chord=6;}
+                            if(eye.disc.note==eye.disc.NotesNumber.value-CHORDSNUM+5){ chord=6;}
+                            if(eye.disc.note==eye.disc.NotesNumber.value-CHORDSNUM+6){ chord=2;}
                             chordChanged=true;
                             if(prChord!=chord){
                                 stepSeq.updatePitch();
@@ -307,7 +321,7 @@ void EyeHarp::update(ofPoint Gaze,bool *sacadic){
 	if(midiAvailable){
 		if(eye.timbrePresets.selected==3 ){
 			
-			if(ofDist(gaze.x,gaze.y,eye.width2,eye.height2)>eye.disc.releaseDist && velocity<100){
+			if(ofDist(gaze.x,gaze.y,eye.width2,eye.height2)>eye.disc.releaseDist && ofDist(gaze.x, gaze.y, eye.width2, eye.height2)<eye.disc.releaseDistEnd && velocity<100){
 					midiOut.sendNoteOff(MIDICH1, midinote, 0);//if we look outside, release
 				}
 			if(volumeChanged && velocity<100){
@@ -403,14 +417,16 @@ void EyeHarp::audioRequested 	(float * output, int bufferSize, int nChannels){
 }
 
 void EyeHarp::draw(){
-
     if(!layer.value){
         eye.draw();
 		chordLoop.draw();
-        if(eye.multiplex.selected==3 && eye.advanced.value){
-            for(int i=0;i<7;i++)
-                Scale[i].draw();
-        }
+		if (configure.value)
+			showScale.draw();
+		else {
+			if (showScale.value)
+				for (int i = 0; i<7; i++)
+					Scale[i].draw();
+		}
         if(eye.multiplex.selected==0 && eye.advanced.value)
             randomChord.draw();
     }
@@ -426,6 +442,7 @@ void EyeHarp::draw(){
 	}
     layer.draw();
 	configure.draw();
+	
     //masterMultiPlex.draw();
     //fullScreen.draw();
     if(masterMultiPlex.selected==0){
@@ -471,6 +488,7 @@ void EyeHarp::resized(int w, int h){
     for(int i=0;i<7;i++)        Scale[i].resized(w,h);
 	focusPoints.resized(w,h);
 	configure.resized(w,h);
+	showScale.resized(w, h);
 }
 
 

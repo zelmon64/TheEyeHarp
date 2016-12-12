@@ -56,6 +56,7 @@ class EyeHarp{
 		
 		Switch focusPoints;
 		Switch configure;
+		Switch showScale;
 		recordChords chordLoop;
 //        vrpn_Analog_Remote* VRPNAnalog;
         ~EyeHarp();

@@ -7,7 +7,7 @@
 //#include "tobii.h"
 #include "EyeHarp.h"
 #define DISPL 2
-#define STH 0.03
+#define STH 0.025
 #define SM 0.95
 /***********************************************************************
 

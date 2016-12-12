@@ -15,13 +15,13 @@ void Eye::setup(int * chord, DistControl * Scale,bool* Conf){
     height=ofGetHeight();height2=height/2.0;
     XSsize=0.045f;
     Ssize=0.05;
-    Msize=0.06;
+    Msize=0.07;
     multiPos.x=-1.1f;
     multiPos.y=-.76f;
     sliderPos=ofPoint(-1.55,0);
     stepPosUP=ofPoint(-1.45,0.4);
     stepPosDW=ofPoint(-1.45,-.2f);
-    disc.setup(17,0.7,0.3,0.1,chord,false,conf);
+    disc.setup(18,0.7,0.3,0.1,chord,false,conf);
 
 	char* scaleNames[7];
 	scaleNames[0] = "I";
@@ -32,10 +32,10 @@ void Eye::setup(int * chord, DistControl * Scale,bool* Conf){
 	scaleNames[5] = "VI";
 	scaleNames[6] = "VII";
 
-    harmonic[0].setup("Timbre",-3,ofPoint(-1.2f,-0.58f),ofPoint(-1.62f,-0.58f),-60,-1,Ssize,100,10,0.99,0.1,0.0,true);
+   // harmonic[0].setup("Timbre",-3,ofPoint(-1.3f,-0.58f),ofPoint(-1.62f,-0.58f),-60,-1,Ssize,100,10,0.99,0.1,0.0,true);
 //    harmonic[1].setup("",50,ofPoint(0.95,0.92),ofPoint(0.95,0.77),0.0,0.9,Ssize,30,5,0.4,0.4,0.8);
-	for (int i = 1; i < 7; i++) {
-		harmonic[i].setup("", -60, ofPoint(-1.2f, -0.58 + i*0.2), ofPoint(-1.62f, -0.58 + i*0.2), -60, -1, Ssize, 100, 10, 0.99, 0.1, 0.0, true);
+	for (int i = 0; i < 7; i++) {
+		harmonic[i].setup("", -60, ofPoint(-1.28f, -0.86 + i*0.287), ofPoint(-1.64f, -0.86 + i*0.287), -60, -1, Ssize, 100, 10, 0.99, 0.1, 0.0, true);
 	}
 	octave.setup("8va",ofPoint(.14,0.22),ofPoint(-.14,0.22),1,3,1,0,0.04,1000,0.2,0.2,0);
 
