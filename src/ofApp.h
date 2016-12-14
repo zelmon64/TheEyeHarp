@@ -48,7 +48,7 @@ class ofApp : public ofBaseApp {
 		eyetracker tracker;
 		ofPoint eyeSmoothed;
         ofSoundStream soundstream;
-
+		
         int mouseDwell;
 		void mySmooth();
 		bool fixation();

@@ -52,7 +52,7 @@ void DistControl::update(ofPoint pt){
 		if(ofDist(pt.x,pt.y,magPosUP.x,magPosUP.y)<sizeUP)
 		{
 			activeUP=true;
-			if(Switch::pressed){
+			if (Switch::pressed && ofDist(Switch::pressedPos.x, Switch::pressedPos.y, magPosUP.x, magPosUP.y)<sizeUP) {
 				Switch::pressed=false;
 				value+=step;
 				if(value>max) value=max;
@@ -82,7 +82,7 @@ void DistControl::update(ofPoint pt){
 		if(ofDist(pt.x,pt.y,magPosDW.x,magPosDW.y)<sizeDW)
 		{
 			activeDW=true;
-			if(Switch::pressed){
+			if (Switch::pressed && ofDist(Switch::pressedPos.x, Switch::pressedPos.y, magPosDW.x, magPosDW.y)<sizeDW) {
 				Switch::pressed=false;
 				value-=step;
 				if(value<min) value=min;

@@ -31,6 +31,7 @@ class Switch{
 		static bool focuspoints;
 		static bool click;
 		static bool pressed;
+		static ofPoint pressedPos;
 		bool arrowsAccess;
 		static ofPoint MagWindowCenter;
 		static float Mag;

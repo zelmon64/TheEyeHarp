@@ -21,7 +21,7 @@ void recordChords::update(ofPoint gaze) {
 		switch (state) {
 		case PAUSE:
 			strcpy(button.name, "PRESS TO RECORD");
-			*showChords = true;
+			*showChords = showChordsBackup;
 			break;
 		case RECORD:
 			strcpy(button.name, "RECORDING...\nPRESS TO STOP");
@@ -32,6 +32,7 @@ void recordChords::update(ofPoint gaze) {
 			temp.chord = *chord;
 			temp.sampleCount = 0;
 			loop.push_back(temp);
+			showChordsBackup = *showChords;
 			*showChords = true;
 			break;
 		case PLAY:

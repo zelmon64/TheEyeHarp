@@ -22,31 +22,35 @@ void ofApp::setup(){
 	help = true;
 	initParam = fopen("eyeharp.cfg", "r");
 	char paramName[30];
-	int discNotesNumber=-1, stepSequencerNotesNumber=-1, bufferSize=-1;
+	int discNotesNumber=15, stepSequencerNotesNumber=6, bufferSize=512;
 	bool chordsONOFF=false, showScale = false, mouseEyetribeInput = false, clickDwell = false, tomidi=false;
 	int temp;
-	while (fscanf(initParam, "%s %d", paramName, &temp) != EOF) {
-		//printf("%s, %d\n", paramName, temp);
-		if (strcmp(paramName, "discNotesNumber") == 0)
-			discNotesNumber = temp;
-		else if (strcmp(paramName, "stepSequencerNotesNumber") == 0)
-			stepSequencerNotesNumber = temp;
-		else if (strcmp(paramName, "bufferSize") == 0)
-			bufferSize = temp;
-		else if (strcmp(paramName, "chords") == 0)
-			chordsONOFF = (bool)temp;
-		else if (strcmp(paramName, "showScale") == 0)
-			showScale = (bool)temp;
-		else if (strcmp(paramName, "mouseEyetribeInput") == 0)
-			mouseEyetribeInput = (bool)temp;
-		else if (strcmp(paramName, "clickDwell") == 0)
-			clickDwell = (bool)temp;
-		else if (strcmp(paramName, "help") == 0)
-			help = (bool)temp;
-		else if (strcmp(paramName, "tomidi") == 0)
-			tomidi = (bool)temp;
+	if (initParam == NULL)
+		cout << "No eyeharp.cgf file found\n";
+	else {
+		while (fscanf(initParam, "%s %d", paramName, &temp) != EOF) {
+			//printf("%s, %d\n", paramName, temp);
+			if (strcmp(paramName, "discNotesNumber") == 0)
+				discNotesNumber = temp;
+			else if (strcmp(paramName, "stepSequencerNotesNumber") == 0)
+				stepSequencerNotesNumber = temp;
+			else if (strcmp(paramName, "bufferSize") == 0)
+				bufferSize = temp;
+			else if (strcmp(paramName, "chords") == 0)
+				chordsONOFF = (bool)temp;
+			else if (strcmp(paramName, "showScale") == 0)
+				showScale = (bool)temp;
+			else if (strcmp(paramName, "mouseEyetribeInput") == 0)
+				mouseEyetribeInput = (bool)temp;
+			else if (strcmp(paramName, "clickDwell") == 0)
+				clickDwell = (bool)temp;
+			else if (strcmp(paramName, "help") == 0)
+				help = (bool)temp;
+			else if (strcmp(paramName, "tomidi") == 0)
+				tomidi = (bool)temp;
+		}
+		fclose(initParam);
 	}
-	fclose(initParam);
 	Switch::click = !clickDwell;
 	printf("discNotesNumber: %d\nstepSequencerNotesNumber: %d\nbufferSize: %d\nchordsONOFF: %d\nshowScale: %d\nmouseEyetribeInput: %d\nclickDwell: %d\n", discNotesNumber, stepSequencerNotesNumber, bufferSize, chordsONOFF, showScale, mouseEyetribeInput, clickDwell);
 //    glutSetCursor(GLUT_CURSOR_CROSSHAIR); 
@@ -331,8 +335,9 @@ void ofApp::mouseDragged(int x, int y, int button){
 
 //--------------------------------------------------------------
 void ofApp::mousePressed(int x, int y, int button){
-	printf("xRaw: %f   yRaw: %f  Smooth: %f, %f\n, window: %d, %d\n", gdata.raw.x,  gdata.raw.y, eyeSmoothed.x, eyeSmoothed.y , ofGetWindowPositionX(), ofGetWindowPositionY());
+	//printf("xRaw: %f   yRaw: %f  Smooth: %f, %f\n, window: %d, %d\n", gdata.raw.x,  gdata.raw.y, eyeSmoothed.x, eyeSmoothed.y , ofGetWindowPositionX(), ofGetWindowPositionY());
 	Switch::pressed=true;
+	Switch::pressedPos = eyeSmoothed;
 }
 
 //--------------------------------------------------------------

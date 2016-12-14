@@ -6,6 +6,7 @@ bool Switch::focuspoints=false;
 bool Switch::click=false;
 bool Switch::pressed=false;
 ofPoint Switch::MagWindowCenter;
+ofPoint Switch::pressedPos;
 float Switch::Mag=2;
 float Switch::MagFac=0;
 int Switch::MagRegion;
@@ -52,7 +53,7 @@ void Switch::update(ofPoint gazee){
 		if(ofDist(gaze.x,gaze.y,magPos.x,magPos.y)<size)
 		{
 			active=true;
-			if(Switch::pressed){
+			if(Switch::pressed && ofDist(Switch::pressedPos.x, Switch::pressedPos.y, magPos.x, magPos.y)<size){
 				Switch::pressed=false;
 				value=!value;
 				changed=true;
@@ -112,7 +113,7 @@ void Switch::update(ofPoint gazee,bool*sacadic){
 		if(ofDist(gaze.x,gaze.y,magPos.x,magPos.y)<size && (size>orSize || !eagleEnable))
 		{
 			active=true;
-			if(Switch::pressed){
+			if (Switch::pressed && ofDist(Switch::pressedPos.x, Switch::pressedPos.y, magPos.x, magPos.y)<size) {
 				Switch::pressed=false;
 				value=!value;
 				changed=true;

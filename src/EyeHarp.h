@@ -53,7 +53,7 @@ class EyeHarp{
         ofxMidiOut midiOut;
         int midinote;
 		bool showCircle;
-		
+		Switch exit;
 		Switch focusPoints;
 		Switch configure;
 		Switch showScale;

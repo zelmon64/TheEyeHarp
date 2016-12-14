@@ -55,7 +55,7 @@ void control::update(ofPoint pt){
 		if(ofDist(pt.x,pt.y,magPosUP.x,magPosUP.y)<sizeUP)
 		{
 			activeUP=true;
-			if(Switch::pressed){
+			if (Switch::pressed && ofDist(Switch::pressedPos.x, Switch::pressedPos.y, magPosUP.x, magPosUP.y)<sizeUP) {
 				Switch::pressed=false;
 				color+=cstep;
 				value+=step;
@@ -93,7 +93,7 @@ void control::update(ofPoint pt){
 		if(ofDist(pt.x,pt.y,magPosDW.x,magPosDW.y)<sizeDW)
 		{
 			activeDW=true;
-			if(Switch::pressed){
+			if (Switch::pressed && ofDist(Switch::pressedPos.x, Switch::pressedPos.y, magPosDW.x, magPosDW.y)<sizeDW) {
 				Switch::pressed=false;
 				color-=cstep;
 				value-=step;

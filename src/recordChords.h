@@ -31,6 +31,7 @@ public:
 	int *chord;
 	bool* showChords;
 	bool* cchanged;
+	bool showChordsBackup;
 	ofPoint gaze;
 	Switch button;
 };
