@@ -18,7 +18,37 @@ ofApp::~ofApp(){
 
 //--------------------------------------------------------------
 void ofApp::setup(){
-    int bufferSize		= 512;
+	FILE *initParam;
+	help = true;
+	initParam = fopen("eyeharp.cfg", "r");
+	char paramName[30];
+	int discNotesNumber=-1, stepSequencerNotesNumber=-1, bufferSize=-1;
+	bool chordsONOFF=false, showScale = false, mouseEyetribeInput = false, clickDwell = false, tomidi=false;
+	int temp;
+	while (fscanf(initParam, "%s %d", paramName, &temp) != EOF) {
+		//printf("%s, %d\n", paramName, temp);
+		if (strcmp(paramName, "discNotesNumber") == 0)
+			discNotesNumber = temp;
+		else if (strcmp(paramName, "stepSequencerNotesNumber") == 0)
+			stepSequencerNotesNumber = temp;
+		else if (strcmp(paramName, "bufferSize") == 0)
+			bufferSize = temp;
+		else if (strcmp(paramName, "chords") == 0)
+			chordsONOFF = (bool)temp;
+		else if (strcmp(paramName, "showScale") == 0)
+			showScale = (bool)temp;
+		else if (strcmp(paramName, "mouseEyetribeInput") == 0)
+			mouseEyetribeInput = (bool)temp;
+		else if (strcmp(paramName, "clickDwell") == 0)
+			clickDwell = (bool)temp;
+		else if (strcmp(paramName, "help") == 0)
+			help = (bool)temp;
+		else if (strcmp(paramName, "tomidi") == 0)
+			tomidi = (bool)temp;
+	}
+	fclose(initParam);
+	Switch::click = !clickDwell;
+	printf("discNotesNumber: %d\nstepSequencerNotesNumber: %d\nbufferSize: %d\nchordsONOFF: %d\nshowScale: %d\nmouseEyetribeInput: %d\nclickDwell: %d\n", discNotesNumber, stepSequencerNotesNumber, bufferSize, chordsONOFF, showScale, mouseEyetribeInput, clickDwell);
 //    glutSetCursor(GLUT_CURSOR_CROSSHAIR); 
     //glutSetCursor(GLUT_CURSOR_NONE);
 	ofBackground(50,60,30);
@@ -27,8 +57,8 @@ void ofApp::setup(){
 	ofSetVerticalSync(true);
 	//ofHideCursor();
 	//ofToggleFullscreen();
-	gaze=false;
-	HARP.setup();
+	gaze= mouseEyetribeInput;
+	HARP.setup(discNotesNumber, stepSequencerNotesNumber, chordsONOFF, showScale, clickDwell,tomidi);
 	tribe.setup();
 	//myTobii.setup();
 	
@@ -49,7 +79,6 @@ void ofApp::setup(){
 	read=NULL;
 	record=NULL;
 	firstRead=false;
-	help=true;
 	/*FILE* conf;
 	conf=fopen("configuration.txt", "r");
 	float screenx, screeny;

@@ -26,7 +26,7 @@ void Disc::setup(int NumOfNotes,float red,float green,float blue,int * Chord, bo
     angle=0.0;
     outSpotStep=(ofGetHeight()/2-neutralRegion)/5;
     inSpotDist=0.3*neutralRegion;
-    chordONOFF.setup("Chords",true,ofPoint(1.55,0.8),0.1, 1000, 0.6,0.2,0.1,false);
+    chordONOFF.setup("Chords",*chord,ofPoint(-1,-0.8),0.1, 1000, 0.6,0.2,0.1,false);
     percussive.setup("Percu\nssive",false, ofPoint(-1.2,0.85),0.05,1000,0.6,0.2,0.1,false);
 	replaySame.setup("",false,ofPoint(0,0),0.11,10,0,0,0,false);
     changed=false;
@@ -86,8 +86,8 @@ void Disc::update(ofPoint gaze, float* velocity,bool *sacadic){
 		int prDist=dist;
 		dist=ofDist(gaze.x,gaze.y,width2,height2);
 	   // notesONOFF.update(gaze);
-		
-		//chordONOFF.update(gaze);
+		if(*conf)
+			chordONOFF.update(gaze);
 		if(*velocity < FIXVEL && dist < neutralRegion){
 			fixationInNeutral=true;
 		}
@@ -242,9 +242,10 @@ void Disc::draw(){
 			//ofDisableAlphaBlending();
 	
     for(int i=0;i<NotesNumber.value;i++){
+		ofPoint curPos = ofPoint(width2 - cos((i + 0.5)*tangle)*inSpotDist, height2 + sin((i + 0.5)*tangle)*inSpotDist);
         if(chordONOFF.value){
             if(i<NotesNumber.value-CHORDSNUM){
-                ofPoint curPos=ofPoint(width2-cos((i+0.5)*tangle)*inSpotDist, height2+sin((i+0.5)*tangle)*inSpotDist);
+                
                 int c=255*(i!=melody);
                 ofSetColor(c,255,c);
                 ofDrawBitmapString(ofToString((i+4)%7+1),curPos.x,curPos.y);
@@ -276,11 +277,10 @@ void Disc::draw(){
             }
         }
         else{
-			
             int c=255*(i!=melody);
             ofSetColor(c,255,c);
-			ofDrawBitmapString(ofToString(i%7+1),width2-cos((i+0.5)*tangle)*inSpotDist, height2+sin((i+0.5)*tangle)*inSpotDist);
-        }
+			ofDrawBitmapString(ofToString((i + 4) % 7 + 1), curPos.x, curPos.y);
+		}
     }
    
     //ofSetColor(0,50*(prbeat!=*beat),0);prbeat=*beat;
@@ -289,6 +289,7 @@ void Disc::draw(){
    // notesONOFF.draw();
 	// chordONOFF.draw();
 	 if(*conf)
+		chordONOFF.draw();
 		 //distVolume.draw();
 	 //if(!inside)
     if(advanced){

@@ -8,7 +8,7 @@ enum{
     MAJOR,MINOR,HITZAZ,HITZAZSKIAR,DORIAN,PHRYGIAN,MYXOLYDIAN
 };
 
-void Eye::setup(int * chord, DistControl * Scale,bool* Conf){
+void Eye::setup(int * chord, DistControl * Scale,bool* Conf,int noteNumber,bool tomidi){
 	conf=Conf;
     scale=Scale;
     width=ofGetWidth();width2=width/2.0;
@@ -65,7 +65,7 @@ void Eye::setup(int * chord, DistControl * Scale,bool* Conf){
     release.setup("Rls",235,stepPosUP,stepPosDW,0.9995,0.9999,XSsize,300,5,0.6f,0.2f,0.0f);
     vibratoHz.setup("Vib cHz",700,stepPosUP,stepPosDW,50,1000,XSsize,300,5,0.6f,0.2f,0.0f,true);
     vibratoW.setup("VibW",150,stepPosUP,stepPosDW,0.0,3.5,XSsize,300,5,0.6f,0.2f,0.0f);
-    disc.NotesNumber.setup("NotesNum",stepPosUP,stepPosDW,7,36,disc.NotesNumber.value,1,XSsize*3,800,0.6f,0.2f,0.0f);
+    disc.NotesNumber.setup("NotesNum",stepPosUP,stepPosDW,7,36,noteNumber,1,XSsize*3,800,0.6f,0.2f,0.0f);
     volume.setup("Vol",200,stepPosUP,stepPosDW,0.0,1.0,XSsize,500,20,0.6f,0.2f,0.0f);
 
     char* instrumentNames[4];
@@ -73,7 +73,10 @@ void Eye::setup(int * chord, DistControl * Scale,bool* Conf){
     instrumentNames[1]="Sinusoidal";
     instrumentNames[2]="Vibraphone";
     instrumentNames[3]="ToMidi";
-    timbrePresets.setup(4,instrumentNames,2,ofPoint(-1.93,0.85),0,0.072f,1000);
+	if(tomidi)
+		timbrePresets.setup(4,instrumentNames,3,ofPoint(-1.93,0.85),0,0.072f,1000);
+	else
+		timbrePresets.setup(4, instrumentNames, 2, ofPoint(-1.93, 0.85), 0, 0.072f, 1000);
 	disc.percussive.value=true;
     char* musicalModesNames[7];
     musicalModesNames[0]="Major";

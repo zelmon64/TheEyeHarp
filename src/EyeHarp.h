@@ -35,7 +35,7 @@ class EyeHarp{
         Eye eye;
 //        arpeggiator * arpeggio;
 //    stepSeq stepseq;
-        void setup();
+        void setup(int discNotesNumber, int stepSequencerNotesNumber, bool chordsONOFF, bool showScale, bool clickDwell,bool tomidi);
 		void update(ofPoint Gaze,bool*sacadic);
 		void draw();
 		void resized(int w, int h);

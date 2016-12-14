@@ -4,7 +4,7 @@
 EyeHarp::~EyeHarp(){
 
 }
-void EyeHarp::setup(){
+void EyeHarp::setup(int discNotesNumber, int stepSequencerNotesNumber, bool chordsONOFF, bool showScaleInit, bool clickDwell,bool tomidi){
     //midiOut.listPorts();
 	string s1("LoopBe");
 	midiAvailable=false;
@@ -19,8 +19,8 @@ void EyeHarp::setup(){
 	if(midiAvailable==false)
 		printf("LoopBe Virtual Midi Port Not Found. Midi Out Disabled!\n");
 
-    chord=0;
-	eye.setup(&chord,Scale,&(configure.value));
+    chord=chordsONOFF;
+	eye.setup(&chord,Scale,&(configure.value), discNotesNumber,tomidi);
 
 	// 0 input channels
 	// 22050 samples per second
@@ -69,7 +69,7 @@ void EyeHarp::setup(){
    
     layer.setup("Layer",0,ofPoint(1.48,-0.69),0.16,800,0.6,0.2,0.1,false);
 //    loopNote.setup(60, 61, 0.2, 100, 1000);
-	stepSeq.setup(Scale,&(transpose.value),8,&tempo,700,1.0f,.3f,.1f, &sampleRate,&chord, &midiOut,&(configure.value));
+	stepSeq.setup(Scale,&(transpose.value), stepSequencerNotesNumber,&tempo,700,1.0f,.3f,.1f, &sampleRate,&chord, &midiOut,&(configure.value));
     eye.arpInterface.setup(Scale,&(transpose.value),&chord,&(stepSeq.totalSamples),&sampleRate,&(stepSeq.curSample));
     randomChord.setup("Random\nChord",false,ofPoint(-1.6f,0.85f),0.05f,1000,0.6,0.2,0.1,false);
     fullScreen.setup("FullScreen",false,ofPoint(1.5f,0.9f),0.05f,1000,0.6,0.2,0.1,false);
@@ -81,7 +81,11 @@ void EyeHarp::setup(){
 	masterVolumeSlider.setValue(0);*/
 	configure.setup("Setup",false,ofPoint(1.55,0),0.1,800,0.6,0.2,0.1,false);
 	chordLoop.setup(&stepSeq,&chord,&(eye.disc.chordONOFF.value),&chordChanged);
-	showScale.setup("ShowScale", false, ofPoint(-1.5, -0.8), 0.1, 800, 0.5, 0.2, 0, false);
+	showScale.setup("ShowScale", showScaleInit, ofPoint(-1.5, -0.8), 0.1, 800, 0.5, 0.2, 0, false);
+	if (tomidi) {
+		masterVolume.setValueByColor(0);
+		masterVolumeSlider.setValue(0);
+	}
 }
 
 void EyeHarp::update(ofPoint Gaze,bool *sacadic){
