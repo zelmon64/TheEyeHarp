@@ -23,7 +23,7 @@ void ofApp::setup(){
 	initParam = fopen("eyeharp.cfg", "r");
 	char paramName[30];
 	int discNotesNumber=15, stepSequencerNotesNumber=6, bufferSize=512;
-	bool chordsONOFF=false, showScale = false, mouseEyetribeInput = false, clickDwell = false, tomidi=false;
+	bool chordsONOFF=false, showScale = false, mouseEyetribeInput = false, clickDwell = false, tomidi=false,fullscreen=false;
 	int temp;
 	if (initParam == NULL)
 		cout << "No eyeharp.cgf file found\n";
@@ -48,11 +48,16 @@ void ofApp::setup(){
 				help = (bool)temp;
 			else if (strcmp(paramName, "tomidi") == 0)
 				tomidi = (bool)temp;
+			else if (strcmp(paramName, "fullscreen") == 0) {
+				fullscreen = (bool)temp;
+				if (fullscreen)
+					ofToggleFullscreen();
+			}
 		}
 		fclose(initParam);
 	}
 	Switch::click = !clickDwell;
-	printf("discNotesNumber: %d\nstepSequencerNotesNumber: %d\nbufferSize: %d\nchordsONOFF: %d\nshowScale: %d\nmouseEyetribeInput: %d\nclickDwell: %d\n", discNotesNumber, stepSequencerNotesNumber, bufferSize, chordsONOFF, showScale, mouseEyetribeInput, clickDwell);
+	printf("discNotesNumber: %d\nstepSequencerNotesNumber: %d\nbufferSize: %d\nchordsONOFF: %d\nshowScale: %d\nmouseEyetribeInput: %d\nclickDwell: %d\nfullscreen: %d", discNotesNumber, stepSequencerNotesNumber, bufferSize, chordsONOFF, showScale, mouseEyetribeInput, clickDwell,fullscreen);
 //    glutSetCursor(GLUT_CURSOR_CROSSHAIR); 
     //glutSetCursor(GLUT_CURSOR_NONE);
 	ofBackground(50,60,30);

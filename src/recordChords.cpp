@@ -54,7 +54,7 @@ void recordChords::update(ofPoint gaze) {
 	if (state == PLAY) {
 		//cout << ".";
 		//printf("%d: %d, %d\n", pos, barCount, loop[pos].bar);
-		if ((barCount >= loop[pos].bar && stepSeq->curSample >= loop[pos].sampleCount)) {
+		if (barCount >= loop[pos].bar || (barCount >= loop[pos].bar && stepSeq->curSample >= loop[pos].sampleCount) ) {
 			*chord = loop[pos].chord;
 			*cchanged = true;
 			stepSeq->updatePitch();

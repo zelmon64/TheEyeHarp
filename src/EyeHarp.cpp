@@ -7,7 +7,7 @@ EyeHarp::~EyeHarp(){
 void EyeHarp::setup(int discNotesNumber, int stepSequencerNotesNumber, bool chordsONOFF, bool showScaleInit, bool clickDwell,bool tomidi){
     //midiOut.listPorts();
 	string s1("LoopBe");
-	exit.setup("QUIT", false, ofPoint(1.1, 0.8), 0.1, 1500, 0, 0, 0, false);
+	exit.setup("QUIT", false, ofPoint(1.1, 0.8), 0.1, 1000, 0, 0, 0, false);
 	midiAvailable=false;
 	for(int i=0;i<midiOut.getNumPorts();i++){
 		string s2(midiOut.getPortName(i));
@@ -177,16 +177,19 @@ void EyeHarp::update(ofPoint Gaze,bool *sacadic){
 	else{
 		eye.update(gaze, &velocity,sacadic);
 
-		if (ofDist(gaze.x, gaze.y, width / 2, height / 2) < height / 2) 
-			exit.setup("QUIT", false, ofPoint(1.1, 0.8), 0.1, 1500, 0, 0, 0, false);
+		if (ofDist(gaze.x, gaze.y, width / 2, height / 2) < height / 2) {
+			exit.setup("QUIT", false, ofPoint(1.1, 0.8), 0.1, 1000, 0, 0, 0, false);
+			exit.resized(width, height);
+		}
 		if (configure.value) {
 			showScale.update(gaze);
 			exit.update(gaze);
 			if (exit.changed) {
 				if (exit.value)
-					exit.setup("Quit", true, ofPoint(1.55, 0.4), 0.09,1000, 0.5, 0, 0, false);
+					exit.setup("QUIT", true, ofPoint(1.55, 0.4), 0.1,1000, 0.5, 0, 0, false);
 				else
 					ofExit();
+				exit.resized(width, height);
 			}
 		}
 		else{
@@ -506,6 +509,7 @@ void EyeHarp::resized(int w, int h){
 	focusPoints.resized(w,h);
 	configure.resized(w,h);
 	showScale.resized(w, h);
+	exit.resized(w,h);
 }
 
 
