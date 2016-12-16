@@ -27,26 +27,27 @@ void recordChords::update(ofPoint gaze) {
 			strcpy(button.name, "RECORDING...\nPRESS TO STOP");
 			loop.clear();
 			barCount = 0; 
-			record temp;
 			temp.bar = 0;
 			temp.chord = *chord;
-			temp.sampleCount = 0;
-			loop.push_back(temp);
+			//loop.push_back(temp);
 			showChordsBackup = *showChords;
 			*showChords = true;
 			break;
 		case PLAY:
+			temp.bar = barCount;
+			temp.sampleCount = stepSeq->totalSamples - 2;
+			loop.push_back(temp); // add the first one at the end!
 			strcpy(button.name, "PLAYING...\nPRESS TO STOP");
-			if (loop[loop.size() - 1].sampleCount > stepSeq->noteSamples*(stepSeq->numberOfNotes.value - 2)) {
+			/*if (loop[loop.size() - 1].sampleCount > stepSeq->noteSamples*(stepSeq->numberOfNotes.value - 2)) {
 				record temp;
 				temp.bar = loop[loop.size() - 1].bar+1;
 				temp.chord = *chord;
 				temp.sampleCount = 0;
 				loop.push_back(temp);
-			}
+			}*/
 			//printVector();
-			pos = 0;
-			barCount = 0; 
+			pos = loop.size()-1;
+			barCount = loop[pos].bar; 
 			*showChords = false;
 			break;
 		}
@@ -54,25 +55,23 @@ void recordChords::update(ofPoint gaze) {
 	if (state == PLAY) {
 		//cout << ".";
 		//printf("%d: %d, %d\n", pos, barCount, loop[pos].bar);
-		if (barCount >= loop[pos].bar || (barCount >= loop[pos].bar && stepSeq->curSample >= loop[pos].sampleCount) ) {
+		if (barCount * stepSeq->totalSamples + stepSeq->curSample >= loop[pos].bar * stepSeq->totalSamples + loop[pos].sampleCount) {
 			*chord = loop[pos].chord;
 			*cchanged = true;
 			stepSeq->updatePitch();
-			//printf("pos: %d, size:%d", pos, loop.size());
-			pos = (pos + 1);
-			//cout << pos << endl;
+			//printf("pos: %d, size:%d\n", pos, loop.size());
+			pos++;
 			if (pos == loop.size()) {
-				barCount = 0;
 				pos = 0;
+				barCount = 0;
 			}
 		}
 	}
 }
 
 void recordChords::getPos() {
-	if (stepSeq->curSample % stepSeq->noteSamples == 0) {
-		if (stepSeq->curSample == 0)
-			barCount++;
+	if (stepSeq->curSample == stepSeq->totalSamples-1) {
+		barCount++;
 		//printf("%d\t%d\n", barCount,*curSample / *noteSamples);
 	}
 }

@@ -34,4 +34,5 @@ public:
 	bool showChordsBackup;
 	ofPoint gaze;
 	Switch button;
+	record temp;
 };

@@ -11,7 +11,7 @@ ofApp::ofApp(){
 
 ofApp::~ofApp(){
 	fclose(record);
-//	myTobii.~tobii();
+	myTobii.~tobii();
 	tribe.~MyGaze();
 	HARP.~EyeHarp();
 }
@@ -69,7 +69,7 @@ void ofApp::setup(){
 	gaze= mouseEyetribeInput;
 	HARP.setup(discNotesNumber, stepSequencerNotesNumber, chordsONOFF, showScale, clickDwell,tomidi);
 	tribe.setup();
-	//myTobii.setup();
+	myTobii.setup();
 	
 	ofSoundStreamListDevices();
 	ofSoundStreamSetup(2, 0, SAMPLERATE, bufferSize, 4);
@@ -133,7 +133,7 @@ void ofApp::update(){
 				eyeSmoothed = ofPoint( ofGetWindowPositionX(), ofGetWindowPositionY());
 			}
 		}
-		/*else if(gaze &&  myTobii.success){
+		else if(gaze &&  myTobii.success){
 			tracker=TOBII;
 			if(myTobii.eventParams.X>ofGetWindowPositionX() && myTobii.eventParams.X<ofGetWindowPositionX()+ofGetWidth() && myTobii.eventParams.Y>ofGetWindowPositionY() && myTobii.eventParams.Y<ofGetWindowPositionY()+ofGetHeight()){
 				raw.x=myTobii.eventParams.X;
@@ -143,7 +143,7 @@ void ofApp::update(){
 			mySmooth();
 			eyeSmoothed=ofPoint(smooth.x-ofGetWindowPositionX(),smooth.y-ofGetWindowPositionY());
 			
-		}*/
+		}
 		else{
 			sacadic=true;
 			eyeSmoothed=ofPoint(mousex,mousey);

@@ -4,7 +4,7 @@
 
 #include "ofMain.h"
 #include "MyGaze.h"
-//#include "tobii.h"
+#include "tobii.h"
 #include "EyeHarp.h"
 #define DISPL 2
 #define STH 0.025
@@ -40,7 +40,7 @@ class ofApp : public ofBaseApp {
 		bool gaze;
 		bool firstRead;
 		//----- scenes
-//		tobii myTobii;
+		tobii myTobii;
 		MyGaze tribe;
 		EyeHarp                 HARP;
 		bool sacadic;
