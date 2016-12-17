@@ -20,13 +20,16 @@ void recordChords::update(ofPoint gaze) {
 		//cout << state<< endl;
 		switch (state) {
 		case PAUSE:
+			button.setColor(0, 0, 0);
+			button.value = true;
 			strcpy(button.name, "PRESS TO RECORD");
 			*showChords = showChordsBackup;
 			break;
 		case RECORD:
+			button.value = true;
 			strcpy(button.name, "RECORDING...\nPRESS TO STOP");
 			loop.clear();
-			barCount = 0; 
+			barCount = -1; 
 			temp.bar = 0;
 			temp.chord = *chord;
 			//loop.push_back(temp);
@@ -34,6 +37,8 @@ void recordChords::update(ofPoint gaze) {
 			*showChords = true;
 			break;
 		case PLAY:
+			button.value = true;
+			button.setColor(0, 0, 1);
 			temp.bar = barCount;
 			temp.sampleCount = stepSeq->totalSamples - 2;
 			loop.push_back(temp); // add the first one at the end!
@@ -67,6 +72,8 @@ void recordChords::update(ofPoint gaze) {
 			}
 		}
 	}
+	else if (state == RECORD && barCount >= 0)
+		button.setColor(1, 0, 0);
 }
 
 void recordChords::getPos() {
@@ -77,7 +84,7 @@ void recordChords::getPos() {
 }
 
 void recordChords::addChord(int Chord) {
-	if (state == RECORD) {
+	if (state == RECORD && barCount >= 0) {
 		record temp;
 		temp.bar = barCount;
 		temp.chord = Chord;
