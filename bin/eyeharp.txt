@@ -1,0 +1,10 @@
+discNotesNumber 15
+stepSequencerNotesNumber 6
+chords 0
+showScale 0
+mouseEyetribeInput 0
+clickDwell 1
+bufferSize 512
+help 0
+tomidi 0
+fullscreen 0

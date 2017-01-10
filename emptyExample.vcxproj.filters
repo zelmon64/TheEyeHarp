@@ -91,6 +91,9 @@
     <ClCompile Include="src\recordChords.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="src\tobii.cpp">
+      <Filter>tobii</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="src">
@@ -101,6 +104,9 @@
     </Filter>
     <Filter Include="gazeapi">
       <UniqueIdentifier>{66e1e983-84c9-43d3-8310-20c562ddacd9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="tobii">
+      <UniqueIdentifier>{3f70610e-dc56-4528-833e-7874cbbd0103}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -232,6 +238,12 @@
     </ClInclude>
     <ClInclude Include="src\recordChords.h">
       <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\tobii.h">
+      <Filter>tobii</Filter>
+    </ClInclude>
+    <ClInclude Include="src\eyex\EyeX.h">
+      <Filter>tobii</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

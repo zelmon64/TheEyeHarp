@@ -78,7 +78,7 @@
       <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <WarningLevel>Level3</WarningLevel>
-      <AdditionalIncludeDirectories>C:\boost_1_62_0;..\..\..\addons\eyetribe\include;..\..\..\addons\ofxMidi\src\desktop;C:\Users\zackbam\Documents\tet-cpp-client-master\include;C:\Users\zackbam\Documents\Tobii\include\eyex;..\..\..\addons\ofxMidi\libs\rtmidi;..\..\..\addons\ofxMidi\src;%(AdditionalIncludeDirectories);src</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src\eyex;C:\boost_1_62_0;..\..\..\addons\eyetribe\include;..\..\..\addons\ofxMidi\src\desktop;C:\Users\zackbam\Documents\tet-cpp-client-master\include;C:\Users\zackbam\Documents\Tobii\include\eyex;..\..\..\addons\ofxMidi\libs\rtmidi;..\..\..\addons\ofxMidi\src;%(AdditionalIncludeDirectories);src</AdditionalIncludeDirectories>
       <CompileAs>CompileAsCpp</CompileAs>
       <AdditionalUsingDirectories>C:\of_v0.9.7_vs_release\addons\eyetribe\src;%(AdditionalUsingDirectories)</AdditionalUsingDirectories>
     </ClCompile>
@@ -89,8 +89,8 @@
       <OptimizeReferences>true</OptimizeReferences>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <RandomizedBaseAddress>false</RandomizedBaseAddress>
-      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>C:\boost_1_62_0\stage\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>Tobii.EyeX.Client.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\of_v0.9.8_vs_release\apps\myApps\EyeHarp\bin;C:\boost_1_62_0\stage\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <Manifest>
       <EnableDpiAwareness>PerMonitorHighDPIAware</EnableDpiAwareness>
@@ -125,6 +125,7 @@
     <ClCompile Include="src\slider.cpp" />
     <ClCompile Include="src\stepSequencer.cpp" />
     <ClCompile Include="src\switch.cpp" />
+    <ClCompile Include="src\tobii.cpp" />
     <ClCompile Include="src\tomidipie.cpp" />
     <ClCompile Include="src\XORswitch.cpp" />
   </ItemGroup>
@@ -154,6 +155,7 @@
     <ClInclude Include="src\eye.h" />
     <ClInclude Include="src\EyeHarp.h" />
     <ClInclude Include="src\EyeHarpVARS.h" />
+    <ClInclude Include="src\eyex\EyeX.h" />
     <ClInclude Include="src\gaze.h" />
     <ClInclude Include="src\gazeapi.h" />
     <ClInclude Include="src\gazeapi_interfaces.h" />
@@ -170,6 +172,7 @@
     <ClInclude Include="src\slider.h" />
     <ClInclude Include="src\stepSequencer.h" />
     <ClInclude Include="src\switch.h" />
+    <ClInclude Include="src\tobii.h" />
     <ClInclude Include="src\tomidipie.h" />
     <ClInclude Include="src\XORswitch.h" />
   </ItemGroup>

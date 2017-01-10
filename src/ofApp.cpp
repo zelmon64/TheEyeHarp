@@ -20,7 +20,7 @@ ofApp::~ofApp(){
 void ofApp::setup(){
 	FILE *initParam;
 	help = true;
-	initParam = fopen("eyeharp.cfg", "r");
+	initParam = fopen("eyeharp.txt", "r");
 	char paramName[30];
 	int discNotesNumber=15, stepSequencerNotesNumber=6, bufferSize=512;
 	bool chordsONOFF=false, showScale = false, mouseEyetribeInput = false, clickDwell = false, tomidi=false,fullscreen=false;
