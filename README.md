@@ -10,24 +10,22 @@ The EyeHarp comes with a build-in synthesizer. Alternatively, it can be used as 
 
 A configuration file named "eyeharp.txt" is placed inside the bin folder. A number of settings can be adjusted. The following default values are set:
 
-discNotesNumber 15          // reduce the number of notes in the screen if the accuracy of the eye tracker is low.
+discNotesNumber 15          (reduce the number of notes in the screen if the accuracy of the eye tracker is low)
 
-stepSequencerNotesNumber 6  // reduce the number of notes in the screen if the accuracy of the eye tracker is low.
+stepSequencerNotesNumber 6  (reduce the number of notes in the screen if the accuracy of the eye tracker is low)
 
-chords 0                    // 0: not show chords, 1: show chords
+chords 0                    (0: not show chords, 1: show chords)
 
-showScale 0                 // show/hide the "pedals" of the harp
+showScale 0                 (show/hide the "pedals" of the harp)
 
-mouseEyetribeInput 0        // mouse input or input straight from the sdk of the eye tracker
+mouseEyetribeInput 0        (switch betweeb mouse input and input straight from the sdk of the eye tracker)
 
-clickDwell 1                // switch between click or dwell time selection method
+clickDwell 1                (switch between click and dwell time selection method)
 
-bufferSize 512              // if you listen to sound crackles, increase the bufferSize
+bufferSize 512              (if you listen to sound crackles, increase the bufferSize)
 
-help 0                      // show/hide the available shortcuts
+help 0                      (show/hide the available shortcuts)
 
-tomidi 0                    // switch between internal synth and midi out
+tomidi 0                    (switch between internal synth and midi out)
 
-fullscreen 0                // widowed/fullscreen mode.
-
-
+fullscreen 0                (windowed/fullscreen mode)
