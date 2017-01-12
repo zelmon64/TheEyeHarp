@@ -23,11 +23,11 @@ void ofApp::setup(){
 	initParam = fopen("eyeharp.txt", "r");
 	char paramName[30];
 	int discNotesNumber=15, stepSequencerNotesNumber=6, bufferSize=512;
-	bool chordsONOFF=false, showScale = false, mouseEyetribeInput = false, clickDwell = false, tomidi=false,fullscreen=false;
+	bool chordsONOFF=false, showScale = false, mouseEyetribeInput = false, clickDwell = false, tomidi=false,fullscreen=false, monophonic = true;
 	int temp;
 	fixationSamples = 4;
 	if (initParam == NULL)
-		cout << "No eyeharp.cgf file found\n";
+		cout << "No eyeharp.txt file found\n";
 	else {
 		while (fscanf(initParam, "%s %d", paramName, &temp) != EOF) {
 			//printf("%s, %d\n", paramName, temp);
@@ -41,7 +41,7 @@ void ofApp::setup(){
 				chordsONOFF = (bool)temp;
 			else if (strcmp(paramName, "showScale") == 0)
 				showScale = (bool)temp;
-			else if (strcmp(paramName, "mouseEyetribeInput") == 0)
+			else if (strcmp(paramName, "mouseEyeTracker") == 0)
 				mouseEyetribeInput = (bool)temp;
 			else if (strcmp(paramName, "clickDwell") == 0)
 				clickDwell = (bool)temp;
@@ -54,8 +54,10 @@ void ofApp::setup(){
 				if (fullscreen)
 					ofToggleFullscreen();
 			}
-			else if (strcmp(paramName, "fixationSamples") == 0) 
+			else if (strcmp(paramName, "fixationSamples") == 0)
 				fixationSamples = temp;
+			else if (strcmp(paramName, "monophonicStep") == 0)
+				monophonic = temp;
 		}
 		fclose(initParam);
 	}
@@ -72,6 +74,7 @@ void ofApp::setup(){
 	//ofToggleFullscreen();
 	gaze= mouseEyetribeInput;
 	HARP.setup(discNotesNumber, stepSequencerNotesNumber, chordsONOFF, showScale, clickDwell,tomidi);
+	HARP.stepSeq.monophonic.setup("monophonic", monophonic, ofPoint(-1.2, 0.8), .095, 800, .8, .4, 0, false);
 	tribe.setup();
 	myTobii.setup();
 	
@@ -144,6 +147,8 @@ void ofApp::update(){
 			}
 			else {
 				printf("Did not connect to any Eye-Tracker\n");
+				sacadic = true;
+				eyeSmoothed = ofPoint(mousex, mousey);
 			}
 		}
 		else{

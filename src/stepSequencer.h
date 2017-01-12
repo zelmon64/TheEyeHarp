@@ -55,6 +55,7 @@ class stepSequencer{
         sequencerNote ** seqNote;
 		struct gridElement { int x=0, y=0; };
 		std::stack<gridElement> arpeggioStack;
+		Switch monophonic;
 		//void eagleEye(ofPoint gaze);
 //        ~stepSequencer();
     private:
@@ -75,7 +76,6 @@ class stepSequencer{
         control releaseFactor;
         control * tempo;
         DistControl octave;
-        Switch monophonic;
 		Switch undo; //deleteLast on the Stack
         int maxNotes;
         int * chord;
