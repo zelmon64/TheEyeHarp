@@ -130,7 +130,6 @@ void ofApp::update(){
 			}
 			else if (myTobii.success) {
 				tracker = TOBII;
-				printf("receiving from Tobii\n");
 				if (myTobii.eventParams.X > ofGetWindowPositionX() && myTobii.eventParams.X<ofGetWindowPositionX() + ofGetWidth() && myTobii.eventParams.Y>ofGetWindowPositionY() && myTobii.eventParams.Y < ofGetWindowPositionY() + ofGetHeight()) {
 					raw.x = myTobii.eventParams.X;
 					raw.y = myTobii.eventParams.Y;

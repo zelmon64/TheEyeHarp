@@ -6,7 +6,7 @@
 #include "MyGaze.h"
 #include "tobii.h"
 #include "EyeHarp.h"
-#define DISPL 2
+#define DISPL 3
 #define STH 0.025
 #define SM 0.95
 /***********************************************************************
