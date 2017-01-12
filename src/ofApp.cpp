@@ -128,21 +128,20 @@ void ofApp::update(){
 				eyeSmoothed = ofPoint(smooth.x - ofGetWindowPositionX(), smooth.y - ofGetWindowPositionY());
 
 			}
+			else if (myTobii.success) {
+				tracker = TOBII;
+				printf("receiving from Tobii\n");
+				if (myTobii.eventParams.X > ofGetWindowPositionX() && myTobii.eventParams.X<ofGetWindowPositionX() + ofGetWidth() && myTobii.eventParams.Y>ofGetWindowPositionY() && myTobii.eventParams.Y < ofGetWindowPositionY() + ofGetHeight()) {
+					raw.x = myTobii.eventParams.X;
+					raw.y = myTobii.eventParams.Y;
+				}
+
+				mySmooth();
+				eyeSmoothed = ofPoint(smooth.x - ofGetWindowPositionX(), smooth.y - ofGetWindowPositionY());
+			}
 			else {
-				cout << "did not connect to EyeTribe\n";
-				eyeSmoothed = ofPoint( ofGetWindowPositionX(), ofGetWindowPositionY());
+				printf("Did not connect to any Eye-Tracker\n");
 			}
-		}
-		else if(gaze &&  myTobii.success){
-			tracker=TOBII;
-			if(myTobii.eventParams.X>ofGetWindowPositionX() && myTobii.eventParams.X<ofGetWindowPositionX()+ofGetWidth() && myTobii.eventParams.Y>ofGetWindowPositionY() && myTobii.eventParams.Y<ofGetWindowPositionY()+ofGetHeight()){
-				raw.x=myTobii.eventParams.X;
-				raw.y=myTobii.eventParams.Y;
-			}
-			
-			mySmooth();
-			eyeSmoothed=ofPoint(smooth.x-ofGetWindowPositionX(),smooth.y-ofGetWindowPositionY());
-			
 		}
 		else{
 			sacadic=true;
