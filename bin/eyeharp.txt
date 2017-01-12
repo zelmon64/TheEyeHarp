@@ -8,3 +8,4 @@ bufferSize 512
 help 0
 tomidi 0
 fullscreen 0
+fixationSamples 4

@@ -6,7 +6,7 @@
 #include "MyGaze.h"
 #include "tobii.h"
 #include "EyeHarp.h"
-#define DISPL 3
+//#define DISPL 3
 #define STH 0.025
 #define SM 0.95
 /***********************************************************************
@@ -48,14 +48,14 @@ class ofApp : public ofBaseApp {
 		eyetracker tracker;
 		ofPoint eyeSmoothed;
         ofSoundStream soundstream;
-		
+		int fixationSamples;
         int mouseDwell;
 		void mySmooth();
 		bool fixation();
 		bool prFixation;
 		ofPoint smooth;
 		bool help;
-		ofPoint gbuffer[DISPL];
+		ofPoint *gbuffer;
 		int bpos;
 		ofPoint raw;
 		int BS;

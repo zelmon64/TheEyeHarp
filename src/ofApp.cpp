@@ -25,6 +25,7 @@ void ofApp::setup(){
 	int discNotesNumber=15, stepSequencerNotesNumber=6, bufferSize=512;
 	bool chordsONOFF=false, showScale = false, mouseEyetribeInput = false, clickDwell = false, tomidi=false,fullscreen=false;
 	int temp;
+	fixationSamples = 4;
 	if (initParam == NULL)
 		cout << "No eyeharp.cgf file found\n";
 	else {
@@ -53,9 +54,12 @@ void ofApp::setup(){
 				if (fullscreen)
 					ofToggleFullscreen();
 			}
+			else if (strcmp(paramName, "fixationSamples") == 0) 
+				fixationSamples = temp;
 		}
 		fclose(initParam);
 	}
+	gbuffer = new ofPoint[fixationSamples];
 	Switch::click = !clickDwell;
 	printf("discNotesNumber: %d\nstepSequencerNotesNumber: %d\nbufferSize: %d\nchordsONOFF: %d\nshowScale: %d\nmouseEyetribeInput: %d\nclickDwell: %d\nfullscreen: %d", discNotesNumber, stepSequencerNotesNumber, bufferSize, chordsONOFF, showScale, mouseEyetribeInput, clickDwell,fullscreen);
 //    glutSetCursor(GLUT_CURSOR_CROSSHAIR); 
@@ -134,8 +138,8 @@ void ofApp::update(){
 					raw.x = myTobii.eventParams.X;
 					raw.y = myTobii.eventParams.Y;
 				}
-
 				mySmooth();
+				//eyeSmoothed = ofPoint(raw.x - ofGetWindowPositionX(), smooth.y - ofGetWindowPositionY());
 				eyeSmoothed = ofPoint(smooth.x - ofGetWindowPositionX(), smooth.y - ofGetWindowPositionY());
 			}
 			else {
@@ -177,20 +181,20 @@ bool ofApp::fixation() {
 	avgNew.x = 0; avgNew.y = 0;
 	int prpos = bpos - 1;
 	if (prpos < 0)
-		prpos += DISPL;
-	for (i = 0; i <DISPL ; i ++) {
+		prpos += fixationSamples ;
+	for (i = 0; i <fixationSamples  ; i ++) {
 		avgNew.x += gbuffer[i].x;
 		avgNew.y += gbuffer[i].y;
 	}
-	avgNew.x /= (float)DISPL;
-	avgNew.y /= (float)DISPL;
+	avgNew.x /= (float)fixationSamples ;
+	avgNew.y /= (float)fixationSamples ;
 	fix = true;
-	for (i = 0; i <DISPL; i++) {
+	for (i = 0; i <fixationSamples ; i++) {
 		if (ofDist(gbuffer[i].x, gbuffer[i].y, avgNew.x, avgNew.y) > STH * ofGetScreenHeight()) {
 			fix=false;
 		}
 	}
-	bpos = (bpos + 1) % DISPL;
+	bpos = (bpos + 1) % fixationSamples ;
 	return fix;
 }
 
