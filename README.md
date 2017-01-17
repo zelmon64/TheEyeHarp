@@ -29,3 +29,10 @@ help 0                      (show/hide the available shortcuts)
 tomidi 0                    (switch between internal synth and midi out)
 
 fullscreen 0                (windowed/fullscreen mode)
+
+monophonicStep 1            (allow only one note per column in the step Sequencer)
+
+fixationSamples 4           (how quickly a fixation should be detected) 
+
+showGaze 1                  (show or hide a pointer corresponding to the gaze of the user)
+
