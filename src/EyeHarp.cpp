@@ -477,7 +477,9 @@ void EyeHarp::draw(){
         transposeSlider.draw();
     }
 	if (showCircle || (focusPoints.value && layer.value == 1)) {
-		ofCircle(gaze, 5);
+		ofNoFill();
+		ofCircle(gaze, height*0.076);
+		ofFill();
 		/*string mousPos = ofToString(gaze.x)+ " ," + ofToString(gaze.y);
 		ofDrawBitmapString(mousPos, gaze);*/
 	}
