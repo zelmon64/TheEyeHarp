@@ -23,7 +23,7 @@ void ofApp::setup(){
 	initParam = fopen("eyeharp.txt", "r");
 	char paramName[30];
 	int discNotesNumber=15, stepSequencerNotesNumber=6, bufferSize=512;
-	bool chordsONOFF=false, showScale = false, mouseEyetribeInput = false, clickDwell = false, tomidi=false,fullscreen=false, monophonic = true;
+	bool chordsONOFF=false, showScale = false, mouseEyetribeInput = false, clickDwell = false, tomidi=false,fullscreen=false, monophonic = true, showGaze=true;
 	int temp;
 	fixationSamples = 4;
 	if (initParam == NULL)
@@ -58,12 +58,14 @@ void ofApp::setup(){
 				fixationSamples = temp;
 			else if (strcmp(paramName, "monophonicStep") == 0)
 				monophonic = temp;
+			else if(strcmp(paramName, "showGaze") == 0)
+				showGaze = temp;
 		}
 		fclose(initParam);
 	}
 	gbuffer = new ofPoint[fixationSamples];
 	Switch::click = !clickDwell;
-	printf("discNotesNumber: %d\nstepSequencerNotesNumber: %d\nbufferSize: %d\nchordsONOFF: %d\nshowScale: %d\nmouseEyetribeInput: %d\nclickDwell: %d\nfullscreen: %d", discNotesNumber, stepSequencerNotesNumber, bufferSize, chordsONOFF, showScale, mouseEyetribeInput, clickDwell,fullscreen);
+	//printf("discNotesNumber: %d\nstepSequencerNotesNumber: %d\nbufferSize: %d\nchordsONOFF: %d\nshowScale: %d\nmouseEyetribeInput: %d\nclickDwell: %d\nfullscreen: %d", discNotesNumber, stepSequencerNotesNumber, bufferSize, chordsONOFF, showScale, mouseEyetribeInput, clickDwell,fullscreen);
 //    glutSetCursor(GLUT_CURSOR_CROSSHAIR); 
     //glutSetCursor(GLUT_CURSOR_NONE);
 	ofBackground(50,60,30);
@@ -74,6 +76,7 @@ void ofApp::setup(){
 	//ofToggleFullscreen();
 	gaze= mouseEyetribeInput;
 	HARP.setup(discNotesNumber, stepSequencerNotesNumber, chordsONOFF, showScale, clickDwell,tomidi);
+	HARP.showCircle = showGaze;
 	HARP.stepSeq.monophonic.setup("monophonic", monophonic, ofPoint(-1.2, 0.8), .095, 800, .8, .4, 0, false);
 	tribe.setup();
 	myTobii.setup();
@@ -137,6 +140,7 @@ void ofApp::update(){
 			}
 			else if (myTobii.success) {
 				tracker = TOBII;
+				//SetCursorPos(myTobii.eventParams.X, myTobii.eventParams.Y);
 				if (myTobii.eventParams.X > ofGetWindowPositionX() && myTobii.eventParams.X<ofGetWindowPositionX() + ofGetWidth() && myTobii.eventParams.Y>ofGetWindowPositionY() && myTobii.eventParams.Y < ofGetWindowPositionY() + ofGetHeight()) {
 					raw.x = myTobii.eventParams.X;
 					raw.y = myTobii.eventParams.Y;
@@ -144,6 +148,7 @@ void ofApp::update(){
 				mySmooth();
 				//eyeSmoothed = ofPoint(raw.x - ofGetWindowPositionX(), smooth.y - ofGetWindowPositionY());
 				eyeSmoothed = ofPoint(smooth.x - ofGetWindowPositionX(), smooth.y - ofGetWindowPositionY());
+				//SetCursorPos(smooth.x, smooth.y);
 			}
 			else {
 				printf("Did not connect to any Eye-Tracker\n");
@@ -158,6 +163,7 @@ void ofApp::update(){
 		if(record!=NULL)
 			fprintf(record,"%f,%f,%d,%d\n",eyeSmoothed.x,eyeSmoothed.y,sacadic,HARP.stepSeq.curSample);
 	}
+	sacadic = true;
 	HARP.update(eyeSmoothed,&sacadic);	
 }
 

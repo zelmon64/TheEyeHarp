@@ -47,6 +47,8 @@ void Disc::setup(int NumOfNotes,float red,float green,float blue,int * Chord, bo
 	//sharp45.setup("4# 5#", false, ofPoint(-1.0f, -0.8f), 0.1, 100, 0.6f, 0.2f, 0.0f, false);
 	releaseDist = height2*RELEASE_DIST;
 	releaseDistEnd = releaseDist*1.2;
+	pressed = false;
+	notesONOFF.setup("noteONOFF", true, ofPoint(0, 0), 1, 1000, 5, 5, 5, false);
 }
 
 

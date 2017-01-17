@@ -76,7 +76,6 @@ void EyeHarp::setup(int discNotesNumber, int stepSequencerNotesNumber, bool chor
     fullScreen.setup("FullScreen",false,ofPoint(1.5f,0.9f),0.05f,1000,0.6,0.2,0.1,false);
     eye.disc.beat=&stepSeq.beat;
     eye.disc.noteFrames=&stepSeq.noteFrames;
-	showCircle=true;
 	//if the interface starts with midi out
 	/*masterVolume.setValueByColor(0);
 	masterVolumeSlider.setValue(0);*/

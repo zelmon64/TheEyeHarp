@@ -1,4 +1,4 @@
-discNotesNumber 15
+discNotesNumber 12
 stepSequencerNotesNumber 6
 chords 0
 showScale 0
@@ -10,3 +10,4 @@ tomidi 0
 fullscreen 0
 monophonicStep 1
 fixationSamples 4
+showGaze 1
