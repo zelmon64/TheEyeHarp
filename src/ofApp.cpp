@@ -81,9 +81,10 @@ void ofApp::setup(){
 	tribe.setup();
 	myTobii.setup();
 	
-	ofSoundStreamListDevices();
-	ofSoundStreamSetup(2, 0, SAMPLERATE, bufferSize, 4);
-	//soundstream.setup(this, 2, 0, SAMPLERATE, bufferSize, 4);
+	printf("Sound Devices:\n");
+	//ofSoundStreamListDevices();
+	soundstream.printDeviceList();
+	soundstream.setup(this,2, 0, SAMPLERATE, bufferSize, 4);
 	
 	mouseDwell=0;
 	printf("\nPress Esc to exit when the EyeHarp window is active or Ctrl+c in the current terminal\n");

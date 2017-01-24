@@ -1,8 +1,8 @@
-discNotesNumber 12
-stepSequencerNotesNumber 6
+discNotesNumber 15
+stepSequencerNotesNumber 8
 chords 0
 showScale 0
-mouseEyeTracker 1
+mouseEyeTracker 0
 clickDwell 1
 bufferSize 512
 help 0
