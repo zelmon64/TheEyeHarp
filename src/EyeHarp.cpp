@@ -7,18 +7,28 @@ EyeHarp::~EyeHarp(){
 void EyeHarp::setup(int discNotesNumber, int stepSequencerNotesNumber, bool chordsONOFF, bool showScaleInit, bool clickDwell,bool tomidi){
     //midiOut.listPorts();
 	string s1("LoopBe");
+	string s2("loopMIDI");
 	exit.setup("QUIT", false, ofPoint(1.1, 0.8), 0.1, 1000, 0, 0, 0, false);
 	midiAvailable=false;
+	midiOut.listPorts();
 	for(int i=0;i<midiOut.getNumPorts();i++){
-		string s2(midiOut.getPortName(i));
-		if(s2.compare(0,6,s1)==0){
+		string s(midiOut.getPortName(i));
+		//cout << s << endl;
+		if(s.compare(0,6,s1)==0){
 			midiOut.openPort(i);
 			printf("Connected to LoopBe Vitrual Midi port: Sending melodies to channel 1 and arpeggios to Channel 2\n");
 			midiAvailable=true;
+			break;
+		}
+		else if (s.compare(0, 8, s2) == 0) {
+			midiOut.openPort(i);
+			printf("Connected to loopMidi Visrtual Midi Port: Sending melodies to channel 1 and arpeggios to Channel 2\n");
+			midiAvailable = true;
+			break;
 		}
 	}
 	if(midiAvailable==false)
-		printf("LoopBe Virtual Midi Port Not Found. Midi Out Disabled!\n");
+		printf("Virtual Midi Port Not Found. Midi Out Disabled!\n");
 
     chord=chordsONOFF;
 	eye.setup(&chord,Scale,&(configure.value), discNotesNumber,tomidi);
