@@ -58,7 +58,7 @@ void sequencerNote::update(ofPoint gaze,bool*sacadic){
 	if(!(*curSample>*waitSamples && *curSample<(*waitSamples+*noteSamples))){
 		
 		if(sounds==false){
-			//button.setColor(red,green,blue);
+			button.setColor(red,green,blue);
 			sounds=true;
 			
 		}
@@ -75,7 +75,7 @@ void sequencerNote::update(ofPoint gaze,bool*sacadic){
 					beatDist=beatDist*0.9+0.1*tempDist;
 			}*/
 		}
-		//button.setColor(2*red,2*green,2*blue);
+		button.setColor(2*red,2*green,2*blue);
 		sounds=false;
 	}
 }

@@ -4,27 +4,42 @@
 EyeHarp::~EyeHarp(){
 
 }
-void EyeHarp::setup(int discNotesNumber, int stepSequencerNotesNumber, bool chordsONOFF, bool showScaleInit, bool clickDwell,bool tomidi){
+void EyeHarp::setup(int discNotesNumber, int stepSequencerNotesNumber, bool chordsONOFF, bool showScaleInit, bool clickDwell,bool tomidi, bool LoopBeLoopMidi){
     //midiOut.listPorts();
-	string s1("LoopBe");
-	string s2("loopMIDI");
+	string s1;
+	string s2;
+	soundWorking = false;
+	sampleDIVframe = SAMPLERATE / FRAMERATE;
+	if (LoopBeLoopMidi == false) {
+		s1 = "LoopBe";
+		s2 = "loopMI";
+	}
+	else
+	{
+		s1 = "loopMI";
+		s2 = "LoopBe";
+	}
 	exit.setup("QUIT", false, ofPoint(1.1, 0.8), 0.1, 1000, 0, 0, 0, false);
 	midiAvailable=false;
 	midiOut.listPorts();
-	for(int i=0;i<midiOut.getNumPorts();i++){
+	for (int i = 0; i < midiOut.getNumPorts(); i++) {
 		string s(midiOut.getPortName(i));
-		//cout << s << endl;
-		if(s.compare(0,6,s1)==0){
+		if (s.compare(0, 6, s1) == 0) {
 			midiOut.openPort(i);
-			printf("Connected to LoopBe Vitrual Midi port: Sending melodies to channel 1 and arpeggios to Channel 2\n");
-			midiAvailable=true;
-			break;
-		}
-		else if (s.compare(0, 8, s2) == 0) {
-			midiOut.openPort(i);
-			printf("Connected to loopMidi Visrtual Midi Port: Sending melodies to channel 1 and arpeggios to Channel 2\n");
+			cout << "Connected to " << s << ". Sending melodies to channel 1 and arpeggios to Channel 2\n";
 			midiAvailable = true;
 			break;
+		}
+	}
+	if (!midiAvailable) {
+		for (int i = 0; i < midiOut.getNumPorts(); i++) {
+			string s(midiOut.getPortName(i));
+			if (s.compare(0, 6, s2) == 0) {
+				midiOut.openPort(i);
+				cout << "\nConnected to " << s << ". Sending melodies to channel 1 and arpeggios to Channel 2\n";
+				midiAvailable = true;
+				break;
+			}
 		}
 	}
 	if(midiAvailable==false)
@@ -42,8 +57,8 @@ void EyeHarp::setup(int discNotesNumber, int stepSequencerNotesNumber, bool chor
 	phase 				= 0;
 	phaseAdder 			= 0.0f;
 	phaseAdderTarget 	= 0.0f;
-	volume				= 0.1f;
-	targetVolume		= 0.1f;
+	volume				= 0.99f;
+	targetVolume		= 0.99f;
 //	lAudio = new float[256];
 //	rAudio = new float[256];
     note=0;
@@ -58,7 +73,7 @@ void EyeHarp::setup(int discNotesNumber, int stepSequencerNotesNumber, bool chor
     ofPoint stepPosUP=ofPoint(1.35,0.2);
     ofPoint stepPosDW=ofPoint(1.35,-.2f);
     masterMultiPlex.setup(3,masterNames,0,ofPoint(1.12,-0.4),HALF_PI,0.05,800);
-    tempo.setup("Tempo",140,ofPoint(-1.25, -0.83),ofPoint(-1.61, -0.83),30.0f,600.0f,0.085f,300,5,.9f,.1f,.0f,true);
+    tempo.setup("Tempo",140,ofPoint(-1.25, -0.83),ofPoint(-1.61, -0.83),30.0f,600.0f,0.085f,500,1,.9f,.1f,.0f,true);
     masterVolume.setup("Volume",150, stepPosUP,stepPosDW,0,1,0.045f,500,20,.9f,.1f,.0f);
     transpose.setup("Transp",stepPosUP,stepPosDW,-5,6,0,1,0.045f,800,0.6f,0.2f,0.0f,false);
     tempoSlider.setup(sliderPos,tempo.value,tempo.min,tempo.max,0.7,true);
@@ -308,6 +323,7 @@ void EyeHarp::update(ofPoint Gaze,bool *sacadic){
 
                                 if(prDist<eye.disc.dist){
 									distVol=(MINVOL+(1-MINVOL)*((float)(eye.disc.dist-eye.disc.neutralRegion)/(height/2-eye.disc.neutralRegion)));
+									//cout << distVol << endl;
                                     targetVolume=eye.volume.value*distVol;
                                     volumeChanged=true;
                                 }
@@ -352,7 +368,7 @@ void EyeHarp::update(ofPoint Gaze,bool *sacadic){
 					midiOut.sendNoteOff(MIDICH1, midinote, 0);//if we look outside, release
 				}
 			if(volumeChanged && velocity<100){
-				int tempVol=volume*200;
+				int tempVol=targetVolume*200;
 				if(tempVol<50)
 					tempVol=50;
 				if(tempVol>127)
@@ -381,12 +397,18 @@ void EyeHarp::update(ofPoint Gaze,bool *sacadic){
 		}
 		
 	}
+	if (!soundWorking) {
+		for(int i=0;i<sampleDIVframe;i++)
+			stepSeq.getSample();
+	}
 }
 
 void EyeHarp::audioRequested 	(float * output, int bufferSize, int nChannels){
    // if(eye.timbrePresets.selected!=3){
         // sin (n) seems to have trouble when n is very large, so we
         // keep phase in the range of 0-TWO_PI like this:
+	/*cout << "." << endl;*/
+	soundWorking = true;
         while (phase > TWO_PI){
             phase -= TWO_PI;
         }

@@ -23,7 +23,7 @@ void ofApp::setup(){
 	initParam = fopen("eyeharp.txt", "r");
 	char paramName[30];
 	int discNotesNumber=15, stepSequencerNotesNumber=6, bufferSize=512;
-	bool chordsONOFF=false, showScale = false, mouseEyetribeInput = false, clickDwell = false, tomidi=false,fullscreen=false, monophonic = true, showGaze=true;
+	bool loopBeLoopMIDI=0, chordsONOFF=false, showScale = false, mouseEyetribeInput = false, clickDwell = false, tomidi=false,fullscreen=false, monophonic = true, showGaze=true;
 	int temp;
 	fixationSamples = 4;
 	if (initParam == NULL)
@@ -58,8 +58,10 @@ void ofApp::setup(){
 				fixationSamples = temp;
 			else if (strcmp(paramName, "monophonicStep") == 0)
 				monophonic = temp;
-			else if(strcmp(paramName, "showGaze") == 0)
+			else if (strcmp(paramName, "showGaze") == 0)
 				showGaze = temp;
+			else if (strcmp(paramName, "LoopBe_loopMIDI") == 0)
+				loopBeLoopMIDI = temp;
 		}
 		fclose(initParam);
 	}
@@ -75,7 +77,7 @@ void ofApp::setup(){
 	//ofHideCursor();
 	//ofToggleFullscreen();
 	gaze= mouseEyetribeInput;
-	HARP.setup(discNotesNumber, stepSequencerNotesNumber, chordsONOFF, showScale, clickDwell,tomidi);
+	HARP.setup(discNotesNumber, stepSequencerNotesNumber, chordsONOFF, showScale, clickDwell,tomidi, loopBeLoopMIDI);
 	HARP.showCircle = showGaze;
 	HARP.stepSeq.monophonic.setup("monophonic", monophonic, ofPoint(-1.2, 0.8), .095, 800, .8, .4, 0, false);
 	tribe.setup();
@@ -84,7 +86,7 @@ void ofApp::setup(){
 	printf("Sound Devices:\n");
 	//ofSoundStreamListDevices();
 	soundstream.printDeviceList();
-	soundstream.setup(this,2, 0, SAMPLERATE, bufferSize, 4);
+	soundstream.setup(this, 2, 0, SAMPLERATE, bufferSize, 4);
 	
 	mouseDwell=0;
 	printf("\nPress Esc to exit when the EyeHarp window is active or Ctrl+c in the current terminal\n");
@@ -235,7 +237,7 @@ void ofApp::draw(){
 }
 
 void ofApp::audioRequested 	(float * output, int bufferSize, int nChannels){
-
+	//cout << HARP.stepSeq.curSample << endl;
         HARP.audioRequested 	(output, bufferSize, nChannels);
 }
 

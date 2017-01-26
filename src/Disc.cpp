@@ -3,6 +3,7 @@
 #define NR 0.29
 #define FIXVEL 100
 #define RELEASE_DIST 1
+#define RELEASE_DIST_END 1.2
 void Disc::setup(int NumOfNotes,float red,float green,float blue,int * Chord, bool Advanced,bool* Conf){
     NotesNumber.setup("NotesNum",ofPoint(-1.2,-0.58+5*0.18),ofPoint(-1.62,-0.58+5*0.18),7,36,NumOfNotes,1,0.2,1000,0.9,0.2,NR);
     chord=Chord;
@@ -46,7 +47,7 @@ void Disc::setup(int NumOfNotes,float red,float green,float blue,int * Chord, bo
 	replaySameActive=true;
 	//sharp45.setup("4# 5#", false, ofPoint(-1.0f, -0.8f), 0.1, 100, 0.6f, 0.2f, 0.0f, false);
 	releaseDist = height2*RELEASE_DIST;
-	releaseDistEnd = releaseDist*1.2;
+	releaseDistEnd = releaseDist*RELEASE_DIST_END;
 	pressed = false;
 	notesONOFF.setup("noteONOFF", true, ofPoint(0, 0), 1, 1000, 5, 5, 5, false);
 }
@@ -175,7 +176,7 @@ void Disc::update(ofPoint gaze, float* velocity,bool *sacadic){
 			inside=true;
 			changed=true;
 		}
-		/*if(tempNote==melody && dist<neutralRegion*1.2 && !inside && *velocity < 100){
+		/*if(tempNote==melody && dist<neutralRegion*RELEASE_DIST_END && !inside && *velocity < 100){
 			note=prNote;
 			melody=note;
 			inside=true;
@@ -300,7 +301,9 @@ void Disc::draw(){
         distVolume.draw();
         percussive.draw();
     }
-
+	ofNoFill();
+	ofCircle(width2, height2, releaseDistEnd);
+	ofFill();
 	 //sharp45.draw();
 //    ofSetColor(0,0,0);
 //    int melPosX=width2-cos((melody+0.5)*tangle)*inSpotDist;
@@ -330,7 +333,7 @@ void Disc::resized(int w, int h){
 	sharp45.resized(w, h);
 	pointSize=height*0.005;
 	releaseDist = height2*RELEASE_DIST;
-	releaseDistEnd = releaseDist*1.2;
+	releaseDistEnd = releaseDist*RELEASE_DIST_END;
 }
 
 void Disc::keyPressed(int key){
