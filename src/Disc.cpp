@@ -205,6 +205,8 @@ float Disc::getMagVal(int i){
 }
 
 void Disc::draw(){
+	ofSetColor(60,70,40);
+	ofCircle(width2, height2, releaseDistEnd);
 	int brightActive=(float)(dist-neutralRegion)/(float)(height2-neutralRegion)*80;
     for(int i=0;i<NotesNumber.value;i++){
 		if(chordONOFF.value && (i+CHORDSNUM+1-NotesNumber.value<=CHORDSNUM) && (i+CHORDSNUM-NotesNumber.value>=0)){
@@ -301,9 +303,7 @@ void Disc::draw(){
         distVolume.draw();
         percussive.draw();
     }
-	ofNoFill();
-	ofCircle(width2, height2, releaseDistEnd);
-	ofFill();
+	
 	 //sharp45.draw();
 //    ofSetColor(0,0,0);
 //    int melPosX=width2-cos((melody+0.5)*tangle)*inSpotDist;
