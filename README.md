@@ -18,6 +18,8 @@ chords 0                    (0: not show chords, 1: show chords)
 
 showScale 0                 (show/hide the "pedals" of the harp)
 
+scalePreset 1               (show preset scale instead of the "pedals")
+
 mouseEyetribeInput 0        (switch betweeb mouse input and input straight from the sdk of the eye tracker)
 
 clickDwell 1                (switch between click and dwell time selection method)
@@ -36,3 +38,5 @@ fixationSamples 4           (how quickly a fixation should be detected)
 
 showGaze 1                  (show or hide a pointer corresponding to the gaze of the user)
 
+LoopBe_loopMIDI 1           (which is the preferable midi port, if both are present)
+           
