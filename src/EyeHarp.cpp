@@ -7,14 +7,13 @@ enum {
 EyeHarp::~EyeHarp(){
 
 }
-void EyeHarp::setup(int discNotesNumber, int stepSequencerNotesNumber, bool chordsONOFF, int showScaleInit, bool clickDwell,bool tomidi, bool LoopBeLoopMidi){
+void EyeHarp::setup(int discNotesNumber, int stepSequencerNotesNumber, bool chordsONOFF, bool showScaleInit, bool scalePreset, bool clickDwell,bool tomidi, bool LoopBeLoopMidi){
     //midiOut.listPorts();
 	string s1;
 	string s2;
 	soundWorking = false;
 	presetscale = false;
-	if (showScaleInit == 2) presetscale = true;
-	cout << "showscaleInit: "<<showScaleInit<<"         presetscale: " << presetscale << endl;
+	presetscale = scalePreset;
 	sampleDIVframe = SAMPLERATE / FRAMERATE;
 	if (LoopBeLoopMidi == false) {
 		s1 = "LoopBe";

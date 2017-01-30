@@ -1,7 +1,8 @@
 discNotesNumber 15
 stepSequencerNotesNumber 8
 chords 0
-showScale 2
+showScale 0
+scalePreset 1
 mouseEyeTracker 0
 clickDwell 1
 bufferSize 512

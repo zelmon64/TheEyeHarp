@@ -22,8 +22,8 @@ void ofApp::setup(){
 	help = true;
 	initParam = fopen("eyeharp.txt", "r");
 	char paramName[30];
-	int discNotesNumber=15, stepSequencerNotesNumber=6, bufferSize=512, showScale = 1 ;
-	bool loopBeLoopMIDI = 0, chordsONOFF = false,  mouseEyetribeInput = false, clickDwell = false, tomidi = false, fullscreen = false, monophonic = true, showGaze = true;
+	int discNotesNumber=15, stepSequencerNotesNumber=6, bufferSize=512 ;
+	bool showScale = true, scalePreset=true, loopBeLoopMIDI = 0, chordsONOFF = false,  mouseEyetribeInput = false, clickDwell = false, tomidi = false, fullscreen = false, monophonic = true, showGaze = true;
 	int temp;
 	fixationSamples = 4;
 	if (initParam == NULL)
@@ -40,7 +40,9 @@ void ofApp::setup(){
 			else if (strcmp(paramName, "chords") == 0)
 				chordsONOFF = (bool)temp;
 			else if (strcmp(paramName, "showScale") == 0)
-				showScale = temp;
+				showScale = (bool)temp;
+			else if (strcmp(paramName, "scalePreset") == 0)
+				scalePreset = (bool)temp;
 			else if (strcmp(paramName, "mouseEyeTracker") == 0)
 				mouseEyetribeInput = (bool)temp;
 			else if (strcmp(paramName, "clickDwell") == 0)
@@ -77,7 +79,7 @@ void ofApp::setup(){
 	//ofHideCursor();
 	//ofToggleFullscreen();
 	gaze= mouseEyetribeInput;
-	HARP.setup(discNotesNumber, stepSequencerNotesNumber, chordsONOFF, showScale, clickDwell,tomidi, loopBeLoopMIDI);
+	HARP.setup(discNotesNumber, stepSequencerNotesNumber, chordsONOFF, showScale,scalePreset, clickDwell,tomidi, loopBeLoopMIDI);
 	HARP.showCircle = showGaze;
 	HARP.stepSeq.monophonic.setup("monophonic", monophonic, ofPoint(-1.2, 0.8), .095, 800, .8, .4, 0, false);
 	tribe.setup();
