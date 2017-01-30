@@ -1,7 +1,7 @@
 discNotesNumber 15
 stepSequencerNotesNumber 8
 chords 0
-showScale 0
+showScale 2
 mouseEyeTracker 0
 clickDwell 1
 bufferSize 512
@@ -12,3 +12,4 @@ monophonicStep 1
 fixationSamples 4
 showGaze 1
 LoopBe_loopMIDI 1
+presetChords 1

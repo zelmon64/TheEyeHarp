@@ -35,7 +35,7 @@ class EyeHarp{
         Eye eye;
 //        arpeggiator * arpeggio;
 //    stepSeq stepseq;
-        void setup(int discNotesNumber, int stepSequencerNotesNumber, bool chordsONOFF, bool showScale, bool clickDwell,bool tomidi, bool LoopBeLoopMidi);
+        void setup(int discNotesNumber, int stepSequencerNotesNumber, bool chordsONOFF, int showScale, bool clickDwell,bool tomidi, bool LoopBeLoopMidi);
 		void update(ofPoint Gaze,bool*sacadic);
 		void draw();
 		void resized(int w, int h);
@@ -59,7 +59,9 @@ class EyeHarp{
 		Switch configure;
 		Switch showScale;
 		recordChords chordLoop;
+		bool presetscale; //0 if we want to the user to control all seperate semitones. 1 if we want to desplay presets.
 //        vrpn_Analog_Remote* VRPNAnalog;
+		xorSwitch musicalModes;
         ~EyeHarp();
     private:
         bool chordChanged;

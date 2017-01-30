@@ -4,9 +4,7 @@ enum{
     NOTESNUM,VIBWIDTH,VIBFREQ,RELEASE,ATTACK,GLISSANTO,VOLUME
 };
 
-enum{
-    MAJOR,MINOR,HITZAZ,HITZAZSKIAR,DORIAN,PHRYGIAN,MYXOLYDIAN
-};
+
 
 void Eye::setup(int * chord, DistControl * Scale,bool* Conf,int noteNumber,bool tomidi){
 	conf=Conf;
@@ -78,16 +76,7 @@ void Eye::setup(int * chord, DistControl * Scale,bool* Conf,int noteNumber,bool 
 	else
 		timbrePresets.setup(4, instrumentNames, 2, ofPoint(-1.93, 0.85), 0, 0.072f, 1000);
 	disc.percussive.value=true;
-    char* musicalModesNames[7];
-    musicalModesNames[0]="Major";
-    musicalModesNames[1]="Minor";
-    musicalModesNames[2]="Hitzaz";
-    musicalModesNames[3]="Hitzaz\nskiar";
-    musicalModesNames[4]="Dorian";
-    musicalModesNames[5]="Phrygian";
-    musicalModesNames[6]="Myxolydian";
-
-    musicalModes.setup(6,musicalModesNames,0,ofPoint(-1.4,-0.85),HALF_PI,0.06,1000);
+    
 
     notesNumSlider.setup(sliderPos,15, 7, 36, 0.7,false);
     vibratoWSlider.setup(sliderPos,128, 0, 255, 0.7,false);
@@ -123,79 +112,12 @@ void Eye::update(ofPoint Gaze, float* Velocity,bool *sacadic){
 
 void Eye::basicMode(){
     timbrePresets.update(gaze);
-   // musicalModes.update(gaze);
+   // 
   //  playArpeggio.update(gaze);
     if(timbrePresets.changed){
         setTimbrePreset();
     }
-    /*if(musicalModes.changed){
-        switch(musicalModes.selected){
-            case MAJOR:
-                scale[0].value=0;
-                scale[1].value=2;
-                scale[2].value=4;
-                scale[3].value=5;
-                scale[4].value=7;
-                scale[5].value=9;
-                scale[6].value=11;
-                break;
-            case MINOR:
-                scale[0].value=0;
-                scale[1].value=2;
-                scale[2].value=3;
-                scale[3].value=5;
-                scale[4].value=7;
-                scale[5].value=8;
-                scale[6].value=11;
-                break;
-            case HITZAZ:
-                scale[0].value=0;
-                scale[1].value=1;
-                scale[2].value=4;
-                scale[3].value=5;
-                scale[4].value=7;
-                scale[5].value=8;
-                scale[6].value=10;
-                break;
-            case HITZAZSKIAR:
-                scale[0].value=0;
-                scale[1].value=1;
-                scale[2].value=4;
-                scale[3].value=5;
-                scale[4].value=7;
-                scale[5].value=8;
-                scale[6].value=11;
-                break;
-            case DORIAN:
-                scale[0].value=0;
-                scale[1].value=2;
-                scale[2].value=3;
-                scale[3].value=5;
-                scale[4].value=7;
-                scale[5].value=9;
-                scale[6].value=10;
-                break;
-            case PHRYGIAN:
-                scale[0].value=0;
-                scale[1].value=1;
-                scale[2].value=3;
-                scale[3].value=5;
-                scale[4].value=7;
-                scale[5].value=8;
-                scale[6].value=10;
-                break;
-            case MYXOLYDIAN:
-                scale[0].value=0;
-                scale[1].value=2;
-                scale[2].value=4;
-                scale[3].value=5;
-                scale[4].value=7;
-                scale[5].value=9;
-                scale[6].value=10;
-                break;
-        }
-        scale[0].changed=true;
-    }
+    /*
     if(playArpeggio.value){
         for(int i=0;i<4;i++){
             arpInterface.arpVolume=0.5;
@@ -382,7 +304,6 @@ void Eye::resized(int w, int h){
     attackSlider.resized(w,h);
     glissantoSlider.resized(w,h);
     volumeSlider.resized(w,h);
-    musicalModes.resized(w,h);
     width=w;width2=w/2;
     height=h;height2=h/2;
     disc.resized(w,h);

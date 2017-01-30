@@ -1,14 +1,20 @@
 #include "EyeHarp.h"
 
 #define MINVOL 0.5
+enum {
+	MAJOR, MINOR, HITZAZ, HITZAZSKIAR, DORIAN, PHRYGIAN, MYXOLYDIAN
+};
 EyeHarp::~EyeHarp(){
 
 }
-void EyeHarp::setup(int discNotesNumber, int stepSequencerNotesNumber, bool chordsONOFF, bool showScaleInit, bool clickDwell,bool tomidi, bool LoopBeLoopMidi){
+void EyeHarp::setup(int discNotesNumber, int stepSequencerNotesNumber, bool chordsONOFF, int showScaleInit, bool clickDwell,bool tomidi, bool LoopBeLoopMidi){
     //midiOut.listPorts();
 	string s1;
 	string s2;
 	soundWorking = false;
+	presetscale = false;
+	if (showScaleInit == 2) presetscale = true;
+	cout << "showscaleInit: "<<showScaleInit<<"         presetscale: " << presetscale << endl;
 	sampleDIVframe = SAMPLERATE / FRAMERATE;
 	if (LoopBeLoopMidi == false) {
 		s1 = "LoopBe";
@@ -89,10 +95,19 @@ void EyeHarp::setup(int discNotesNumber, int stepSequencerNotesNumber, bool chor
     Scale[6].setup("VII",eye.harmonic[6].posUP_,eye.harmonic[6].posDW_,10,12,11,1, eye.Msize,500,0.5,0.2,0.0);
     curMasterVolume=masterVolume.value;
     prChord=chord;
-    char** names = new char*[2];
+    /*char** names = new char*[2];
     for(int i=0;i<2;i++)
-        names[i]=new char[20];
-   
+        names[i]=new char[20];*/
+	char* musicalModesNames[7];
+	musicalModesNames[0] = "Major";
+	musicalModesNames[1] = "Minor";
+	musicalModesNames[2] = "Hitzaz";
+	musicalModesNames[3] = "Hitzaz\nskiar";
+	musicalModesNames[4] = "Dorian";
+	musicalModesNames[5] = "Phrygian";
+	musicalModesNames[6] = "Myxolydian";
+	musicalModes.setup(6, musicalModesNames, 0, ofPoint(-1.6, -1.15), HALF_PI, 0.082, 1000);
+
     layer.setup("Layer",0,ofPoint(1.48,-0.69),0.16,800,0.6,0.2,0.1,false);
 //    loopNote.setup(60, 61, 0.2, 100, 1000);
 	stepSeq.setup(Scale,&(transpose.value), stepSequencerNotesNumber,&tempo,700,1.0f,.3f,.1f, &sampleRate,&chord, &midiOut,&(configure.value));
@@ -106,7 +121,7 @@ void EyeHarp::setup(int discNotesNumber, int stepSequencerNotesNumber, bool chor
 	masterVolumeSlider.setValue(0);*/
 	configure.setup("Setup",false,ofPoint(1.55,0),0.1,800,0.6,0.2,0.1,false);
 	chordLoop.setup(&stepSeq,&chord,&(eye.disc.chordONOFF.value),&chordChanged);
-	showScale.setup("ShowScale", showScaleInit, ofPoint(-1.5, -0.8), 0.1, 800, 0.5, 0.2, 0, false);
+	showScale.setup("ShowScale", showScaleInit>0, ofPoint(-1.5, -0.8), 0.1, 800, 0.5, 0.2, 0, false);
 	if (tomidi) {
 		masterVolume.setValueByColor(0);
 		masterVolumeSlider.setValue(0);
@@ -217,14 +232,88 @@ void EyeHarp::update(ofPoint Gaze,bool *sacadic){
 			}
 		}
 		else{
-			if(showScale.value)
-				for (int i = 0; i < 7; i++) {
-					Scale[i].update(gaze);
-					if (Scale[i].changed) {
-						stepSeq.updatePitch();
-						eye.arpInterface.updateChords();
+			if (showScale.value) {
+				if (presetscale) {
+					musicalModes.update(gaze);
+					if (musicalModes.changed) {
+						switch (musicalModes.selected) {
+						case MAJOR:
+							eye.scale[0].value = 0;
+							eye.scale[1].value = 2;
+							eye.scale[2].value = 4;
+							eye.scale[3].value = 5;
+							eye.scale[4].value = 7;
+							eye.scale[5].value = 9;
+							eye.scale[6].value = 11;
+							break;
+						case MINOR:
+							eye.scale[0].value = 0;
+							eye.scale[1].value = 2;
+							eye.scale[2].value = 3;
+							eye.scale[3].value = 5;
+							eye.scale[4].value = 7;
+							eye.scale[5].value = 8;
+							eye.scale[6].value = 11;
+							break;
+						case HITZAZ:
+							eye.scale[0].value = 0;
+							eye.scale[1].value = 1;
+							eye.scale[2].value = 4;
+							eye.scale[3].value = 5;
+							eye.scale[4].value = 7;
+							eye.scale[5].value = 8;
+							eye.scale[6].value = 10;
+							break;
+						case HITZAZSKIAR:
+							eye.scale[0].value = 0;
+							eye.scale[1].value = 1;
+							eye.scale[2].value = 4;
+							eye.scale[3].value = 5;
+							eye.scale[4].value = 7;
+							eye.scale[5].value = 8;
+							eye.scale[6].value = 11;
+							break;
+						case DORIAN:
+							eye.scale[0].value = 0;
+							eye.scale[1].value = 2;
+							eye.scale[2].value = 3;
+							eye.scale[3].value = 5;
+							eye.scale[4].value = 7;
+							eye.scale[5].value = 9;
+							eye.scale[6].value = 10;
+							break;
+						case PHRYGIAN:
+							eye.scale[0].value = 0;
+							eye.scale[1].value = 1;
+							eye.scale[2].value = 3;
+							eye.scale[3].value = 5;
+							eye.scale[4].value = 7;
+							eye.scale[5].value = 8;
+							eye.scale[6].value = 10;
+							break;
+						case MYXOLYDIAN:
+							eye.scale[0].value = 0;
+							eye.scale[1].value = 2;
+							eye.scale[2].value = 4;
+							eye.scale[3].value = 5;
+							eye.scale[4].value = 7;
+							eye.scale[5].value = 9;
+							eye.scale[6].value = 10;
+							break;
+						}
+						eye.scale[0].changed = true;
 					}
 				}
+				else {
+					for (int i = 0; i < 7; i++) {
+						Scale[i].update(gaze);
+						if (Scale[i].changed) {
+							stepSeq.updatePitch();
+							eye.arpInterface.updateChords();
+						}
+					}
+				}
+			}
 		}
 		chordLoop.update(Gaze);
 		/*if (eye.disc.sharp45.changed) {
@@ -474,9 +563,15 @@ void EyeHarp::draw(){
 			exit.draw();
 		}
 		else {
-			if (showScale.value)
-				for (int i = 0; i<7; i++)
-					Scale[i].draw();
+			if (showScale.value) {
+				if (presetscale) {
+					musicalModes.draw();
+				}
+				else {
+					for (int i = 0; i < 7; i++)
+						Scale[i].draw();
+				}
+			}
 		}
         if(eye.multiplex.selected==0 && eye.advanced.value)
             randomChord.draw();
@@ -543,6 +638,7 @@ void EyeHarp::resized(int w, int h){
 	configure.resized(w,h);
 	showScale.resized(w, h);
 	exit.resized(w,h);
+	musicalModes.resized(w, h);
 }
 
 

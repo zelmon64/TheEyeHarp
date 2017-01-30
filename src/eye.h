@@ -41,8 +41,9 @@ class Eye{
         void setTimbrePreset();
         int width;int width2;
         int height;int height2;
+		DistControl * scale;
     private:
-        xorSwitch musicalModes;
+        
         ofPoint multiPos;
         ofPoint sliderPos;
         ofPoint stepPosUP;ofPoint stepPosDW;
@@ -56,7 +57,6 @@ class Eye{
         slider attackSlider;
         slider glissantoSlider;
         slider volumeSlider;
-        DistControl * scale;
         void basicMode();
         Switch playArpeggio;
 };
