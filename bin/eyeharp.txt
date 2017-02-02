@@ -13,4 +13,3 @@ monophonicStep 1
 fixationSamples 4
 showGaze 1
 LoopBe_loopMIDI 1
-presetChords 1

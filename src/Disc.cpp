@@ -160,9 +160,9 @@ void Disc::update(ofPoint gaze, float* velocity,bool *sacadic){
 
 		if(ofDist(gaze.x,gaze.y,width2,height2)<releaseRegion && *velocity<FIXVEL)     notesONOFF.value=true;
 		
-		if((!chordONOFF.value || note<NotesNumber.value-CHORDSNUM ) && note!=-1){
+		if((!chordONOFF.value || note<NotesNumber.value-CHORDSNUM ) && note!=-1 && ofDist(gaze.x,gaze.y,width2,height2)>neutralRegion  &&  *velocity<FIXVEL){
 			melody=note;
-			float scaling=(float)(neutralRegion*0.6)/height2;
+			cout << ".";
 			//replaySame.setup("",false,ofPoint(-cos((note+0.5)*tangle)*scaling, -sin((melody+0.5)*tangle)*scaling),0.095,10,0,0,0,false);
 			replaySame.setup("",false,ofPoint(0,0),0.12,10,0,0,0,false);
 			replaySame.resized(width,height);
@@ -171,7 +171,7 @@ void Disc::update(ofPoint gaze, float* velocity,bool *sacadic){
 		}
 		if(replaySameActive)
 			replaySame.update(gaze);
-		if(replaySame.active && *velocity<FIXVEL && !inside /*&& percussive.value*/){
+		if(replaySame.active && *velocity<FIXVEL && !inside/* && percussive.value*/){
 			note=melody;
 			inside=true;
 			changed=true;
