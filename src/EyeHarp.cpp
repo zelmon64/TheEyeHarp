@@ -1,13 +1,13 @@
 #include "EyeHarp.h"
 
-#define MINVOL 0.5
+#define MINVOL 0.65
 enum {
 	MAJOR, MINOR, HITZAZ, HITZAZSKIAR, DORIAN, PHRYGIAN, MYXOLYDIAN
 };
 EyeHarp::~EyeHarp(){
 
 }
-void EyeHarp::setup(int discNotesNumber, int stepSequencerNotesNumber, bool chordsONOFF, bool showScaleInit, bool scalePreset, bool clickDwell,bool tomidi, bool LoopBeLoopMidi){
+void EyeHarp::setup(int discNotesNumber, int stepSequencerNotesNumber, bool chordsONOFF, bool showScaleInit, bool scalePreset, bool clickDwell,bool tomidi, bool LoopBeLoopMidi, bool semitoneActive){
     //midiOut.listPorts();
 	string s1;
 	string s2;
@@ -51,7 +51,7 @@ void EyeHarp::setup(int discNotesNumber, int stepSequencerNotesNumber, bool chor
 		printf("Virtual Midi Port Not Found. Midi Out Disabled!\n");
 
     chord=chordsONOFF;
-	eye.setup(&chord,Scale,&(configure.value), discNotesNumber,tomidi);
+	eye.setup(&chord,Scale,&(configure.value), discNotesNumber,tomidi,semitoneActive);
 
 	// 0 input channels
 	// 22050 samples per second
@@ -375,19 +375,22 @@ void EyeHarp::update(ofPoint Gaze,bool *sacadic){
                     }
                     else{
 						octave = (int)(eye.disc.note + 4) / 7;
-                        note=Scale[(eye.disc.note+4)%7].value;
+                        note=Scale[(eye.disc.note+4)%7].value - eye.disc.semi;
                         if(eye.disc.distVolume.value){
                             if(eye.disc.dist>eye.disc.neutralRegion && eye.disc.dist<ofGetHeight()/2 && (!eye.disc.fixation.value || velocity<100)){
 
                                 if(prDist<eye.disc.dist){
                                     distVol=(MINVOL+(1-MINVOL)*((float)(eye.disc.dist-eye.disc.neutralRegion)/(height/2-eye.disc.neutralRegion)));
-					
+									if (eye.disc.semi)
+										distVol = (distVol - 0.4)*1.4;
                                     targetVolume=eye.volume.value*distVol;
                                     volumeChanged=true;
                                 }
                                 else{
-                                    if(velocity<100){
+                                    if(velocity<FIXVEL){
 										distVol=(MINVOL+(1-MINVOL)*((float)(eye.disc.dist-eye.disc.neutralRegion)/(height/2-eye.disc.neutralRegion)));
+										if (eye.disc.semi)
+											distVol = (distVol - 0.4)*1.4;
 										targetVolume=eye.volume.value*distVol;
                                         volumeChanged=true;
                                     }
@@ -404,21 +407,26 @@ void EyeHarp::update(ofPoint Gaze,bool *sacadic){
                     }
                 }
                 else{
-                    octave=(int)(eye.disc.note+4)/7;
-                    note=Scale[(eye.disc.note+4)%7].value;
+					octave=(int)(eye.disc.note+4)/7;
+                    note=Scale[(eye.disc.note+4)%7].value-eye.disc.semi;
+					//cout << "NOTE: " << note;
                     if(eye.disc.distVolume.value){
-                            if(eye.disc.dist>eye.disc.neutralRegion && eye.disc.dist<ofGetHeight()/2 ){
+                            if(eye.disc.dist>eye.disc.neutralRegion && (eye.disc.dist<ofGetHeight()/2 || eye.disc.semi==1)){
 
                                 if(prDist<eye.disc.dist){
 									distVol=(MINVOL+(1-MINVOL)*((float)(eye.disc.dist-eye.disc.neutralRegion)/(height/2-eye.disc.neutralRegion)));
+									if (eye.disc.semi)
+										distVol = (distVol - 0.4)*1.4;
 									//cout << distVol << endl;
                                     targetVolume=eye.volume.value*distVol;
                                     volumeChanged=true;
                                 }
                                 else{
-                                    if(velocity<100){
+                                    if(velocity<FIXVEL){
                                         distVol=(MINVOL+(1-MINVOL)*((float)(eye.disc.dist-eye.disc.neutralRegion)/(height/2-eye.disc.neutralRegion)));
-                                        targetVolume=eye.volume.value*distVol;
+										if (eye.disc.semi)
+											distVol = (distVol - 0.4)*1.4;
+										targetVolume=eye.volume.value*distVol;
                                         volumeChanged=true;
                                     }
                                 }
@@ -452,7 +460,7 @@ void EyeHarp::update(ofPoint Gaze,bool *sacadic){
 	if(midiAvailable){
 		if(eye.timbrePresets.selected==3 ){
 			
-			if(ofDist(gaze.x,gaze.y,eye.width2,eye.height2)>eye.disc.releaseDist && ofDist(gaze.x, gaze.y, eye.width2, eye.height2)<eye.disc.releaseDistEnd && velocity<100){
+			if(ofDist(gaze.x,gaze.y,eye.width2,eye.height2)>eye.disc.releaseDist && ofDist(gaze.x, gaze.y, eye.width2, eye.height2)<eye.disc.releaseDistEnd && velocity<FIXVEL && !eye.disc.semi){
 					midiOut.sendNoteOff(MIDICH1, midinote, 0);//if we look outside, release
 				}
 			if(volumeChanged && velocity<100){

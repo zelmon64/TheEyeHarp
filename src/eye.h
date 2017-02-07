@@ -15,7 +15,7 @@
 class Eye{
     public:
         Disc disc;
-        void setup(int * chord,DistControl* Scale,bool* conf,int noteNumbers,bool tomidi);
+        void setup(int * chord,DistControl* Scale,bool* conf,int noteNumbers,bool tomidi, bool semitoneActive);
         void update(ofPoint Gaze, float * velocity,bool *sacadic);
         void draw();
         void resized(int w, int h);

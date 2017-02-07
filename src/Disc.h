@@ -13,12 +13,14 @@
 
 class Disc{
     public:
-        void setup(int NumOfNotes,float r,float g,float b,int * Chord, bool Advanced, bool* Conf);
+        void setup(int NumOfNotes,float r,float g,float b,int * Chord, bool Advanced, bool* Conf,bool semitoneActive);
         void update(ofPoint Gaze, float * Velocity,bool *sacadic);
         void draw();
         void resized(int w, int h);
         void keyPressed(int Key);
         int note;//the note that the disc is sending.
+		bool semi;
+		bool prSemi;
         float R,G,B;//the color of the disc. values from 0 to 1;
         int neutralRegion;//area where nothing happens inside the circle
         int releaseRegion;//the release button in the middle
@@ -40,9 +42,11 @@ class Disc{
         int * noteFrames;
 		int chordnum;
 		bool replaySameActive;
+		bool semitoneActive;
 		Switch sharp45;
 		int releaseDist;
 		int releaseDistEnd;
+		int semiActive;
         ~Disc();
     private:
 		int pointSize;
@@ -65,6 +69,7 @@ class Disc{
         bool pressed;
 		ofPoint lgaze;
 		float getMagVal(int);
+		int SemiSize;
 };
 
 #endif

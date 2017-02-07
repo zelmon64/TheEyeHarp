@@ -1,10 +1,11 @@
 #include "Disc.h"
 #include <string>
 #define NR 0.29
-#define FIXVEL 100
 #define RELEASE_DIST 1
-#define RELEASE_DIST_END 1.2
-void Disc::setup(int NumOfNotes,float red,float green,float blue,int * Chord, bool Advanced,bool* Conf){
+#define RELEASE_DIST_END 1.2/*
+#define SEMI_SIZE 170*/
+
+void Disc::setup(int NumOfNotes,float red,float green,float blue,int * Chord, bool Advanced,bool* Conf, bool SemitoneActive){
     NotesNumber.setup("NotesNum",ofPoint(-1.2,-0.58+5*0.18),ofPoint(-1.62,-0.58+5*0.18),7,36,NumOfNotes,1,0.2,1000,0.9,0.2,NR);
     chord=Chord;
 	conf=Conf;
@@ -13,6 +14,7 @@ void Disc::setup(int NumOfNotes,float red,float green,float blue,int * Chord, bo
     distVolume.setup("Dist\nVolume",true, ofPoint(-1.0f,-0.8f),0.1,1000,0.6,0.2,0.1,false);
     fixation.setup("Fixation",true,ofPoint(-0.8f,0.85f),0.05,1000,0.6,0.2,0.1,false);
     note=-1;
+	semi = false;
     melody=note;
     prNote=note;
     tangle=TWO_PI/NotesNumber.value;
@@ -50,6 +52,9 @@ void Disc::setup(int NumOfNotes,float red,float green,float blue,int * Chord, bo
 	releaseDistEnd = releaseDist*RELEASE_DIST_END;
 	pressed = false;
 	notesONOFF.setup("noteONOFF", true, ofPoint(0, 0), 1, 1000, 5, 5, 5, false);
+	semiActive = -1;
+	SemiSize = height2*0.35;
+	semitoneActive = SemitoneActive;
 }
 
 
@@ -71,22 +76,22 @@ void Disc::update(ofPoint gaze, float* velocity,bool *sacadic){
         pressed=false;
     }
     else{
-		if(*conf){
-			//distVolume.update(gaze);
-			if(distVolume.changed){
-				if(distVolume.value)
-					neutralRegion=ofGetHeight()*NR;
-				else
-					neutralRegion=ofGetHeight()*NR;
-				/*outSpotStep=(ofGetHeight()/2-neutralRegion)/5;
-				inSpotDist=0.3*neutralRegion;*/
-			}
-		}
+		//if(*conf){
+		//	//distVolume.update(gaze);
+		//	if(distVolume.changed){
+		//		if(distVolume.value)
+		//			neutralRegion=ofGetHeight()*NR;
+		//		else
+		//			neutralRegion=ofGetHeight()*NR;
+		//		/*outSpotStep=(ofGetHeight()/2-neutralRegion)/5;
+		//		inSpotDist=0.3*neutralRegion;*/
+		//	}
+		//}
 		changed=false;
 		tangle=TWO_PI/NotesNumber.value;
 		colorstep=255/NotesNumber.value;
 		angle=atan2(-gaze.y+height2,gaze.x-width2)+TWO_PI/2;
-		int prDist=dist;
+		//int prDist=dist;
 		dist=ofDist(gaze.x,gaze.y,width2,height2);
 	   // notesONOFF.update(gaze);
 		if(*conf)
@@ -94,20 +99,56 @@ void Disc::update(ofPoint gaze, float* velocity,bool *sacadic){
 		if(*velocity < FIXVEL && dist < neutralRegion){
 			fixationInNeutral=true;
 		}
-		int tempNote=(int)floor(angle/TWO_PI*NotesNumber.value) % NotesNumber.value; //integer: note
-		if(advanced){
-			//chordONOFF.update(gaze);
-			percussive.update(gaze);
-			fixation.update(gaze);
+		//semiActive = -1;
+		if (*velocity < FIXVEL && semitoneActive) {
+			semiActive = -1;
+			for (int j = 0; j < NotesNumber.value - 7*chordONOFF.value; j++) {
+				ofPoint curPosSemitone = ofPoint(width2 - cos((j)*tangle)*height2, height2 + sin((j)*tangle)*height2);
 
-			
+				int ii = (j + 5) % 7;
+				if ((ii == 2 || ii == 3 || ii == 5 || ii == 6 || ii == 0) && j != 0) {
+					if (ofDist(gaze.x, gaze.y, curPosSemitone.x, curPosSemitone.y) < tangle*SemiSize /*&& *velocity < FIXVEL*/) {
+						semiActive = j;
+						//cout << semiActive << endl;
+					}
+				}
+			}
 		}
+		int tempNote = (int)floor(angle / TWO_PI*NotesNumber.value) % NotesNumber.value; //integer: note;
+		if (dist > neutralRegion && *velocity<FIXVEL) {
+			prSemi = semi;
+			if (semiActive == -1 && dist<releaseDist) {
+				semi = false;
+			}
+			else {
+				tempNote = semiActive % NotesNumber.value;
+				semi = true;
+				inside = false;
+			}
+			if ((semi && prNote != tempNote) || prSemi != semi) {
+				//cout << "  [" << semi << "," << prSemi << "]   ";
+				//if (temp) {
+				prNote = note;
+				note = tempNote;
+				//}
+				changed = true;
+				//inside = false;
+			}
+		}
+		//cout << semi;
+		//if(advanced){
+		//	//chordONOFF.update(gaze);
+		//	percussive.update(gaze);
+		//	fixation.update(gaze);
+
+		//	
+		//}
 
 
 		if(percussive.value && !pressed){
 			
-			if(dist>neutralRegion && dist<height2&& notesONOFF.value ){
-				if(tempNote!=prNote || fixationInNeutral ){
+			if(dist>neutralRegion && (dist<height2 || semi)&& notesONOFF.value ){
+				if(tempNote!=prNote || semi != prSemi || fixationInNeutral ){
 					if(*velocity<FIXVEL || (!fixation.value && (!chordONOFF.value || tempNote<NotesNumber.value-CHORDSNUM))){
 						prNote=note;
 						note=tempNote;
@@ -127,21 +168,21 @@ void Disc::update(ofPoint gaze, float* velocity,bool *sacadic){
 		}
 		else{
 			pressed=false;
-			if(dist>neutralRegion && dist<height2 && notesONOFF.value && (*velocity<FIXVEL || !fixation.value )){
+			if(dist>neutralRegion && (dist<height2 /*|| semiActive != -1*/) && notesONOFF.value && (*velocity<FIXVEL /*|| !fixation.value*/ )){
 				if(chordONOFF.value && tempNote>=NotesNumber.value-CHORDSNUM){
 					prNote=note;
 					if(*velocity<FIXVEL){
 						note=tempNote;
-
 					}
-					dist=prDist;
+					//dist=prDist;
 				}
 				//always apply a fixation detection for changing the chords
 				else{
 					prNote=note;
 					note=tempNote;
-					if(note!=prNote || fixationInNeutral){
+					if(note!=prNote /*&& semi==prSemi*/|| fixationInNeutral){
 						changed=true;
+						//cout << "changed\t";
 					}
 					if((!chordONOFF.value || note<NotesNumber.value-CHORDSNUM ))
 						inside=false;
@@ -149,18 +190,18 @@ void Disc::update(ofPoint gaze, float* velocity,bool *sacadic){
 			}
 
 		}
-		if(ofDist(gaze.x,gaze.y,width2,height2)>releaseDist && ofDist(gaze.x, gaze.y, width2, height2) <releaseDistEnd &&  *velocity<FIXVEL){
-				prNote=note;
-				note=-1;//this means release note / rest
-				  //  changed=true;
-				replaySame.setup("",false,ofPoint(-10,-10),0.001,10,0,0,0,false);
-			
+		if ((dist > releaseDist && dist < releaseDistEnd && !semi) && *velocity < FIXVEL) {
+			//cout << semi;
+			prNote = note;
+			note = -1;//this means release note / rest
+			  //  changed=true;
+			replaySame.setup("", false, ofPoint(-10, -10), 0.001, 10, 0, 0, 0, false);
 		}
 		
 
 		if(ofDist(gaze.x,gaze.y,width2,height2)<releaseRegion && *velocity<FIXVEL)     notesONOFF.value=true;
 		
-		if((/*replaySame.size<0.1 && */!chordONOFF.value || note<NotesNumber.value-CHORDSNUM ) && note!=-1 && ofDist(gaze.x,gaze.y,width2,height2)>neutralRegion  &&  *velocity<FIXVEL){
+		if((/*replaySame.size<0.1 && */!chordONOFF.value || note<NotesNumber.value-CHORDSNUM ) && note!=-1 && dist>neutralRegion  &&  *velocity<FIXVEL){
 			melody=note;
 			/*cout << ".";*/
 			//replaySame.setup("",false,ofPoint(-cos((note+0.5)*tangle)*scaling, -sin((melody+0.5)*tangle)*scaling),0.095,10,0,0,0,false);
@@ -173,6 +214,8 @@ void Disc::update(ofPoint gaze, float* velocity,bool *sacadic){
 			replaySame.update(gaze);
 		if(replaySame.active && *velocity<FIXVEL && !inside){
 			note=melody;
+			cout <<"["<< melody<<","<<prSemi<<"]"<<endl;
+			//semi = prSemi;
 			inside=true;
 			changed=true;
 		}
@@ -188,7 +231,7 @@ void Disc::update(ofPoint gaze, float* velocity,bool *sacadic){
 	}
 	if(ofDist(gaze.x,gaze.y, width2,height2)<neutralRegion && *velocity<FIXVEL && !replaySame.active)
 		replaySame.setup("",false,ofPoint(-10,-10),0.001,10,0,0,0,false);
-    
+	//cout << /*"TempoNote: " << tempNote << */" note: " << note << endl;
 }
 
 float Disc::getMagVal(int i){
@@ -210,9 +253,9 @@ void Disc::draw(){
 	int brightActive=(float)(dist-neutralRegion)/(float)(height2-neutralRegion)*80;
     for(int i=0;i<NotesNumber.value;i++){
 		if(chordONOFF.value && (i+CHORDSNUM+1-NotesNumber.value<=CHORDSNUM) && (i+CHORDSNUM-NotesNumber.value>=0)){
-            ofSetColor(i*colorstep*R+(note==i && notesONOFF.value)*brightActive, i*colorstep *1.5*G+(note==i && notesONOFF.value)*brightActive,i*colorstep*B+(note==i && notesONOFF.value)*brightActive);				
+            ofSetColor(i*colorstep*R+((note == i && !semi) && notesONOFF.value)*brightActive, i*colorstep *1.5*G+((note == i && !semi) && notesONOFF.value)*brightActive,i*colorstep*B+((note==i && !semi) && notesONOFF.value)*brightActive);
 		}
-		else ofSetColor(i*colorstep*R+(note==i && notesONOFF.value)*brightActive+(i%7==0), i*colorstep *G+(note==i && notesONOFF.value)*brightActive+(i%7==4)*10,i*colorstep*B+(note==i && notesONOFF.value)*brightActive);
+		else ofSetColor(i*colorstep*R+((note == i && !semi) && notesONOFF.value)*brightActive+(i%7==0), i*colorstep *G+((note == i && !semi) && notesONOFF.value)*brightActive+(i%7==4)*10,i*colorstep*B+((note == i && !semi) && notesONOFF.value)*brightActive);
         ofBeginShape();
         ofVertex(width2, height2);
 		ofVertex(width2-cos(getMagVal(i))*height2,height2+sin(getMagVal(i))*height2);
@@ -226,12 +269,11 @@ void Disc::draw(){
         }
         else{    
 			ofCircle(width2-cos((i+0.5)*tangle)*(neutralRegion + 2.5*outSpotStep), height2+sin((i+0.5)*tangle)*(neutralRegion + 2.5*outSpotStep),pointSize);
-			
-
 		}
 		ofCircle(width2-cos((i+0.5)*tangle)*height2*RELEASE_DIST*1.13, height2+sin((i+0.5)*tangle)*height2* RELEASE_DIST*1.13,pointSize);
 //        ofSetColor(200,200,255);
 //        ofCircle(width2-cos((i+0.5)*tangle)*inSpotDist, height2+sin((i+0.5)*tangle)*inSpotDist,pointSize);
+		
 	}
 	
 			//ofEnableAlphaBlending();
@@ -248,6 +290,21 @@ void Disc::draw(){
 	
     for(int i=0;i<NotesNumber.value;i++){
 		ofPoint curPos = ofPoint(width2 - cos((i + 0.5)*tangle)*inSpotDist, height2 + sin((i + 0.5)*tangle)*inSpotDist);
+		ofPoint curPosSemitone = ofPoint(width2 - cos((i)*tangle)*height2, height2 + sin((i)*tangle)*height2);
+		ofPoint SemSpotPos[4];
+		if (semitoneActive) {
+			for (int j = 0; j < 4; j++)
+				SemSpotPos[j] = ofPoint(width2 - cos((i)*tangle)*(height2 - tangle*SemiSize*0.6 + tangle * SemiSize*0.4*j), height2 + sin((i)*tangle)*(height2 - tangle * SemiSize*0.6 + tangle * SemiSize*0.4*j));
+
+			int ii = (i + 5) % 7;
+			if ((ii == 2 || ii == 3 || ii == 5 || ii == 6 || ii == 0) && i != 0 && i < NotesNumber.value - 7 * chordONOFF.value) {
+				ofSetColor(40 + (i == semiActive) * 50);
+				ofCircle(curPosSemitone.x, curPosSemitone.y, tangle*SemiSize);
+				ofSetColor(255);
+				for (int j = 0; j < 4; j++)
+					ofCircle(SemSpotPos[j].x, SemSpotPos[j].y, tangle * SemiSize*0.05);
+			}
+		}
         if(chordONOFF.value){
             if(i<NotesNumber.value-CHORDSNUM){
                 
@@ -334,6 +391,8 @@ void Disc::resized(int w, int h){
 	pointSize=height*0.005;
 	releaseDist = height2*RELEASE_DIST;
 	releaseDistEnd = releaseDist*RELEASE_DIST_END;
+
+	SemiSize = height2*0.35;
 }
 
 void Disc::keyPressed(int key){

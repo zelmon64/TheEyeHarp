@@ -6,7 +6,7 @@ enum{
 
 
 
-void Eye::setup(int * chord, DistControl * Scale,bool* Conf,int noteNumber,bool tomidi){
+void Eye::setup(int * chord, DistControl * Scale,bool* Conf,int noteNumber,bool tomidi,bool semitoneActive){
 	conf=Conf;
     scale=Scale;
     width=ofGetWidth();width2=width/2.0;
@@ -19,7 +19,7 @@ void Eye::setup(int * chord, DistControl * Scale,bool* Conf,int noteNumber,bool 
     sliderPos=ofPoint(-1.55,0);
     stepPosUP=ofPoint(-1.45,0.4);
     stepPosDW=ofPoint(-1.45,-.2f);
-    disc.setup(18,0.7,0.3,0.1,chord,false,conf);
+    disc.setup(18,0.7,0.3,0.1,chord,false,conf,semitoneActive);
 
 	char* scaleNames[7];
 	scaleNames[0] = "I";
