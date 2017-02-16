@@ -7,7 +7,7 @@ enum {
 EyeHarp::~EyeHarp(){
 
 }
-void EyeHarp::setup(int discNotesNumber, int stepSequencerNotesNumber, bool chordsONOFF, bool showScaleInit, bool scalePreset, bool clickDwell,bool tomidi, bool LoopBeLoopMidi, bool semitoneActive){
+void EyeHarp::setup(int discNotesNumber, int stepSequencerNotesNumber, bool chordsONOFF, bool showScaleInit, bool scalePreset, bool clickDwell,bool tomidi, bool LoopBeLoopMidi, bool semitoneActive, int trans){
     //midiOut.listPorts();
 	string s1;
 	string s2;
@@ -80,7 +80,7 @@ void EyeHarp::setup(int discNotesNumber, int stepSequencerNotesNumber, bool chor
     masterMultiPlex.setup(3,masterNames,0,ofPoint(1.12,-0.4),HALF_PI,0.05,800);
     tempo.setup("Tempo",140,ofPoint(-1.25, -0.83),ofPoint(-1.61, -0.83),30.0f,600.0f,0.085f,500,1,.9f,.1f,.0f,true);
     masterVolume.setup("Volume",150, stepPosUP,stepPosDW,0,1,0.045f,500,20,.9f,.1f,.0f);
-    transpose.setup("Transp",stepPosUP,stepPosDW,-5,6,0,1,0.045f,800,0.6f,0.2f,0.0f,false);
+    transpose.setup("Transp",stepPosUP,stepPosDW,-5,6,trans,1,0.045f,800,0.6f,0.2f,0.0f,false);
     tempoSlider.setup(sliderPos,tempo.value,tempo.min,tempo.max,0.7,true);
     masterVolumeSlider.setup(sliderPos,masterVolume.color, 0, 255, 0.7,true);
     transposeSlider.setup(sliderPos,transpose.value,transpose.min,transpose.max,0.7,true);
@@ -124,6 +124,10 @@ void EyeHarp::setup(int discNotesNumber, int stepSequencerNotesNumber, bool chor
 	if (tomidi) {
 		masterVolume.setValueByColor(0);
 		masterVolumeSlider.setValue(0);
+	}
+	for (int i = 0; i < 7; i++) {
+		eye.disc.scale[i] = &(Scale[i].value);
+		//cout << *eye.disc.scale[i] << endl;
 	}
 }
 

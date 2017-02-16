@@ -47,6 +47,7 @@ class Disc{
 		int releaseDist;
 		int releaseDistEnd;
 		int semiActive;
+		int* scale[7];
         ~Disc();
     private:
 		int pointSize;

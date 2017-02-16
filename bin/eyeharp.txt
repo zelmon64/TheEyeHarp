@@ -6,11 +6,12 @@ scalePreset 1
 mouseEyeTracker 0
 clickDwell 1
 bufferSize 512
-help 1
+help 0
 tomidi 0
 fullscreen 0
 monophonicStep 1
 fixationSamples 4
 showGaze 1
 LoopBe_loopMIDI 1
-semitoneActive 0
+semitoneActive 1
+transpose 0

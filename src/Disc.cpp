@@ -105,8 +105,9 @@ void Disc::update(ofPoint gaze, float* velocity,bool *sacadic){
 			for (int j = 0; j < NotesNumber.value - 7*chordONOFF.value; j++) {
 				ofPoint curPosSemitone = ofPoint(width2 - cos((j)*tangle)*height2, height2 + sin((j)*tangle)*height2);
 
-				int ii = (j + 5) % 7;
-				if ((ii == 2 || ii == 3 || ii == 5 || ii == 6 || ii == 0) && j != 0) {
+				int ii = (j + 4) % 7;
+				//if ((ii == 2 || ii == 3 || ii == 5 || ii == 6 || ii == 0) && j != 0) {
+				if ((*scale[ii]-*scale[(ii+6)%7]) > 1  && j != 0) {
 					if (ofDist(gaze.x, gaze.y, curPosSemitone.x, curPosSemitone.y) < tangle*SemiSize /*&& *velocity < FIXVEL*/) {
 						semiActive = j;
 						//cout << semiActive << endl;
@@ -214,7 +215,7 @@ void Disc::update(ofPoint gaze, float* velocity,bool *sacadic){
 			replaySame.update(gaze);
 		if(replaySame.active && *velocity<FIXVEL && !inside){
 			note=melody;
-			cout <<"["<< melody<<","<<prSemi<<"]"<<endl;
+			//cout <<"["<< melody<<","<<prSemi<<"]"<<endl;
 			//semi = prSemi;
 			inside=true;
 			changed=true;
@@ -296,8 +297,10 @@ void Disc::draw(){
 			for (int j = 0; j < 4; j++)
 				SemSpotPos[j] = ofPoint(width2 - cos((i)*tangle)*(height2 - tangle*SemiSize*0.6 + tangle * SemiSize*0.4*j), height2 + sin((i)*tangle)*(height2 - tangle * SemiSize*0.6 + tangle * SemiSize*0.4*j));
 
-			int ii = (i + 5) % 7;
-			if ((ii == 2 || ii == 3 || ii == 5 || ii == 6 || ii == 0) && i != 0 && i < NotesNumber.value - 7 * chordONOFF.value) {
+			int ii = (i + 4) % 7;
+			//if ((ii == 2 || ii == 3 || ii == 5 || ii == 6 || ii == 0) && i != 0 && i < NotesNumber.value - 7 * chordONOFF.value) {
+			if ((*scale[ii] - *scale[(ii + 6) % 7])%12 > 1 && i != 0 && i < NotesNumber.value - 7 * chordONOFF.value) {
+
 				ofSetColor(40 + (i == semiActive) * 50);
 				ofCircle(curPosSemitone.x, curPosSemitone.y, tangle*SemiSize);
 				ofSetColor(255);
@@ -394,6 +397,7 @@ void Disc::resized(int w, int h){
 
 	SemiSize = height2*0.35;
 }
+
 
 void Disc::keyPressed(int key){
     prNote=-1;
