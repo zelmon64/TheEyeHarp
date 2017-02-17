@@ -498,8 +498,10 @@ void EyeHarp::update(ofPoint Gaze,bool *sacadic){
 		
 	}
 	if (!soundWorking) {
-		for(int i=0;i<sampleDIVframe;i++)
+		for (int i = 0; i < sampleDIVframe; i++) {
 			stepSeq.getSample();
+			chordLoop.getPos();
+		}
 	}
 }
 

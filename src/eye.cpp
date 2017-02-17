@@ -17,8 +17,8 @@ void Eye::setup(int * chord, DistControl * Scale,bool* Conf,int noteNumber,bool 
     multiPos.x=-1.1f;
     multiPos.y=-.76f;
     sliderPos=ofPoint(-1.55,0);
-    stepPosUP=ofPoint(-1.45,0.4);
-    stepPosDW=ofPoint(-1.45,-.2f);
+    stepPosUP=ofPoint(-1.28,0.5);
+    stepPosDW=ofPoint(-1.62,0.5);
     disc.setup(18,0.7,0.3,0.1,chord,false,conf,semitoneActive);
 
 	char* scaleNames[7];
@@ -35,7 +35,7 @@ void Eye::setup(int * chord, DistControl * Scale,bool* Conf,int noteNumber,bool 
 	for (int i = 0; i < 7; i++) {
 		harmonic[i].setup("", -60, ofPoint(-1.28f, -0.86 + i*0.287), ofPoint(-1.64f, -0.86 + i*0.287), -60, -1, Ssize, 100, 10, 0.99, 0.1, 0.0, true);
 	}
-	octave.setup("8va",ofPoint(.14,0.22),ofPoint(-.14,0.22),1,3,1,0,0.04,1000,0.2,0.2,0);
+	octave.setup("8va", ofPoint(-1.6, -0.3), ofPoint(-1.6,0.1),-1,3,1,1,0.085,1000,0.2,0.2,0,true);
 
     advanced.setup("Advanced",false,ofPoint(-0.8,-0.85),0.05f,1000,0.7,0.4,0,false);
     playArpeggio.setup("ArpeggioON",false,ofPoint(-1.05,-0.6),0.05f,1000,0.7,.4,0,false);
@@ -63,7 +63,7 @@ void Eye::setup(int * chord, DistControl * Scale,bool* Conf,int noteNumber,bool 
     release.setup("Rls",235,stepPosUP,stepPosDW,0.9995,0.9999,XSsize,300,5,0.6f,0.2f,0.0f);
     vibratoHz.setup("Vib cHz",700,stepPosUP,stepPosDW,50,1000,XSsize,300,5,0.6f,0.2f,0.0f,true);
     vibratoW.setup("VibW",150,stepPosUP,stepPosDW,0.0,3.5,XSsize,300,5,0.6f,0.2f,0.0f);
-    disc.NotesNumber.setup("NotesNum",stepPosUP,stepPosDW,7,36,noteNumber,1,XSsize*3,800,0.6f,0.2f,0.0f);
+    disc.NotesNumber.setup("NotesNum",stepPosUP,stepPosDW,7,36,noteNumber,1,0.085,800,0.6f,0.2f,0.0f);
     volume.setup("Vol",200,stepPosUP,stepPosDW,0.0,1.0,XSsize,500,20,0.6f,0.2f,0.0f);
 
     char* instrumentNames[4];
@@ -101,6 +101,7 @@ void Eye::update(ofPoint Gaze, float* Velocity,bool *sacadic){
    // octave.update(gaze);
 	if(*conf){
 		disc.NotesNumber.update(gaze);
+		octave.update(gaze);
 		basicMode();
 		
 	}
@@ -227,10 +228,10 @@ void Eye::draw(){
 	if(*conf){
 		disc.NotesNumber.draw();
 		timbrePresets.draw();
-		
+		octave.draw();
 		
 	}
-    //octave.draw();
+    //
 
     //advanced.draw();
     /*if(advanced.value){
