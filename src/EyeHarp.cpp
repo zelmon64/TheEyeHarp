@@ -463,11 +463,11 @@ void EyeHarp::update(ofPoint Gaze,bool *sacadic){
 	int dist=ofDist(gaze.x,gaze.y,width/2,height/2);
 	if(midiAvailable){
 		if(eye.timbrePresets.selected==3 ){
-			
-			if(ofDist(gaze.x,gaze.y,eye.width2,eye.height2)>eye.disc.releaseDist && ofDist(gaze.x, gaze.y, eye.width2, eye.height2)<eye.disc.releaseDistEnd && velocity<FIXVEL && !eye.disc.semi){
+			if(velocity<FIXVEL)
+				if((eye.disc.inRelease && dist<eye.disc.neutralRegion && dist>eye.disc.inreleaseRegion)||(dist>eye.disc.releaseDist && dist<eye.disc.releaseDistEnd)  && !eye.disc.semi){
 					midiOut.sendNoteOff(MIDICH1, midinote, 0);//if we look outside, release
 				}
-			if(volumeChanged && velocity<100){
+			if(volumeChanged && velocity<FIXVEL){
 				int tempVol=targetVolume*200;
 				if(tempVol<50)
 					tempVol=50;

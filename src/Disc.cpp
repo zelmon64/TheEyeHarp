@@ -24,14 +24,15 @@ void Disc::setup(int NumOfNotes,float red,float green,float blue,int * Chord, bo
         neutralRegion=ofGetHeight()*NR;
     else
         neutralRegion=ofGetHeight()*NR;
-    releaseRegion=ofGetHeight()*0.11;
+    //releaseRegion=ofGetHeight()*0.11;
+	inreleaseRegion = 0.85*neutralRegion;
     dist=0;
     angle=0.0;
     outSpotStep=(ofGetHeight()/2-neutralRegion)/5;
-    inSpotDist=0.3*neutralRegion;
+    inSpotDist=0.6*neutralRegion;
     chordONOFF.setup("Chords",*chord,ofPoint(-1,-0.8),0.1, 1000, 0.6,0.2,0.1,false);
     percussive.setup("Percu\nssive",false, ofPoint(-1.2,0.85),0.05,1000,0.6,0.2,0.1,false);
-	replaySame.setup("",false,ofPoint(0,0),0.11,10,0,0,0,false);
+	replaySame.setup("",false,ofPoint(0,0),0.095,10,0,0,0,false);
     changed=false;
 	pointSize=height*0.005;
 //    char filename[50];
@@ -55,6 +56,7 @@ void Disc::setup(int NumOfNotes,float red,float green,float blue,int * Chord, bo
 	semiActive = -1;
 	SemiSize = height2*0.35;
 	semitoneActive = SemitoneActive;
+	inRelease = false;
 }
 
 
@@ -191,7 +193,7 @@ void Disc::update(ofPoint gaze, float* velocity,bool *sacadic){
 			}
 
 		}
-		if ((dist > releaseDist && dist < releaseDistEnd && !semi) && *velocity < FIXVEL) {
+		if (((dist > releaseDist && dist < releaseDistEnd && !semi)||(inRelease && dist <neutralRegion && dist > inreleaseRegion))&& *velocity < FIXVEL) {
 			//cout << semi;
 			prNote = note;
 			note = -1;//this means release note / rest
@@ -200,13 +202,13 @@ void Disc::update(ofPoint gaze, float* velocity,bool *sacadic){
 		}
 		
 
-		if(ofDist(gaze.x,gaze.y,width2,height2)<releaseRegion && *velocity<FIXVEL)     notesONOFF.value=true;
+		//if((dist<releaseRegion ) && *velocity<FIXVEL)     notesONOFF.value=true;
 		
 		if((/*replaySame.size<0.1 && */!chordONOFF.value || note<NotesNumber.value-CHORDSNUM ) && note!=-1 && dist>neutralRegion  &&  *velocity<FIXVEL){
 			melody=note;
 			/*cout << ".";*/
 			//replaySame.setup("",false,ofPoint(-cos((note+0.5)*tangle)*scaling, -sin((melody+0.5)*tangle)*scaling),0.095,10,0,0,0,false);
-			replaySame.setup("",false,ofPoint(0,0),0.12,10,0,0,0,false);
+			replaySame.setup("",false,ofPoint(0,0),0.095,10,0,0,0,false);
 			replaySame.resized(width,height);
 			//release.setup("Rls",false,ofPoint(cos((note+0.5)*tangle)*scaling, sin((melody+0.5)*tangle)*scaling),tangle/TWO_PI,10,0,0,0,false);
 			
@@ -251,6 +253,7 @@ float Disc::getMagVal(int i){
 void Disc::draw(){
 	ofSetColor(60,70,40);
 	ofCircle(width2, height2, releaseDistEnd);
+	ofCircle(width2, height2, neutralRegion);
 	int brightActive=(float)(dist-neutralRegion)/(float)(height2-neutralRegion)*80;
     for(int i=0;i<NotesNumber.value;i++){
 		if(chordONOFF.value && (i+CHORDSNUM+1-NotesNumber.value<=CHORDSNUM) && (i+CHORDSNUM-NotesNumber.value>=0)){
@@ -276,10 +279,23 @@ void Disc::draw(){
 //        ofCircle(width2-cos((i+0.5)*tangle)*inSpotDist, height2+sin((i+0.5)*tangle)*inSpotDist,pointSize);
 		
 	}
+	if (inRelease) {
+		ofSetColor(60, 70, 40);
+		ofCircle(width2, height2, neutralRegion);
+		//ofEnableAlphaBlending();
+		ofSetColor(20, 20, 20);
+		ofCircle(width2, height2, inreleaseRegion);
+		int releaseSpot = ((neutralRegion + inreleaseRegion) / 2);
+		ofSetColor(255, 255, 255);
+		for (int i = 0; i < NotesNumber.value; i++)
+			ofCircle(width2 - cos((i + 0.5)*tangle)*releaseSpot, height2 + sin((i + 0.5)*tangle)*releaseSpot, pointSize);
+	}
+	else
+	{
+		ofSetColor(20, 20, 20);
+		ofCircle(width2, height2, neutralRegion);
+	}
 	
-			//ofEnableAlphaBlending();
-	ofSetColor(10,10,10);
-	ofCircle(width2,height2,neutralRegion);
 	
 	ofSetColor(255,255,255);
 	ofCircle(width2,height2,pointSize);
@@ -380,9 +396,9 @@ void Disc::resized(int w, int h){
         neutralRegion=h*NR;
     else
         neutralRegion=h*NR;
-    releaseRegion=h*0.11;
+    //releaseRegion=h*0.11;
     outSpotStep=(h/2-neutralRegion)/5;
-    inSpotDist=0.66*neutralRegion;
+    inSpotDist=0.6*neutralRegion;
     notesONOFF.resized(w,h);
     chordONOFF.resized(w,h);
     NotesNumber.resized(w,h);
@@ -394,7 +410,7 @@ void Disc::resized(int w, int h){
 	pointSize=height*0.005;
 	releaseDist = height2*RELEASE_DIST;
 	releaseDistEnd = releaseDist*RELEASE_DIST_END;
-
+	inreleaseRegion = neutralRegion*0.85;
 	SemiSize = height2*0.35;
 }
 

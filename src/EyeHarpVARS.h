@@ -8,5 +8,5 @@
 #define MIDICH2 2
 #define mag 1.5
 #define magFac -2
-#define FIXVEL 100
+#define FIXVEL 70
 #endif

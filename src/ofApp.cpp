@@ -23,7 +23,7 @@ void ofApp::setup(){
 	initParam = fopen("eyeharp.txt", "r");
 	char paramName[30];
 	int discNotesNumber=15, stepSequencerNotesNumber=6, bufferSize=512, transpose = 0 ;
-	bool semitoneActive=false, showScale = true, scalePreset=true, loopBeLoopMIDI = 0, chordsONOFF = false,  mouseEyetribeInput = false, clickDwell = false, tomidi = false, fullscreen = false, monophonic = true, showGaze = true;
+	bool inRelease = false, semitoneActive = false, showScale = true, scalePreset = true, loopBeLoopMIDI = 0, chordsONOFF = false, mouseEyetribeInput = false, clickDwell = false, tomidi = false, fullscreen = false, monophonic = true, showGaze = true;
 	int temp;
 	fixationSamples = 4;
 	if (initParam == NULL)
@@ -68,6 +68,8 @@ void ofApp::setup(){
 				semitoneActive = temp;
 			else if (strcmp(paramName, "transpose") == 0)
 				transpose = temp;
+			else if (strcmp(paramName, "inRelease") == 0)
+				inRelease = temp;
 		}
 		fclose(initParam);
 	}
@@ -88,7 +90,7 @@ void ofApp::setup(){
 	HARP.stepSeq.monophonic.setup("monophonic", monophonic, ofPoint(-1.2, 0.8), .095, 800, .8, .4, 0, false);
 	tribe.setup();
 	myTobii.setup();
-	
+	HARP.eye.disc.inRelease = inRelease;
 	printf("Sound Devices:\n");
 	//ofSoundStreamListDevices();
 	soundstream.printDeviceList();

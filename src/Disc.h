@@ -23,7 +23,8 @@ class Disc{
 		bool prSemi;
         float R,G,B;//the color of the disc. values from 0 to 1;
         int neutralRegion;//area where nothing happens inside the circle
-        int releaseRegion;//the release button in the middle
+		int inreleaseRegion;
+        //int releaseRegion;//the release button in the middle
         Switch  notesONOFF;
         Switch chordONOFF;
         DistControl NotesNumber;
@@ -35,7 +36,7 @@ class Disc{
         bool changed;
 		bool* conf;
         bool advanced;
-
+		bool inRelease;
         Switch fixation;
         int * beat;
         int prbeat;
