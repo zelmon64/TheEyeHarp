@@ -22,8 +22,9 @@ void ofApp::setup(){
 	help = true;
 	initParam = fopen("eyeharp.txt", "r");
 	char paramName[30];
-	int discNotesNumber=15, stepSequencerNotesNumber=6, bufferSize=512, transpose = 0 ;
-	bool inRelease = false, semitoneActive = false, showScale = true, scalePreset = true, loopBeLoopMIDI = 0, chordsONOFF = false, mouseEyetribeInput = false, clickDwell = false, tomidi = false, fullscreen = false, monophonic = true, showGaze = true;
+	float minVol;
+	int discNotesNumber = 15, stepSequencerNotesNumber = 6, bufferSize = 512, transpose = 0;
+	bool cc1 = 0, cc2 = 0, cc7 = 1, cc11 = 0,afterTouch=0, inRelease = false, semitoneActive = false, showScale = true, scalePreset = true, loopBeLoopMIDI = 0, chordsONOFF = false, mouseEyetribeInput = false, clickDwell = false, tomidi = false, fullscreen = false, monophonic = true, showGaze = true;
 	int temp;
 	fixationSamples = 4;
 	if (initParam == NULL)
@@ -70,9 +71,22 @@ void ofApp::setup(){
 				transpose = temp;
 			else if (strcmp(paramName, "inRelease") == 0)
 				inRelease = temp;
+			else if (strcmp(paramName, "cc1") == 0)
+				cc1 = temp;
+			else if (strcmp(paramName, "cc2") == 0)
+				cc2 = temp;
+			else if (strcmp(paramName, "cc7") == 0)
+				cc7 = temp;
+			else if (strcmp(paramName, "cc11") == 0)
+				cc11 = temp;
+			else if (strcmp(paramName, "afterTouch") == 0)
+				afterTouch = temp;
+			else if (strcmp(paramName, "MINVOL") == 0)
+				minVol = (float)temp / 100.0;
 		}
 		fclose(initParam);
 	}
+	printf("cc1 %d\ncc2 %d\ncc7 %d\ncc11 %d\ncafterTouch %d\n", cc1, cc2, cc7, cc11, afterTouch);
 	gbuffer = new ofPoint[fixationSamples];
 	Switch::click = !clickDwell;
 	//printf("discNotesNumber: %d\nstepSequencerNotesNumber: %d\nbufferSize: %d\nchordsONOFF: %d\nshowScale: %d\nmouseEyetribeInput: %d\nclickDwell: %d\nfullscreen: %d", discNotesNumber, stepSequencerNotesNumber, bufferSize, chordsONOFF, showScale, mouseEyetribeInput, clickDwell,fullscreen);
@@ -117,6 +131,7 @@ void ofApp::setup(){
 	ratioy = ofGetScreenHeight() / screeny;
 	fclose(conf);*/
 	prFixation = false;
+	HARP.cc1 = cc1; HARP.cc2 = cc2; HARP.cc7 = cc7; HARP.cc11 = cc11; HARP.afterTouch = afterTouch, HARP.MINVOL = minVol;
 }
 
 //--------------------------------------------------------------

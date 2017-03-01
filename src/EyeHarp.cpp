@@ -1,6 +1,6 @@
 #include "EyeHarp.h"
 
-#define MINVOL 0.65
+//#define MINVOL 0.3
 enum {
 	MAJOR, MINOR, HITZAZ, HITZAZSKIAR, DORIAN, PHRYGIAN, MYXOLYDIAN
 };
@@ -11,9 +11,11 @@ void EyeHarp::setup(int discNotesNumber, int stepSequencerNotesNumber, bool chor
     //midiOut.listPorts();
 	string s1;
 	string s2;
+	MINVOL = 0.5;
 	soundWorking = false;
 	presetscale = false;
 	presetscale = scalePreset;
+	cc1 = 0; cc2 = 0; cc7 = 1; cc11 = 0; afterTouch = 0;
 	sampleDIVframe = SAMPLERATE / FRAMERATE;
 	if (LoopBeLoopMidi == false) {
 		s1 = "LoopBe";
@@ -467,17 +469,17 @@ void EyeHarp::update(ofPoint Gaze,bool *sacadic){
 				if((eye.disc.inRelease && dist<eye.disc.neutralRegion && dist>eye.disc.inreleaseRegion)||(dist>eye.disc.releaseDist && dist<eye.disc.releaseDistEnd)  && !eye.disc.semi){
 					midiOut.sendNoteOff(MIDICH1, midinote, 0);//if we look outside, release
 				}
-			if(volumeChanged && velocity<FIXVEL){
+			if(volumeChanged && velocity<FIXVEL && targetVolume!=0){
 				int tempVol=targetVolume*200;
-				if(tempVol<50)
-					tempVol=50;
+				if(tempVol<1)
+					tempVol=1;
 				if(tempVol>127)
 					tempVol=127;
-				midiOut.sendAftertouch(1,tempVol);
-				midiOut.sendControlChange(1,2,tempVol);
-				//midiOut.sendControlChange(1,1,targetVolume*128);
-				midiOut.sendAftertouch(1,targetVolume*128);
-				midiOut.sendControlChange(1,7,tempVol);
+				if(cc1) midiOut.sendControlChange(1, 1, targetVolume * 128);
+				if (cc2) midiOut.sendControlChange(1,2,tempVol);
+				if (cc7) midiOut.sendControlChange(1, 7, tempVol);
+				if (cc11) midiOut.sendControlChange(1, 11, tempVol);
+				if (afterTouch) midiOut.sendAftertouch(1, tempVol);
 			}
 			if(eye.disc.changed){
 				midiOut.sendNoteOff(MIDICH1, midinote, 0);
@@ -486,7 +488,8 @@ void EyeHarp::update(ofPoint Gaze,bool *sacadic){
 				if(temp>stepSeq.seqNote[0][0].beatDist/2.0)
 					temp-=stepSeq.seqNote[0][0].beatDist;
 				cout<<midinote<<'\t'<<temp<<'\n';*/
-				midiOut.sendNoteOn(MIDICH1, midinote, targetVolume*128);
+				if(targetVolume!=0)
+					midiOut.sendNoteOn(MIDICH1, midinote, targetVolume*128);
 				
 	//            if(eye.disc.percussive.value)
 	//                midiOut.sendNoteOff(1, midinote, 0);

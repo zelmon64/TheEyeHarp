@@ -41,7 +41,9 @@ class EyeHarp{
 		void resized(int w, int h);
 		void audioRequested 	(float * input, int bufferSize, int nChannels);
 		void keyPressed  (int key);
-		
+
+		bool cc1, cc2, cc7, cc11, afterTouch;
+		float MINVOL;
         int numArp;
         int chord;
 		bool soundWorking;
