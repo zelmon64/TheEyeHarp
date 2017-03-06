@@ -49,6 +49,7 @@ class Disc{
 		int releaseDistEnd;
 		int semiActive;
 		int* scale[7];
+		int prNote;
         ~Disc();
     private:
 		int pointSize;
@@ -64,7 +65,6 @@ class Disc{
         int outSpotStep;//distance of the outer Spots
         int inSpotDist;//distance of the inner Spots
         int * chord;
-        int prNote;
         int melody;
         int totalSamples;
 //        ofstream myfile;
