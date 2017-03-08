@@ -383,7 +383,7 @@ void EyeHarp::update(ofPoint Gaze,bool *sacadic){
 						octave = (int)(eye.disc.note + 4) / 7;
                         note=Scale[(eye.disc.note+4)%7].value - eye.disc.semi;
                         if(eye.disc.distVolume.value){
-                            if(eye.disc.dist>eye.disc.neutralRegion && eye.disc.dist<ofGetHeight()/2 && (!eye.disc.fixation.value || velocity<100)){
+                            if(eye.disc.dist>eye.disc.neutralRegion && eye.disc.dist<ofGetHeight()/2 && (!eye.disc.fixation.value || velocity<eye.disc.FIXVEL)){
 
                                 if(prDist<eye.disc.dist){
                                     distVol=(MINVOL+(1-MINVOL)*((float)(eye.disc.dist-eye.disc.neutralRegion)/(height/2-eye.disc.neutralRegion)));
@@ -393,7 +393,7 @@ void EyeHarp::update(ofPoint Gaze,bool *sacadic){
                                     volumeChanged=true;
                                 }
                                 else{
-                                    if(velocity<FIXVEL){
+                                    if(velocity<eye.disc.FIXVEL){
 										distVol=(MINVOL+(1-MINVOL)*((float)(eye.disc.dist-eye.disc.neutralRegion)/(height/2-eye.disc.neutralRegion)));
 										if (eye.disc.semi)
 											distVol = (distVol - 0.4)*1.4;
@@ -428,7 +428,7 @@ void EyeHarp::update(ofPoint Gaze,bool *sacadic){
                                     volumeChanged=true;
                                 }
                                 else{
-                                    if(velocity<FIXVEL){
+                                    if(velocity<eye.disc.FIXVEL){
                                         distVol=(MINVOL+(1-MINVOL)*((float)(eye.disc.dist-eye.disc.neutralRegion)/(height/2-eye.disc.neutralRegion)));
 										if (eye.disc.semi)
 											distVol = (distVol - 0.4)*1.4;
@@ -465,11 +465,11 @@ void EyeHarp::update(ofPoint Gaze,bool *sacadic){
 	int dist=ofDist(gaze.x,gaze.y,width/2,height/2);
 	if(midiAvailable){
 		if(eye.timbrePresets.selected==3 ){
-			if(velocity<FIXVEL)
+			if(velocity<eye.disc.FIXVEL)
 				if((eye.disc.inRelease && dist<eye.disc.neutralRegion && dist>eye.disc.inreleaseRegion)||(dist>eye.disc.releaseDist && dist<eye.disc.releaseDistEnd)  && !eye.disc.semi){
 					midiOut.sendNoteOff(MIDICH1, midinote, 0);//if we look outside, release
 				}
-			if(volumeChanged && velocity<FIXVEL && targetVolume!=0){
+			if(volumeChanged && velocity<eye.disc.FIXVEL && targetVolume!=0){
 				int tempVol=targetVolume*200;
 				if(tempVol<1)
 					tempVol=1;

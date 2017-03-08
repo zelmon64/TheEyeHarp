@@ -12,7 +12,7 @@ fullscreen 0
 monophonicStep 1
 fixationSamples 4
 showGaze 1
-LoopBe_loopMIDI 1
+LoopBe_loopMIDI 0
 semitoneActive 1
 transpose 0
 inRelease 1
@@ -22,3 +22,4 @@ cc7 1
 cc11 0
 afterTouch 0
 MINVOL 60
+FIXVEL 80

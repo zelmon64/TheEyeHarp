@@ -23,7 +23,7 @@ void ofApp::setup(){
 	initParam = fopen("eyeharp.txt", "r");
 	char paramName[30];
 	float minVol;
-	int discNotesNumber = 15, stepSequencerNotesNumber = 6, bufferSize = 512, transpose = 0;
+	int discNotesNumber = 15, stepSequencerNotesNumber = 6, bufferSize = 512, transpose = 0,FIXVEL=70;
 	bool cc1 = 0, cc2 = 0, cc7 = 1, cc11 = 0,afterTouch=0, inRelease = false, semitoneActive = false, showScale = true, scalePreset = true, loopBeLoopMIDI = 0, chordsONOFF = false, mouseEyetribeInput = false, clickDwell = false, tomidi = false, fullscreen = false, monophonic = true, showGaze = true;
 	int temp;
 	fixationSamples = 4;
@@ -83,6 +83,8 @@ void ofApp::setup(){
 				afterTouch = temp;
 			else if (strcmp(paramName, "MINVOL") == 0)
 				minVol = (float)temp / 100.0;
+			else if (strcmp(paramName, "FIXVEL") == 0)
+				FIXVEL = temp;
 		}
 		fclose(initParam);
 	}
@@ -132,6 +134,7 @@ void ofApp::setup(){
 	fclose(conf);*/
 	prFixation = false;
 	HARP.cc1 = cc1; HARP.cc2 = cc2; HARP.cc7 = cc7; HARP.cc11 = cc11; HARP.afterTouch = afterTouch, HARP.MINVOL = minVol;
+	HARP.eye.disc.FIXVEL = FIXVEL;
 }
 
 //--------------------------------------------------------------

@@ -50,6 +50,7 @@ class Disc{
 		int semiActive;
 		int* scale[7];
 		int prNote;
+		int FIXVEL;
         ~Disc();
     private:
 		int pointSize;
