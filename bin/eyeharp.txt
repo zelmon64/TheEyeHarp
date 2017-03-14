@@ -7,13 +7,13 @@ mouseEyeTracker 0
 clickDwell 1
 bufferSize 512
 help 0
-tomidi 1
+tomidi 0
 fullscreen 0
 monophonicStep 1
 fixationSamples 4
 showGaze 1
 LoopBe_loopMIDI 0
-semitoneActive 1
+semitoneActive 0
 transpose 0
 inRelease 1
 cc1 0
