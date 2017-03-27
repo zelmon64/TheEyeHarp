@@ -15,7 +15,7 @@ void EyeHarp::setup(int discNotesNumber, int stepSequencerNotesNumber, bool chor
 	soundWorking = false;
 	presetscale = false;
 	presetscale = scalePreset;
-	sequencerNote::sequencer_midi = 9;
+	sequencerNote::sequencer_midi = 2;
 	cc1 = 0; cc2 = 0; cc7 = 1; cc11 = 0; afterTouch = 0;
 	sampleDIVframe = SAMPLERATE / FRAMERATE;
 	if (LoopBeLoopMidi == false) {

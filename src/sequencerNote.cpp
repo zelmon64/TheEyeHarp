@@ -3,7 +3,7 @@
 //int loopedNote::noteSamples;
 int sequencerNote::beat=0;
 float sequencerNote::beatDist=0;
-int sequencerNote::sequencer_midi = 0;
+int sequencerNote::sequencer_midi = 2;
 void sequencerNote::setup(DistControl * Scale,int * Transpose,int * CurSample, int Dwell, int X,
                           int Y,int * Chord, int * TotalSamples, int* NoteSamples, int * WaitSamples,
                           float * tvol, float* nextPhaseAdder, float * Volume, int * AttackSamples,
