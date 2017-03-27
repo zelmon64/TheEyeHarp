@@ -55,6 +55,7 @@ class EyeHarp{
 		int height;
         ofxMidiOut midiOut;
         int midinote;
+		int melody_midi;//midi channels
 		bool showCircle;
 		Switch exit;
 		Switch focusPoints;
@@ -64,6 +65,8 @@ class EyeHarp{
 		bool presetscale; //0 if we want to the user to control all seperate semitones. 1 if we want to desplay presets.
 //        vrpn_Analog_Remote* VRPNAnalog;
 		xorSwitch musicalModes;
+		DistControl melodyMidi;
+		DistControl sequencerMidi;
         ~EyeHarp();
     private:
         bool chordChanged;

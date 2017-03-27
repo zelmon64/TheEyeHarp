@@ -35,7 +35,7 @@ void Eye::setup(int * chord, DistControl * Scale,bool* Conf,int noteNumber,bool 
 	for (int i = 0; i < 7; i++) {
 		harmonic[i].setup("", -60, ofPoint(-1.28f, -0.86 + i*0.287), ofPoint(-1.64f, -0.86 + i*0.287), -60, -1, Ssize, 100, 10, 0.99, 0.1, 0.0, true);
 	}
-	octave.setup("8va", ofPoint(-1.6, -0.3), ofPoint(-1.6,0.1),-1,3,1,1,0.085,1000,0.2,0.2,0,true);
+	octave.setup("8va", ofPoint(-1.6,0.1), ofPoint(-1.6, -0.3),-1,3,1,1,0.085,1000,0.2,0.2,0,true);
 
     advanced.setup("Advanced",false,ofPoint(-0.8,-0.85),0.05f,1000,0.7,0.4,0,false);
     playArpeggio.setup("ArpeggioON",false,ofPoint(-1.05,-0.6),0.05f,1000,0.7,.4,0,false);

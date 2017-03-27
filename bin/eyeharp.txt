@@ -2,18 +2,18 @@ discNotesNumber 15
 stepSequencerNotesNumber 8
 chords 0
 showScale 0
-scalePreset 1
+scalePreset 0
 mouseEyeTracker 0
 clickDwell 1
 bufferSize 512
 help 0
-tomidi 0
+tomidi 1
 fullscreen 0
 monophonicStep 1
 fixationSamples 4
 showGaze 1
 LoopBe_loopMIDI 0
-semitoneActive 0
+semitoneActive 1
 transpose 0
 inRelease 1
 cc1 0
@@ -22,4 +22,4 @@ cc7 1
 cc11 0
 afterTouch 0
 MINVOL 60
-FIXVEL 80
+FIXVEL 200

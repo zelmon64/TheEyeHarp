@@ -88,7 +88,7 @@ void ofApp::setup(){
 		}
 		fclose(initParam);
 	}
-	printf("cc1 %d\ncc2 %d\ncc7 %d\ncc11 %d\ncafterTouch %d\n", cc1, cc2, cc7, cc11, afterTouch);
+	//printf("cc1 %d\ncc2 %d\ncc7 %d\ncc11 %d\ncafterTouch %d\n", cc1, cc2, cc7, cc11, afterTouch);
 	gbuffer = new ofPoint[fixationSamples];
 	Switch::click = !clickDwell;
 	//printf("discNotesNumber: %d\nstepSequencerNotesNumber: %d\nbufferSize: %d\nchordsONOFF: %d\nshowScale: %d\nmouseEyetribeInput: %d\nclickDwell: %d\nfullscreen: %d", discNotesNumber, stepSequencerNotesNumber, bufferSize, chordsONOFF, showScale, mouseEyetribeInput, clickDwell,fullscreen);

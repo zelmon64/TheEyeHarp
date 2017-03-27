@@ -15,6 +15,7 @@ void EyeHarp::setup(int discNotesNumber, int stepSequencerNotesNumber, bool chor
 	soundWorking = false;
 	presetscale = false;
 	presetscale = scalePreset;
+	sequencerNote::sequencer_midi = 9;
 	cc1 = 0; cc2 = 0; cc7 = 1; cc11 = 0; afterTouch = 0;
 	sampleDIVframe = SAMPLERATE / FRAMERATE;
 	if (LoopBeLoopMidi == false) {
@@ -87,6 +88,9 @@ void EyeHarp::setup(int discNotesNumber, int stepSequencerNotesNumber, bool chor
     masterVolumeSlider.setup(sliderPos,masterVolume.color, 0, 255, 0.7,true);
     transposeSlider.setup(sliderPos,transpose.value,transpose.min,transpose.max,0.7,true);
 	focusPoints.setup("FocusPoints",false,ofPoint(1.6,0.85),0.08,800,.8,.4,0,false);
+	melody_midi = 1;
+	melodyMidi.setup("midiChannel", ofPoint(-1.6, 0.2), ofPoint(-1.6, -0.2), 1, 16, melody_midi,1,0.09, 800, 0.6, 0.2, 0, false);
+	sequencerMidi.setup("midiChannel", ofPoint(-1.6, 0.2), ofPoint(-1.6, -0.2), 1, 16, sequencerNote::sequencer_midi, 1, 0.09, 800, 0.6, 0.2, 0, false);
     Scale[0].setup("I",eye.harmonic[0].posUP_,eye.harmonic[0].posDW_,-1,1,0,1,eye.Msize,500,0.5,0.2,0.0);
     Scale[1].setup("II",eye.harmonic[1].posUP_,eye.harmonic[1].posDW_,1,3,2,1, eye.Msize,500,0.5,0.2,0.0);
     Scale[2].setup("III",eye.harmonic[2].posUP_,eye.harmonic[2].posDW_,3,5,4,1, eye.Msize,500,0.5,0.2,0.0);
@@ -156,7 +160,7 @@ void EyeHarp::update(ofPoint Gaze,bool *sacadic){
 			masterVolumeSlider.setValue(150);
 			masterVolume.setValueByColor(masterVolumeSlider.value);
 			if(midiAvailable){
-				midiOut.sendNoteOff(MIDICH1, midinote, 0);
+				midiOut.sendNoteOff(melody_midi, midinote, 0);
 				stepSeq.releaseAllMidi(); 
 			}
 		}
@@ -201,6 +205,13 @@ void EyeHarp::update(ofPoint Gaze,bool *sacadic){
     
 //    if (layer.selected==HARM)    harm.update(gaze);
 	if (layer.value){
+		if (eye.timbrePresets.selected == 3 && !configure.value) {
+			sequencerMidi.update(gaze);
+			if (sequencerMidi.changed) {
+				stepSeq.releaseAllMidi();
+				sequencerNote::sequencer_midi = sequencerMidi.value;
+			}
+		}
         targetVolume=0;
         distVol=0;
         stepSeq.update(gaze,sacadic,&velocity);
@@ -216,11 +227,17 @@ void EyeHarp::update(ofPoint Gaze,bool *sacadic){
 		   eye.arpInterface.updateTempo();
 		}
         if(stepSeq.numberOfNotes.changed)   eye.arpInterface.updateTempo();
-		midiOut.sendNoteOff(MIDICH1, midinote, 0);
+		midiOut.sendNoteOff(melody_midi, midinote, 0);
     }
 	else{
 		eye.update(gaze, &velocity,sacadic);
-
+		if (eye.timbrePresets.selected == 3 && !configure.value) {
+			melodyMidi.update(gaze);
+			if (melodyMidi.changed) {
+				midiOut.sendNoteOff(melody_midi, midinote, 0);
+				melody_midi = melodyMidi.value;
+			}
+		}
 		if (ofDist(gaze.x, gaze.y, width / 2, height / 2) < height / 2) {
 			exit.setup("QUIT", false, ofPoint(1.1, 0.8), 0.1, 1000, 0, 0, 0, false);
 			exit.resized(width, height);
@@ -467,7 +484,7 @@ void EyeHarp::update(ofPoint Gaze,bool *sacadic){
 		if(eye.timbrePresets.selected==3 ){
 			if(velocity<eye.disc.FIXVEL)
 				if((eye.disc.inRelease && dist<eye.disc.neutralRegion && dist>eye.disc.inreleaseRegion)||(dist>eye.disc.releaseDist && dist<eye.disc.releaseDistEnd)  && !eye.disc.semi){
-					midiOut.sendNoteOff(MIDICH1, midinote, 0);//if we look outside, release
+					midiOut.sendNoteOff(melody_midi, midinote, 0);//if we look outside, release
 				}
 			if(volumeChanged && velocity<eye.disc.FIXVEL && targetVolume!=0){
 				int tempVol=targetVolume*200;
@@ -475,27 +492,27 @@ void EyeHarp::update(ofPoint Gaze,bool *sacadic){
 					tempVol=1;
 				if(tempVol>127)
 					tempVol=127;
-				if(cc1) midiOut.sendControlChange(1, 1, targetVolume * 128);
-				if (cc2) midiOut.sendControlChange(1,2,tempVol);
-				if (cc7) midiOut.sendControlChange(1, 7, tempVol);
-				if (cc11) midiOut.sendControlChange(1, 11, tempVol);
-				if (afterTouch) midiOut.sendAftertouch(1, tempVol);
+				if(cc1) midiOut.sendControlChange(melody_midi, 1, targetVolume * 128);
+				if (cc2) midiOut.sendControlChange(melody_midi,2,tempVol);
+				if (cc7) midiOut.sendControlChange(melody_midi, 7, tempVol);
+				if (cc11) midiOut.sendControlChange(melody_midi, 11, tempVol);
+				if (afterTouch) midiOut.sendAftertouch(melody_midi, tempVol);
 			}
 			if(eye.disc.changed){
-				midiOut.sendNoteOff(MIDICH1, midinote, 0);
+				midiOut.sendNoteOff(melody_midi, midinote, 0);
 				midinote=36+12*(octave+eye.octave.value)+note+transpose.value;
 				/*float temp=ofGetFrameNum()-stepSeq.seqNote[0][0].beat;
 				if(temp>stepSeq.seqNote[0][0].beatDist/2.0)
 					temp-=stepSeq.seqNote[0][0].beatDist;
 				cout<<midinote<<'\t'<<temp<<'\n';*/
 				if(targetVolume!=0)
-					midiOut.sendNoteOn(MIDICH1, midinote, targetVolume*128);
+					midiOut.sendNoteOn(melody_midi, midinote, targetVolume*128);
 				
 	//            if(eye.disc.percussive.value)
 	//                midiOut.sendNoteOff(1, midinote, 0);
 			}
 			/*if(volumeChanged))
-				midiOut.sendControlChange(MIDICH1,7,targetVolume*128);*/
+				midiOut.sendControlChange(melody_midi,7,targetVolume*128);*/
 			stepSeq.sendMidi();
 		}
 		
@@ -588,6 +605,8 @@ void EyeHarp::draw(){
 						Scale[i].draw();
 				}
 			}
+			if (eye.timbrePresets.selected == 3)
+				melodyMidi.draw();
 		}
         if(eye.multiplex.selected==0 && eye.advanced.value)
             randomChord.draw();
@@ -600,6 +619,9 @@ void EyeHarp::draw(){
 		if(configure.value){
 			tempo.draw();
 			focusPoints.draw();
+		}
+		else {
+			sequencerMidi.draw();
 		}
 	}
     layer.draw();
@@ -655,6 +677,8 @@ void EyeHarp::resized(int w, int h){
 	showScale.resized(w, h);
 	exit.resized(w,h);
 	musicalModes.resized(w, h);
+	melodyMidi.resized(w, h);
+	sequencerMidi.resized(w, h);
 }
 
 

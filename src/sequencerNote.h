@@ -40,6 +40,7 @@ class sequencerNote{
 		bool sounds;
 		static int beat;
 		static float beatDist;
+		static int sequencer_midi;
     private:
         bool noteoff;
         int * note;

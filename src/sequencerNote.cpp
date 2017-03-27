@@ -3,6 +3,7 @@
 //int loopedNote::noteSamples;
 int sequencerNote::beat=0;
 float sequencerNote::beatDist=0;
+int sequencerNote::sequencer_midi = 0;
 void sequencerNote::setup(DistControl * Scale,int * Transpose,int * CurSample, int Dwell, int X,
                           int Y,int * Chord, int * TotalSamples, int* NoteSamples, int * WaitSamples,
                           float * tvol, float* nextPhaseAdder, float * Volume, int * AttackSamples,
@@ -64,17 +65,17 @@ void sequencerNote::update(ofPoint gaze,bool*sacadic){
 		}
     }
 	else{
-		if(sounds){
-			StepMidiOut->sendNoteOn(3,60+12*(ix==0),64);
-			/*if(iy==0){
-				int tempDist=ofGetFrameNum()-beat;
-				beat=ofGetFrameNum();
-				if(beatDist==0)
-					beatDist=beat;
-				else
-					beatDist=beatDist*0.9+0.1*tempDist;
-			}*/
-		}
+		//if(sounds){
+		//	StepMidiOut->sendNoteOn(3,60+12*(ix==0),64);
+		//	/*if(iy==0){
+		//		int tempDist=ofGetFrameNum()-beat;
+		//		beat=ofGetFrameNum();
+		//		if(beatDist==0)
+		//			beatDist=beat;
+		//		else
+		//			beatDist=beatDist*0.9+0.1*tempDist;
+		//	}*/
+		//}
 		button.setColor(2*red,2*green,2*blue);
 		sounds=false;
 	}
@@ -87,20 +88,20 @@ void sequencerNote::releaseOnTimeAfterChordChange(){
 		}
     }
 	else{
-		if(sounds){
-			StepMidiOut->sendNoteOn(3,60+12*(ix==0),64);
-			/*if(iy==0){
-				int tempDist=ofGetFrameNum()-beat;
-				beat=ofGetFrameNum();
-				if(beatDist==0)
-					beatDist=beat;
-				else
-					beatDist=beatDist*0.9+0.1*tempDist;
-			}*/
-		}
+		//if(sounds){
+		//	//StepMidiOut->sendNoteOn(3,60+12*(ix==0),64);
+		//	/*if(iy==0){
+		//		int tempDist=ofGetFrameNum()-beat;
+		//		beat=ofGetFrameNum();
+		//		if(beatDist==0)
+		//			beatDist=beat;
+		//		else
+		//			beatDist=beatDist*0.9+0.1*tempDist;
+		//	}*/
+		//}
 		sounds=false;
 		if(pendingRelease!=-1){
-			StepMidiOut->sendNoteOff(MIDICH2, pendingRelease, 0);
+			StepMidiOut->sendNoteOff(sequencer_midi, pendingRelease, 0);
 			//cout<<pendingRelease;
 			pendingRelease=-1;
 		}
@@ -113,23 +114,23 @@ void sequencerNote::sendMidi(int volume){
 	
     if(*curSample>*waitSamples && *curSample<(*waitSamples+*noteSamples) ){
         if(noteoff && button.value){
-            StepMidiOut->sendNoteOn(MIDICH2, midinote,volume);
+            StepMidiOut->sendNoteOn(sequencer_midi, midinote,volume);
             noteoff=false;
         }
     }
     else{
         if(!noteoff && button.value){
-            StepMidiOut->sendNoteOff(MIDICH2, midinote, 0);
+            StepMidiOut->sendNoteOff(sequencer_midi, midinote, 0);
 			if (prnote!=midinote){
-				StepMidiOut->sendNoteOff(MIDICH2, prnote, 0);
+				StepMidiOut->sendNoteOff(sequencer_midi, prnote, 0);
 			}
             noteoff=true;
         }
     }
     if(!button.value && !noteoff){
-        StepMidiOut->sendNoteOff(MIDICH2, midinote, 0);
+        StepMidiOut->sendNoteOff(sequencer_midi, midinote, 0);
 		if (prnote!=midinote){
-			StepMidiOut->sendNoteOff(MIDICH2, prnote, 0);
+			StepMidiOut->sendNoteOff(sequencer_midi, prnote, 0);
 		}
         noteoff=true;
 //        cout<<midinote<<'\t';
@@ -139,7 +140,7 @@ void sequencerNote::sendMidi(int volume){
 void sequencerNote::releaseMidi(){
     midinote=60+*oct*12+*note+*transpose;
     if(active){
-       StepMidiOut->sendNoteOff(MIDICH2, midinote, 0);
+       StepMidiOut->sendNoteOff(sequencer_midi, midinote, 0);
 	}
 }
 
