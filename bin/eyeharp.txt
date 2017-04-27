@@ -24,4 +24,4 @@ afterTouch 0
 MINVOL 60
 FIXVEL 200
 BreathSensor 0
-loadSong 1
+loadSong 0
