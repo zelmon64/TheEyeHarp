@@ -35,12 +35,13 @@ class EyeHarp{
         Eye eye;
 //        arpeggiator * arpeggio;
 //    stepSeq stepseq;
-        void setup(int discNotesNumber, int stepSequencerNotesNumber, bool chordsONOFF, bool showScale,bool scalePreset, bool clickDwell,bool tomidi, bool LoopBeLoopMidi, bool semitoneActive, int trans);
+        void setup(int discNotesNumber, int stepSequencerNotesNumber, bool chordsONOFF, bool showScale,bool scalePreset, bool clickDwell,bool tomidi, bool LoopBeLoopMidi, bool semitoneActive, int trans,bool breath);
 		void update(ofPoint Gaze,bool*sacadic);
 		void draw();
 		void resized(int w, int h);
 		void audioRequested 	(float * input, int bufferSize, int nChannels);
 		void keyPressed  (int key);
+		void newMidiMessage(ofxMidiMessage& msg);
 
 		bool cc1, cc2, cc7, cc11, afterTouch;
 		float MINVOL;
@@ -54,6 +55,9 @@ class EyeHarp{
 		int width;
 		int height;
         ofxMidiOut midiOut;
+		ofxMidiIn midiIn;
+		ofxMidiMessage midiMessage;
+		int breath;
         int midinote;
 		int melody_midi;//midi channels
 		bool showCircle;
@@ -67,6 +71,7 @@ class EyeHarp{
 		xorSwitch musicalModes;
 		DistControl melodyMidi;
 		DistControl sequencerMidi;
+		DistControl Scale[7];
         ~EyeHarp();
     private:
         bool chordChanged;
@@ -98,7 +103,6 @@ class EyeHarp{
 		int note;
 		int octave;
 		bool midiAvailable;
-        DistControl Scale[7];
         float curMasterVolume;
         DistControl transpose;
         int prChord;

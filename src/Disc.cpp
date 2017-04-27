@@ -57,6 +57,7 @@ void Disc::setup(int NumOfNotes,float red,float green,float blue,int * Chord, bo
 	SemiSize = height2*0.35;
 	semitoneActive = SemitoneActive;
 	inRelease = false;
+	testSong.setup(&note, &changed, &semi);
 }
 
 
@@ -235,6 +236,9 @@ void Disc::update(ofPoint gaze, float* velocity,bool *sacadic){
 	if(ofDist(gaze.x,gaze.y, width2,height2)<neutralRegion && *velocity<FIXVEL && !replaySame.active)
 		replaySame.setup("",false,ofPoint(-10,-10),0.001,10,0,0,0,false);
 	//cout << /*"TempoNote: " << tempNote << */" note: " << note << endl;
+
+	if (testSong.songNumber != 0)
+		testSong.update();
 }
 
 float Disc::getMagVal(int i){
@@ -260,7 +264,10 @@ void Disc::draw(){
             ofSetColor(i*colorstep*R+((note == i && !semi) && notesONOFF.value)*brightActive, i*colorstep *1.5*G+((note == i && !semi) && notesONOFF.value)*brightActive,i*colorstep*B+((note==i && !semi) && notesONOFF.value)*brightActive);
 		}
 		else ofSetColor(i*colorstep*R+((note == i && !semi) && notesONOFF.value)*brightActive+(i%7==0), i*colorstep *G+((note == i && !semi) && notesONOFF.value)*brightActive+(i%7==4)*10,i*colorstep*B+((note == i && !semi) && notesONOFF.value)*brightActive);
-        ofBeginShape();
+		if (testSong.ilumina == i && !testSong.melody[testSong.pos].flat)
+			ofSetColor(255, 20, 20);
+		
+		ofBeginShape();
         ofVertex(width2, height2);
 		ofVertex(width2-cos(getMagVal(i))*height2,height2+sin(getMagVal(i))*height2);
         ofVertex(width2-cos(getMagVal(i+1))*height2, height2+sin(getMagVal(i+1))*height2);
@@ -318,6 +325,8 @@ void Disc::draw(){
 			if ((*scale[ii] - *scale[(ii + 6) % 7])%12 > 1 && i != 0 && i < NotesNumber.value - 7 * chordONOFF.value) {
 
 				ofSetColor(40 + (i == semiActive) * 50);
+				if (testSong.ilumina == i && testSong.melody[testSong.pos].flat)
+					ofSetColor(255, 20, 20);
 				ofCircle(curPosSemitone.x, curPosSemitone.y, tangle*SemiSize);
 				ofSetColor(255);
 				for (int j = 0; j < 4; j++)

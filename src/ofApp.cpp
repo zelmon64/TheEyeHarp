@@ -23,8 +23,8 @@ void ofApp::setup(){
 	initParam = fopen("eyeharp.txt", "r");
 	char paramName[30];
 	float minVol;
-	int discNotesNumber = 15, stepSequencerNotesNumber = 6, bufferSize = 512, transpose = 0,FIXVEL=70;
-	bool cc1 = 0, cc2 = 0, cc7 = 1, cc11 = 0,afterTouch=0, inRelease = false, semitoneActive = false, showScale = true, scalePreset = true, loopBeLoopMIDI = 0, chordsONOFF = false, mouseEyetribeInput = false, clickDwell = false, tomidi = false, fullscreen = false, monophonic = true, showGaze = true;
+	int loadSong=0, discNotesNumber = 15, stepSequencerNotesNumber = 6, bufferSize = 512, transpose = 0,FIXVEL=70;
+	bool Breath=false,cc1 = 0, cc2 = 0, cc7 = 1, cc11 = 0,afterTouch=0, inRelease = false, semitoneActive = false, showScale = true, scalePreset = true, loopBeLoopMIDI = 0, chordsONOFF = false, mouseEyetribeInput = false, clickDwell = false, tomidi = false, fullscreen = false, monophonic = true, showGaze = true;
 	int temp;
 	fixationSamples = 4;
 	if (initParam == NULL)
@@ -85,9 +85,14 @@ void ofApp::setup(){
 				minVol = (float)temp / 100.0;
 			else if (strcmp(paramName, "FIXVEL") == 0)
 				FIXVEL = temp;
+			else if (strcmp(paramName, "BreathSensor") == 0)
+				Breath = temp; 
+			else if (strcmp(paramName, "loadSong") == 0)
+				loadSong = temp;
 		}
 		fclose(initParam);
 	}
+	
 	//printf("cc1 %d\ncc2 %d\ncc7 %d\ncc11 %d\ncafterTouch %d\n", cc1, cc2, cc7, cc11, afterTouch);
 	gbuffer = new ofPoint[fixationSamples];
 	Switch::click = !clickDwell;
@@ -101,7 +106,9 @@ void ofApp::setup(){
 	//ofHideCursor();
 	//ofToggleFullscreen();
 	gaze= mouseEyetribeInput;
-	HARP.setup(discNotesNumber, stepSequencerNotesNumber, chordsONOFF, showScale,scalePreset, clickDwell,tomidi, loopBeLoopMIDI, semitoneActive, transpose);
+	HARP.eye.disc.testSong.songNumber = loadSong;
+	HARP.setup(discNotesNumber, stepSequencerNotesNumber, chordsONOFF, showScale,scalePreset, clickDwell,tomidi, loopBeLoopMIDI, semitoneActive, transpose,Breath);
+	
 	HARP.showCircle = showGaze;
 	HARP.stepSeq.monophonic.setup("monophonic", monophonic, ofPoint(-1.2, 0.8), .095, 800, .8, .4, 0, false);
 	tribe.setup();

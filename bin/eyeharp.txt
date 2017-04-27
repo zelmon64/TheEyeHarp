@@ -7,7 +7,7 @@ mouseEyeTracker 0
 clickDwell 1
 bufferSize 512
 help 0
-tomidi 0
+tomidi 1
 fullscreen 0
 monophonicStep 1
 fixationSamples 4
@@ -23,3 +23,5 @@ cc11 0
 afterTouch 0
 MINVOL 60
 FIXVEL 200
+BreathSensor 0
+loadSong 1

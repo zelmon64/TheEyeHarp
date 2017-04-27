@@ -7,8 +7,9 @@ enum {
 EyeHarp::~EyeHarp(){
 
 }
-void EyeHarp::setup(int discNotesNumber, int stepSequencerNotesNumber, bool chordsONOFF, bool showScaleInit, bool scalePreset, bool clickDwell,bool tomidi, bool LoopBeLoopMidi, bool semitoneActive, int trans){
+void EyeHarp::setup(int discNotesNumber, int stepSequencerNotesNumber, bool chordsONOFF, bool showScaleInit, bool scalePreset, bool clickDwell,bool tomidi, bool LoopBeLoopMidi, bool semitoneActive, int trans,bool breath){
     //midiOut.listPorts();
+	eye.disc.testSong.scale = Scale;
 	string s1;
 	string s2;
 	MINVOL = 0.5;
@@ -53,6 +54,19 @@ void EyeHarp::setup(int discNotesNumber, int stepSequencerNotesNumber, bool chor
 	if(midiAvailable==false)
 		printf("Virtual Midi Port Not Found. Midi Out Disabled!\n");
 
+	if (breath) {
+		int port;
+		midiIn.listPorts();
+		printf("Select midi IN (breath sensor) device (number 0 to %d): ", midiIn.getNumPorts() - 1);
+		cin >> port;
+		if (port >= 0 && port < midiIn.getNumPorts())
+			midiIn.openPort(port);
+		else
+			printf("Wrong number given!\n");
+		printf("midi In connected\n");/*
+		midiIn.addListener(this);
+		midiIn.setVerbose(true);*/
+	}
     chord=chordsONOFF;
 	eye.setup(&chord,Scale,&(configure.value), discNotesNumber,tomidi,semitoneActive);
 
@@ -98,7 +112,9 @@ void EyeHarp::setup(int discNotesNumber, int stepSequencerNotesNumber, bool chor
     Scale[4].setup("V",eye.harmonic[4].posUP_,eye.harmonic[4].posDW_,6,8,7,1, eye.Msize,500,0.5,0.2,0.0);
     Scale[5].setup("VI",eye.harmonic[5].posUP_,eye.harmonic[5].posDW_,8,10,9,1, eye.Msize,500,0.5,0.2,0.0);
     Scale[6].setup("VII",eye.harmonic[6].posUP_,eye.harmonic[6].posDW_,10,12,11,1, eye.Msize,500,0.5,0.2,0.0);
-    curMasterVolume=masterVolume.value;
+	eye.setup(&chord, Scale, &(configure.value), discNotesNumber, tomidi, semitoneActive);
+
+	curMasterVolume=masterVolume.value;
     prChord=chord;
     /*char** names = new char*[2];
     for(int i=0;i<2;i++)
@@ -139,7 +155,6 @@ void EyeHarp::setup(int discNotesNumber, int stepSequencerNotesNumber, bool chor
 
 void EyeHarp::update(ofPoint Gaze,bool *sacadic){
 	//cout<<startingFrame();
-	
     chordChanged=false;
 	
 	prGaze=gaze;
@@ -204,7 +219,7 @@ void EyeHarp::update(ofPoint Gaze,bool *sacadic){
 
     
 //    if (layer.selected==HARM)    harm.update(gaze);
-	if (layer.value){
+	if (layer.value){//if in the stepSeq
 		if (eye.timbrePresets.selected == 3 && !configure.value) {
 			sequencerMidi.update(gaze);
 			if (sequencerMidi.changed) {
@@ -229,8 +244,11 @@ void EyeHarp::update(ofPoint Gaze,bool *sacadic){
         if(stepSeq.numberOfNotes.changed)   eye.arpInterface.updateTempo();
 		midiOut.sendNoteOff(melody_midi, midinote, 0);
     }
-	else{
+	else{//if in the melody layer
 		eye.update(gaze, &velocity,sacadic);
+		/*if (eye.disc.changed) {
+			printf("%d%c\n", eye.disc.note, eye.disc.semi ? 'b' : ' ');
+		}*/
 		if (eye.timbrePresets.selected == 3 && !configure.value) {
 			melodyMidi.update(gaze);
 			if (melodyMidi.changed) {
@@ -686,4 +704,25 @@ void EyeHarp::keyPressed(int key){
 	eye.disc.keyPressed(key);
 	stepSeq.keyPressed(key);
 	chordLoop.keyPressed(key);
+}
+
+void EyeHarp::newMidiMessage(ofxMidiMessage& msg) {
+	// make a copy of the latest message
+	midiMessage = msg;
+	int sensitivity = 3;
+	int thr = 50;
+	if (msg.status == MIDI_CONTROL_CHANGE || msg.status == MIDI_AFTERTOUCH || msg.status == MIDI_POLY_AFTERTOUCH) {
+		breath = msg.value * 3;
+		if (breath > 127)
+			breath = 127;
+		if (breath < thr) {
+			midiOut.sendNoteOff(1, eye.disc.note, 0);
+			
+		}
+		else {
+			midiOut.sendControlChange(1, 7, breath);
+				midiOut.sendNoteOn(1, eye.disc.note, breath);
+		}
+	}
+	
 }

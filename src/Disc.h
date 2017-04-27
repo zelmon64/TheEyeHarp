@@ -6,9 +6,10 @@
 #include "switch.h"
 #include "DistinctControl.h"
 #include "EyeHarpVARS.h"
-
+#include "song.h"
 #include <windows.h>
 #include <fstream>
+#include "song.h"
 #define CHORDSNUM 7
 
 class Disc{
@@ -51,6 +52,7 @@ class Disc{
 		int* scale[7];
 		int prNote;
 		int FIXVEL;
+		song testSong;
         ~Disc();
     private:
 		int pointSize;
