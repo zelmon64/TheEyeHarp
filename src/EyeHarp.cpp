@@ -97,7 +97,7 @@ void EyeHarp::setup(int discNotesNumber, int stepSequencerNotesNumber, bool chor
     masterMultiPlex.setup(3,masterNames,0,ofPoint(1.12,-0.4),HALF_PI,0.05,800);
     tempo.setup("Tempo",140,ofPoint(-1.25, -0.83),ofPoint(-1.61, -0.83),30.0f,600.0f,0.085f,500,1,.9f,.1f,.0f,true);
     masterVolume.setup("Volume",150, stepPosUP,stepPosDW,0,1,0.045f,500,20,.9f,.1f,.0f);
-    transpose.setup("Transp",stepPosUP,stepPosDW,-5,6,trans,1,0.045f,800,0.6f,0.2f,0.0f,false);
+    transpose.setup("Transp",  ofPoint(1.64, 0.4), ofPoint(1.32, 0.4), -5,6,trans,1,0.07f,800,0.6f,0.2f,0.0f,false);
     tempoSlider.setup(sliderPos,tempo.value,tempo.min,tempo.max,0.7,true);
     masterVolumeSlider.setup(sliderPos,masterVolume.color, 0, 255, 0.7,true);
     transposeSlider.setup(sliderPos,transpose.value,transpose.min,transpose.max,0.7,true);
@@ -182,38 +182,39 @@ void EyeHarp::update(ofPoint Gaze,bool *sacadic){
 	}
 
     if(fullScreen.changed)  ofToggleFullscreen();
-    if(masterMultiPlex.selected==0){
-        //masterVolume.update(gaze);
-       // masterVolumeSlider.update(gaze);
-        if(masterVolume.changed){
-            masterVolumeSlider.setValue(masterVolume.color);
-        }
-        if(masterVolumeSlider.changed){
-            masterVolume.setValueByColor(masterVolumeSlider.value);
-        }
-    }
-    if(masterMultiPlex.selected==1){
-        //tempo.update(gaze);
-        tempoSlider.update(gaze);
-        if(tempo.changed){
-            tempoSlider.setValue(tempo.value);
-        }
-        if(tempoSlider.changed){
-            tempo.setColorByValue(tempoSlider.value);
-        }
-    }
-    if(masterMultiPlex.selected==2){
-        transposeSlider.update(gaze);
-        transpose.update(gaze);
-        if(transposeSlider.changed){
-            transpose.setColorByValue(transposeSlider.value);
-        }
-        if(transpose.changed){
-            transposeSlider.setValue(transpose.value);
-            stepSeq.updatePitch();
-            eye.arpInterface.updateChords();
-        }
-    }
+	
+    //if(masterMultiPlex.selected==0){
+    //    //masterVolume.update(gaze);
+    //   // masterVolumeSlider.update(gaze);
+    //    if(masterVolume.changed){
+    //        masterVolumeSlider.setValue(masterVolume.color);
+    //    }
+    //    if(masterVolumeSlider.changed){
+    //        masterVolume.setValueByColor(masterVolumeSlider.value);
+    //    }
+    //}
+    //else if(masterMultiPlex.selected==1){
+    //    //tempo.update(gaze);
+    //    tempoSlider.update(gaze);
+    //    if(tempo.changed){
+    //        tempoSlider.setValue(tempo.value);
+    //    }
+    //    if(tempoSlider.changed){
+    //        tempo.setColorByValue(tempoSlider.value);
+    //    }
+    //}
+    //else if(masterMultiPlex.selected==2){
+    //    transposeSlider.update(gaze);
+    //    transpose.update(gaze);
+    //    if(transposeSlider.changed){
+    //        transpose.setColorByValue(transposeSlider.value);
+    //    }
+    //    if(transpose.changed){
+    //        transposeSlider.setValue(transpose.value);
+    //        stepSeq.updatePitch();
+    //        eye.arpInterface.updateChords();
+    //    }
+    //}
 
 	velocity=ofDist(gaze.x,gaze.y,prGaze.x,prGaze.y)*FRAMERATE;//fixation detection
 
@@ -233,6 +234,7 @@ void EyeHarp::update(ofPoint Gaze,bool *sacadic){
 		if(configure.value){
 			focusPoints.update(gaze,sacadic);
 			tempo.update(gaze);
+			
 		}
 		if(focusPoints.changed)
 			Switch::focuspoints=!Switch::focuspoints;
@@ -249,7 +251,7 @@ void EyeHarp::update(ofPoint Gaze,bool *sacadic){
 		/*if (eye.disc.changed) {
 			printf("%d%c\n", eye.disc.note, eye.disc.semi ? 'b' : ' ');
 		}*/
-		if (eye.timbrePresets.selected == 3 && !configure.value) {
+		if (eye.timbrePresets.selected == 3 && !configure.value && !showScale.value) {
 			melodyMidi.update(gaze);
 			if (melodyMidi.changed) {
 				midiOut.sendNoteOff(melody_midi, midinote, 0);
@@ -269,6 +271,11 @@ void EyeHarp::update(ofPoint Gaze,bool *sacadic){
 				else
 					ofExit();
 				exit.resized(width, height);
+			}
+			transpose.update(gaze);
+			if (transpose.changed) {
+				stepSeq.updatePitch();
+				eye.arpInterface.updateChords();
 			}
 		}
 		else{
@@ -612,6 +619,7 @@ void EyeHarp::draw(){
 		if (configure.value) {
 			showScale.draw();
 			exit.draw();
+			transpose.draw();
 		}
 		else {
 			if (showScale.value) {
@@ -623,7 +631,7 @@ void EyeHarp::draw(){
 						Scale[i].draw();
 				}
 			}
-			if (eye.timbrePresets.selected == 3)
+			if (eye.timbrePresets.selected == 3 && !showScale.value)
 				melodyMidi.draw();
 		}
         if(eye.multiplex.selected==0 && eye.advanced.value)
@@ -647,18 +655,18 @@ void EyeHarp::draw(){
 	
     //masterMultiPlex.draw();
     //fullScreen.draw();
-    if(masterMultiPlex.selected==0){
-       // masterVolume.draw();
-       // masterVolumeSlider.draw();
-    }
-    if(masterMultiPlex.selected==1){
-        //tempo.draw();
-        tempoSlider.draw();
-    }
-    if(masterMultiPlex.selected==2){
-        transpose.draw();
-        transposeSlider.draw();
-    }
+    //if(masterMultiPlex.selected==0){
+    //   // masterVolume.draw();
+    //   // masterVolumeSlider.draw();
+    //}
+    //if(masterMultiPlex.selected==1){
+    //    //tempo.draw();
+    //    tempoSlider.draw();
+    //}
+    //if(masterMultiPlex.selected==2){
+    //    transpose.draw();
+    //    transposeSlider.draw();
+    //}
 	if (showCircle || (focusPoints.value && layer.value == 1)) {
 		ofNoFill();
 		ofCircle(gaze, height*0.076);
