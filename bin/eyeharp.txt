@@ -7,12 +7,12 @@ mouseEyeTracker 0
 clickDwell 1
 bufferSize 512
 help 0
-tomidi 1
+tomidi 0
 fullscreen 0
 monophonicStep 1
 fixationSamples 4
 showGaze 1
-LoopBe_loopMIDI 0
+LoopBe_loopMIDI 1
 semitoneActive 1
 transpose 0
 inRelease 1
@@ -24,4 +24,4 @@ afterTouch 0
 MINVOL 60
 FIXVEL 200
 BreathSensor 0
-loadSong 1
+loadSong 0
