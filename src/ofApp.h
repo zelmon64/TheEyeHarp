@@ -35,6 +35,7 @@ class ofApp : public ofBaseApp {
 		void mouseReleased(int x, int y, int button);
 		void windowResized(int w, int h);
 
+		void exit();
         int mousex;
         int mousey;
 		bool gaze;

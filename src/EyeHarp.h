@@ -42,7 +42,7 @@ class EyeHarp{
 		void audioRequested 	(float * input, int bufferSize, int nChannels);
 		void keyPressed  (int key);
 		void newMidiMessage(ofxMidiMessage& msg);
-
+		void exitApp();
 		bool cc1, cc2, cc7, cc11, afterTouch;
 		float MINVOL;
         int numArp;

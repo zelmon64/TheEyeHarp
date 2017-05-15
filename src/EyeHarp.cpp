@@ -5,7 +5,6 @@ enum {
 	MAJOR, MINOR, HITZAZ, HITZAZSKIAR, DORIAN, PHRYGIAN, MYXOLYDIAN
 };
 EyeHarp::~EyeHarp(){
-
 }
 void EyeHarp::setup(int discNotesNumber, int stepSequencerNotesNumber, bool chordsONOFF, bool showScaleInit, bool scalePreset, bool clickDwell,bool tomidi, bool LoopBeLoopMidi, bool semitoneActive, int trans,bool breath){
     //midiOut.listPorts();
@@ -152,7 +151,9 @@ void EyeHarp::setup(int discNotesNumber, int stepSequencerNotesNumber, bool chor
 		//cout << *eye.disc.scale[i] << endl;
 	}
 }
-
+void EyeHarp::exitApp() {
+	midiOut.closePort();
+}
 void EyeHarp::update(ofPoint Gaze,bool *sacadic){
 	//cout<<startingFrame();
     chordChanged=false;

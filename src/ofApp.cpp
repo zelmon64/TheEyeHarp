@@ -143,7 +143,9 @@ void ofApp::setup(){
 	HARP.cc1 = cc1; HARP.cc2 = cc2; HARP.cc7 = cc7; HARP.cc11 = cc11; HARP.afterTouch = afterTouch, HARP.MINVOL = minVol;
 	HARP.eye.disc.FIXVEL = FIXVEL;
 }
-
+void ofApp::exit() {
+	HARP.exitApp();
+}
 //--------------------------------------------------------------
 void ofApp::update(){
 	if(read!=NULL && !feof(read)){
